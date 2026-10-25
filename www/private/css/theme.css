@@ -370,16 +370,19 @@ ul.filterList .selectedFilter > .link :is(img, button) {
 }
 
 .altRowColors tbody tr:nth-child(odd of :not(.invisible)) {
-    background-color: hsl(225deg 13% 9%);
+    --row-bg: hsl(225deg 13% 9%);
+    background-color: var(--row-bg);
 }
 
 .dynamicTableDiv table.dynamicTable tbody tr:hover {
-    background-color: var(--surface-2);
+    --row-bg: var(--surface-2);
+    background-color: var(--row-bg);
     color: var(--text);
 }
 
 .dynamicTableDiv table.dynamicTable tbody tr.selected {
-    background-color: var(--accent-soft);
+    --row-bg: var(--accent-soft);
+    background-color: var(--row-bg);
     color: var(--text);
 }
 
@@ -947,6 +950,153 @@ body:has(> div > h2.vcenter) > div {
     td.speedLabel {
         min-width: 0;
         padding: 0 8px;
+    }
+}
+
+/* Mobile details sheet: theme.js sets .details-open when a card is tapped. Mocha sizes the panel inline, hence the !important. */
+
+#detailsSheetBar {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    /* Stock collapses the panel when the active tab is tapped again, and remembers that for desktop. */
+    :root.details-open #propertiesTabs li.selected {
+        pointer-events: none;
+    }
+
+    :root.details-open #propertiesPanel_wrapper {
+        background-color: var(--bg);
+        display: flex !important;
+        flex-direction: column;
+        inset: 0;
+        position: fixed;
+        z-index: 100;
+    }
+
+    :root.details-open #detailsSheetBar {
+        align-items: center;
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex: none;
+        gap: 8px;
+        height: 52px;
+        padding: 0 12px 0 16px;
+
+        & h3 {
+            flex: 1;
+            font-size: 16px;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        & .mochaCloseButton {
+            background: none;
+            border: 0;
+            float: none;
+            flex: none;
+            height: 32px;
+            margin: 0;
+            width: 32px;
+
+            &::before,
+            &::after {
+                width: 14px;
+            }
+        }
+    }
+
+    :root.details-open #propertiesPanel_header {
+        flex: none;
+        overflow-x: auto;
+    }
+
+    :root.details-open #propertiesPanel_header .toolbarTabs {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    :root.details-open #torrentFilesFilterToolbar {
+        float: none;
+        margin: 0;
+        order: 1;
+
+        &.invisible {
+            display: none;
+        }
+    }
+
+    :root.details-open #torrentFilesFilterInput {
+        background-position: 10px center;
+        background-size: 16px;
+        font-size: 16px; /* below 16px iOS Safari zooms the page on focus */
+        padding-left: 34px;
+        width: 100%;
+    }
+
+    :root.details-open :is(#propertiesPanel_header, #propertiesTabs) {
+        scrollbar-width: none;
+    }
+
+    :root.details-open #propertiesPanel {
+        flex: 1;
+        height: auto !important;
+        min-height: 0;
+    }
+
+    :root.details-open :is(#propertiesPanel_handle, #propertiesPanel_headerCollapseBox) {
+        display: none !important;
+    }
+
+    #propBarsWrapper {
+        padding: 0 12px;
+    }
+
+    /* Cells can't take the inset: virtual-list rows size them inline, the header by its colgroup.
+       So the scroller is padded and the header and row backgrounds are stretched back over the padding. */
+    :root.details-open .propertiesTabContent .dynamicTableDiv {
+        padding-inline: 16px;
+
+        & .dynamicTableFixedHeaderDiv {
+            background-color: var(--surface);
+            margin-inline: -16px;
+            padding-inline: 16px;
+        }
+
+        & th:last-child {
+            box-shadow: 16px 0 var(--surface);
+        }
+
+        & tbody tr {
+            box-shadow: -16px 0 var(--row-bg, transparent), 16px 0 var(--row-bg, transparent);
+        }
+    }
+
+    /* General's three label/value column pairs become one pair per line. */
+    #propGeneral fieldset {
+        margin: 10px 12px;
+    }
+
+    #propGeneral tbody {
+        column-gap: 16px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        row-gap: 6px;
+    }
+
+    #propGeneral tr {
+        display: contents;
+    }
+
+    #propGeneral td {
+        overflow-wrap: anywhere;
+        padding: 0;
+        text-align: left;
+        width: auto;
     }
 }
 

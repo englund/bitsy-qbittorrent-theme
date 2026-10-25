@@ -19,7 +19,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 |---|---|
 | `www/` | Stock WebUI from tag `release-5.3.0` (`src/webui/www`), plus our edits. The first commit is the pristine copy, so `git diff 4874bbe` shows every theme change. |
 | `www/private/css/theme.css` | **All theme styling.** Loaded last; overrides the stock CSS instead of editing it. |
-| `www/private/scripts/theme.js` | Theme behaviour: the mobile sort menu, tagging dialog frames for phones, and the shared `placeBelow` popover helper. |
+| `www/private/scripts/theme.js` | Theme behaviour: the mobile sort menu, the mobile details sheet, tagging dialog frames for phones, and the shared `placeBelow` popover helper. |
 | `mock-server.mjs` | Serves `www/` the way qBittorrent does: it fills in `QBT_TR(...)`, `${LANG}`, `${CACHEID}` and `${LANGUAGE_OPTIONS}`, and fakes `/api/v2`. Unknown endpoints are logged as `unmocked:`. |
 | `icons.mjs` | Regenerates the icons from Lucide (see Icons). |
 
@@ -42,6 +42,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - The table is virtualized, so the card height is a *JS row height*. The **92px slot** (84px card + 8px gap) is defined in both `dynamicTable.js` and `theme.css`; keep them in sync.
 - Sorting on mobile uses **one dropdown button** (a popover menu) showing the current column. Picking the active column flips the direction. It calls `torrentsTable.setSortedColumn`, so it persists like a header click. (We tried a select plus a separate direction button first; rejected.)
 - Inputs on mobile use 16px text so iOS Safari doesn't zoom.
+- Tapping a card opens a **details sheet**: the stock properties panel shown full-screen (`:root.details-open`), with a title bar (`#detailsSheetBar`, added by `theme.js`) holding the name and a close button. General's label/value table is restacked into one pair per line; Trackers, Peers and Content scroll sideways; their content is inset 16px while header and row backgrounds run to the edges (the scroller is padded and backgrounds are stretched back with `box-shadow` via `--row-bg`, because cells can't be padded without breaking column alignment). The Content filter gets its own row below the tabs. Tapping the active tab is disabled there, because stock would collapse the panel and remember that for desktop.
 
 **Dialogs (Mocha windows)**
 - Desktop: rounded, shadowed windows; form sections (`fieldset.settings`) are cards with small uppercase headings; the primary action (`button[type=submit]`, `#addButton`, Options Save) is blue in a **sticky footer**.
@@ -73,7 +74,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - The native file picker can't be driven by automation. Call `qBittorrent.Client.uploadTorrentFiles([new File(...)])`, which is the same path the picker uses.
 
 ## Open ideas / next steps
-- Mobile: a torrent **details sheet** when a card is tapped (qBitControl-style); currently the properties panel is hidden on phones.
+- Mobile details sheet: card-style layouts for the Trackers/Peers/Content tables, and closing it with the phone's back gesture.
 - Mobile: a way to reach logout, Search, RSS and Log (the menu bar is hidden).
 - Mobile: category, tag and tracker filters (only the status chips are shown).
 - Theme the **login page** (`www/public/`), which still uses the stock CSS.

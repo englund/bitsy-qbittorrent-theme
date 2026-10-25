@@ -55,3 +55,38 @@ window.addEventListener("DOMContentLoaded", () => {
         menu.hidePopover();
     });
 });
+
+// Mobile hides the properties panel; tapping a card opens it as a full-screen details sheet instead.
+{
+    const mobileQuery = window.matchMedia("(max-width: 640px)");
+    let title;
+
+    const close = () => document.documentElement.classList.remove("details-open");
+
+    const open = (rowId) => {
+        const wrapper = document.getElementById("propertiesPanel_wrapper");
+        if (!title) {
+            const bar = document.createElement("div");
+            bar.id = "detailsSheetBar";
+            title = document.createElement("h3");
+            const closeButton = document.createElement("button");
+            closeButton.type = "button";
+            closeButton.className = "mochaCloseButton";
+            closeButton.ariaLabel = "Close";
+            closeButton.addEventListener("click", close);
+            bar.append(title, closeButton);
+            wrapper.prepend(bar);
+        }
+        title.textContent = torrentsTable.getRow(rowId).full_data.name;
+        document.documentElement.classList.add("details-open");
+    };
+
+    document.addEventListener("click", (event) => {
+        if (!mobileQuery.matches || event.ctrlKey || event.metaKey || event.shiftKey)
+            return;
+        const tr = event.target.closest("#torrentsTableDiv tr");
+        if (tr?.rowId !== undefined)
+            open(tr.rowId);
+    });
+    mobileQuery.addEventListener("change", close);
+}
