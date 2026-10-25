@@ -19,11 +19,13 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 |---|---|
 | `www/` | Stock WebUI from tag `release-5.3.0` (`src/webui/www`), plus our edits. The first commit is the pristine copy, so `git diff 4874bbe` shows every theme change. |
 | `www/private/css/theme.css` | **All theme styling.** Loaded last; overrides the stock CSS instead of editing it. |
+| `www/public/css/login-theme.css` | Login page styling. Self-contained (repeats the tokens it needs) because `private/` isn't served before login. Not named `theme.css` because the mock resolves `private/` first and would shadow it. |
 | `www/private/scripts/theme.js` | Theme behaviour: the mobile sort menu, the mobile details sheet, tagging dialog frames for phones, and the shared `placeBelow` popover helper. |
 | `mock-server.mjs` | Serves `www/` the way qBittorrent does: it fills in `QBT_TR(...)`, `${LANG}`, `${CACHEID}` and `${LANGUAGE_OPTIONS}`, and fakes `/api/v2`. Unknown endpoints are logged as `unmocked:`. |
 | `icons.mjs` | Regenerates the icons from Lucide (see Icons). |
 
 ### Stock files we edited (keep these edits small; they matter when upgrading)
+- `public/index.html`: links `login-theme.css` after `login.css`.
 - `private/index.html`: links `theme.css` and `theme.js`; adds the mobile sort button and menu; the toolbar's leading `&nbsp;&nbsp;` is removed.
 - `private/scripts/dynamicTable.js`: each `td` gets `data-column=<name>` so CSS can target columns; `TorrentsTable` uses 92px rows on mobile and updates when the breakpoint is crossed.
 - 25 dialog pages (`private/*.html` that link `style.css`): link `theme.css`.
@@ -60,6 +62,9 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - Color meaning: muted grey by default; green = start/downloading; blue = seeding/add/links; orange = queued/stop/stalled; red = remove/error; yellow = warning; purple = completed. Stalled torrents use grey arrows.
 - To regenerate: download `lucide-static@1.61.0` (the command is in the header of `icons.mjs`), then run `node icons.mjs <path>/package/icons`.
 
+**Login page**
+- A centered card (max 360px; full width with a 16px gutter on phones): logo above the title (moved with `order`, not in the HTML), muted labels above 16px inputs, full-width blue Login button, red error text that wraps.
+
 **Misc**
 - Checkboxes and radios: both the box and its label are `vertical-align: middle`. This was measured to be within 0.3px across all Options tabs.
 
@@ -77,7 +82,6 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - Mobile details sheet: card-style layouts for the Trackers/Peers/Content tables, and closing it with the phone's back gesture.
 - Mobile: a way to reach logout, Search, RSS and Log (the menu bar is hidden).
 - Mobile: category, tag and tracker filters (only the status chips are shown).
-- Theme the **login page** (`www/public/`), which still uses the stock CSS.
 - Long-press context menu on cards: built into the stock UI but not tested on a real touch device.
 - Test on a real phone (only emulated so far).
 - Optional: a more compact variant of the tabs for the details-panel header on desktop (currently 53px tall).
