@@ -19,6 +19,14 @@ const placeBelow = (popover, button) => {
     document.addEventListener("load", (event) => {
         if (event.target.matches?.(".mochaIframe"))
             tagFrame(event.target);
+        // An RSS article's description is a srcdoc frame that links only the stock style.css.
+        if (event.target.id === "rssDescription") {
+            const link = event.target.contentDocument.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "css/theme.css";
+            event.target.contentDocument.head.append(link);
+            event.target.contentDocument.documentElement.classList.add("rss-description");
+        }
     }, true);
     mobileQuery.addEventListener("change", () => {
         for (const iframe of document.querySelectorAll(".mochaIframe"))
@@ -81,7 +89,7 @@ window.addEventListener("DOMContentLoaded", () => {
 {
     const mobileQuery = window.matchMedia("(max-width: 640px)");
     document.addEventListener("click", (event) => {
-        const tr = event.target.closest?.("#torrentsTableDiv tr");
+        const tr = event.target.closest?.(":is(#torrentsTableDiv, #searchResultsTableDiv) tr");
         if (!mobileQuery.matches || !tr)
             return;
         const rect = tr.getBoundingClientRect();
@@ -92,6 +100,13 @@ window.addEventListener("DOMContentLoaded", () => {
         // Anchor the menu at the ⋮'s centre (theme.css: 20px icon, 8px from the right, 9px from the top), not at the tap.
         tr.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: rect.right - 18, clientY: rect.top + 19 }));
     }, true);
+
+    // Tapping a search result opens the download window, which is what a double-click does on desktop.
+    document.addEventListener("click", (event) => {
+        const tr = event.target.closest("#searchResultsTableDiv tr");
+        if (mobileQuery.matches && tr && !event.ctrlKey && !event.metaKey && !event.shiftKey)
+            tr.dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
+    });
 }
 
 // On mobile the stock filters panel itself becomes the popover menu, so its click handlers and live counts keep working.
@@ -318,5 +333,158 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // history.state survives a reload; a window left open then shouldn't count as open now.
     if (history.state?.options)
+        history.replaceState(null, "");
+}
+
+// Mobile RSS: the three panes (feeds, articles, article) become drill-down pages. Like the details sheet,
+// each level is a history entry, so the back gesture steps out of it.
+{
+    const mobileQuery = window.matchMedia("(max-width: 640px)");
+    const depth = { articles: 1, article: 2 };
+    let view;
+    let title;
+
+    const render = () => {
+        const page = (mobileQuery.matches && history.state?.rss) || "feeds";
+        view.dataset.rssPage = page;
+        if (page === "articles")
+            title.textContent = document.querySelector("#rssFeedTableDiv tr.selected span")?.textContent.replace(/\s*\(\d+\)$/, "") ?? "";
+    };
+
+    const go = (page) => {
+        history.pushState({ rss: page }, "");
+        render();
+    };
+
+    const build = () => {
+        const bar = document.createElement("div");
+        bar.id = "rssSheetBar";
+        const backButton = document.createElement("button");
+        backButton.type = "button";
+        backButton.className = "sheetBack";
+        backButton.ariaLabel = "Back";
+        backButton.addEventListener("click", () => history.back());
+        title = document.createElement("h3");
+        // Desktop downloads an article with a double-click.
+        const downloadButton = document.createElement("button");
+        downloadButton.type = "button";
+        downloadButton.id = "rssDownloadButton";
+        downloadButton.append(...document.querySelector("#rssArticleMenu a[href='#Download']").cloneNode(true).childNodes);
+        downloadButton.addEventListener("click", () => {
+            document.querySelector("#rssArticleTableDiv tr.selected")?.dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
+        });
+        bar.append(backButton, title, downloadButton);
+        view.prepend(bar);
+        render();
+    };
+
+    document.addEventListener("click", (event) => {
+        if (!mobileQuery.matches || !view || event.ctrlKey || event.metaKey || event.shiftKey)
+            return;
+        if (event.target.closest("#rssFeedTableDiv tr"))
+            go("articles");
+        else if (event.target.closest("#rssArticleTableDiv tr"))
+            go("article");
+        // Leaving RSS from the ☰ menu: drop the pages it left in the history.
+        else if (event.target.closest("#mobileMenu [data-click]") && history.state?.rss)
+            history.go(-depth[history.state.rss]);
+    });
+    window.addEventListener("popstate", () => view && render());
+    mobileQuery.addEventListener("change", () => view && render());
+    // history.state survives a reload; pages left open then shouldn't count as open now.
+    if (history.state?.rss)
+        history.replaceState(null, "");
+
+    // The RSS view is loaded by XHR the first time its tab is opened.
+    const waitForView = new MutationObserver(() => {
+        view = document.getElementById("rssView");
+        if (!view || !document.querySelector("#rssArticleMenu"))
+            return;
+        waitForView.disconnect();
+        build();
+    });
+    waitForView.observe(document.body, { childList: true, subtree: true });
+}
+
+// Mobile RSS Downloader: rules → rule editor → matching articles, instead of three squeezed columns.
+// Like Options, each level is a history entry, so the back gesture steps back and then closes the window.
+{
+    const mobileQuery = window.matchMedia("(max-width: 640px)");
+    const depth = { rules: 1, rule: 2, articles: 3 };
+    let ownsHistory = false;
+    let windowTitle;
+
+    const render = () => {
+        const win = document.getElementById("rssdownloaderpage");
+        if (!win || !ownsHistory)
+            return;
+        const page = history.state?.rssDownloader;
+        if (page === undefined) {
+            ownsHistory = false;
+            MochaUI.closeWindow(win);
+            return;
+        }
+        win.dataset.rssdlPage = page;
+        const rules = window.qBittorrent.RssDownloader.rssDownloaderRulesTable;
+        document.getElementById("rssdownloaderpage_title").textContent = {
+            rules: windowTitle,
+            rule: rules.getRow(rules.selectedRows.at(-1))?.full_data.name,
+            articles: document.getElementById("articleTableDesc").textContent
+        }[page];
+    };
+
+    const go = (page) => {
+        history.pushState({ rssDownloader: page }, "");
+        render();
+    };
+
+    const setUp = () => {
+        windowTitle = document.getElementById("rssdownloaderpage_title").textContent;
+
+        const backButton = document.createElement("button");
+        backButton.type = "button";
+        backButton.className = "sheetBack";
+        backButton.ariaLabel = "Back";
+        // Keep Mocha from starting a window drag from the title bar.
+        backButton.addEventListener("mousedown", (event) => event.stopPropagation());
+        backButton.addEventListener("click", () => history.back());
+        document.getElementById("rssdownloaderpage_titleBar").prepend(backButton);
+
+        const articlesRow = document.createElement("button");
+        articlesRow.type = "button";
+        articlesRow.id = "rssdlArticlesRow";
+        articlesRow.textContent = document.getElementById("articleTableDesc").textContent;
+        articlesRow.addEventListener("click", () => go("articles"));
+        document.querySelector("#rssdownloaderpage #saveButton").before(articlesRow);
+
+        ownsHistory = true;
+        go("rules");
+    };
+
+    document.addEventListener("click", (event) => {
+        if (ownsHistory && history.state?.rssDownloader === "rules" && !event.ctrlKey && !event.metaKey && !event.shiftKey
+            && event.target.closest("#rssDownloaderRuleTableDiv tr"))
+            go("rule");
+    });
+
+    // The window and its content arrive asynchronously.
+    const check = () => {
+        if (!document.getElementById("rssdownloaderpage")) {
+            // Closed with ×: drop the history entries it left behind.
+            if (ownsHistory && history.state?.rssDownloader) {
+                ownsHistory = false;
+                history.go(-depth[history.state.rssDownloader]);
+            }
+            return;
+        }
+        if (mobileQuery.matches && !ownsHistory && !document.getElementById("rssdlArticlesRow") && document.querySelector("#rssdownloaderpage #saveButton"))
+            setUp();
+    };
+
+    new MutationObserver(check).observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("popstate", render);
+    mobileQuery.addEventListener("change", check);
+    // history.state survives a reload; a window left open then shouldn't count as open now.
+    if (history.state?.rssDownloader)
         history.replaceState(null, "");
 }

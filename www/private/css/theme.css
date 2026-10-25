@@ -554,6 +554,7 @@ td.statusBarSeparator {
 
 button[type="submit"],
 #addButton,
+#rssdownloaderpage #saveButton,
 input[onclick*="applyPreferences"] {
     background-color: var(--accent);
     border-color: var(--accent);
@@ -564,6 +565,7 @@ input[onclick*="applyPreferences"] {
 
 button[type="submit"]:hover:not(:disabled),
 #addButton:hover,
+#rssdownloaderpage #saveButton:hover:not(:disabled),
 input[onclick*="applyPreferences"]:hover {
     background-color: hsl(217deg 92% 56%);
 }
@@ -939,7 +941,14 @@ body:has(> div > h2.vcenter) > div {
     #searchTabColumn,
     #rssTabColumn,
     #logTabColumn {
+        flex: 1;
+        height: auto !important;
+        min-height: 0;
         width: 100% !important;
+
+        & :is(.panelWrapper, .panel) {
+            height: 100% !important;
+        }
     }
 
     #transferList_wrapper,
@@ -957,36 +966,39 @@ body:has(> div > h2.vcenter) > div {
         min-height: 0;
     }
 
-    #torrentsTableDiv table.dynamicTable {
+    :is(#torrentsTableDiv, #searchResultsTableDiv) table.dynamicTable {
         margin: 8px 0;
         width: 100% !important;
     }
 
-    #torrentsTableDiv colgroup {
+    :is(#torrentsTableDiv, #searchResultsTableDiv) colgroup {
         display: none;
     }
 
-    /* 92px row slot = 84px card + 8px gap; the slot height is set in dynamicTable.js. */
-    #torrentsTableDiv tbody tr {
+    :is(#torrentsTableDiv, #searchResultsTableDiv) tbody tr {
         background-color: var(--surface) !important;
         border: 1px solid var(--border);
         border-radius: var(--radius);
         column-gap: 12px;
         display: grid;
-        grid-template-areas:
-            "name name name name"
-            "progress progress progress progress"
-            "status dl up eta";
-        grid-template-columns: 1fr auto auto auto;
-        height: 84px !important;
         left: 10px;
         padding: 9px 12px;
         right: 10px;
         row-gap: 6px;
     }
 
+    /* 92px row slot = 84px card + 8px gap; the slot height is set in dynamicTable.js. */
+    #torrentsTableDiv tbody tr {
+        grid-template-areas:
+            "name name name name"
+            "progress progress progress progress"
+            "status dl up eta";
+        grid-template-columns: 1fr auto auto auto;
+        height: 84px !important;
+    }
+
     /* Lucide ellipsis-vertical (ISC). theme.js opens the context menu when it's tapped. */
-    #torrentsTableDiv tbody tr::after {
+    :is(#torrentsTableDiv, #searchResultsTableDiv) tbody tr::after {
         background-color: var(--text-muted);
         content: "";
         height: 20px;
@@ -997,7 +1009,7 @@ body:has(> div > h2.vcenter) > div {
         width: 20px;
     }
 
-    #torrentsTableDiv tbody tr.selected {
+    :is(#torrentsTableDiv, #searchResultsTableDiv) tbody tr.selected {
         background-color: var(--surface-2) !important;
         border-color: var(--accent);
     }
@@ -1082,10 +1094,583 @@ body:has(> div > h2.vcenter) > div {
     }
 }
 
+/* Mobile Log view: the controls stack into two full-width rows.
+   The views load their own <style> after this file, hence the :root on rules that override it. */
+
+@media (max-width: 640px) {
+    :root #logView {
+        padding: 0 12px;
+    }
+
+    /* Stock fixes the bar at 24px, so its wrapped second row overlaps the results line. */
+    :root #logFilterBar {
+        gap: 8px;
+        height: auto;
+
+        & .vsb-main {
+            flex: 1;
+        }
+
+        & .vsb-main > button {
+            width: 100%;
+        }
+    }
+
+    :root #filterTextInput {
+        flex: 1 1 calc(100% - 80px); /* wraps to its own row, with Clear beside it */
+        margin: 0;
+        min-width: 0;
+        width: auto;
+    }
+
+    :root :is(#filterTextInput, #searchPattern, #rssFilterInput) {
+        background-position: 10px center;
+        background-size: 16px;
+        font-size: 16px; /* below 16px iOS Safari zooms the page on focus */
+        height: 34px;
+        padding-left: 34px;
+    }
+
+    :root #logFilterSummary {
+        color: var(--text-muted);
+        margin: 10px 0 6px;
+    }
+}
+
+/* Mobile Search view: stacked controls, and results as cards like the torrents. Tapping a card opens the download
+   window and its ⋮ the stock context menu (theme.js). */
+
+@media (max-width: 640px) {
+    :root #searchResults {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 0;
+    }
+
+    :root #searchResultsHeader {
+        flex: none;
+        height: auto;
+        padding: 8px 12px 0;
+    }
+
+    :root #searchResultsHeaderContainer {
+        gap: 8px;
+        height: auto;
+        margin: 0;
+    }
+
+    :root #searchPattern {
+        flex: 1 1 calc(100% - 110px); /* the selects wrap to a second row */
+        min-width: 0;
+        width: auto;
+    }
+
+    :root :is(#categorySelect, #pluginsSelect) {
+        flex: 1 1 0;
+        min-width: 0;
+        order: 1;
+        width: auto;
+    }
+
+    :root #startSearchButton {
+        height: 34px;
+    }
+
+    #searchTabsToolbar {
+        flex: none;
+        margin-top: 8px;
+    }
+
+    :root #searchResultsFilters {
+        align-items: center;
+        display: flex;
+        flex: none;
+        flex-wrap: wrap;
+        gap: 8px;
+        height: auto;
+        overflow: visible;
+        padding: 8px 12px 0;
+
+        &.invisible {
+            display: none;
+        }
+
+        /* "Search in:" and the seed and size filters; the select's options say enough on their own. */
+        & > div {
+            float: none !important;
+        }
+
+        & > div > :not(#searchInTorrentName) {
+            display: none !important;
+        }
+
+        & > span {
+            color: var(--text-muted);
+            flex-basis: 100%;
+            order: 1;
+        }
+    }
+
+    :root #searchInNameFilter {
+        flex: 1;
+        font-size: 16px;
+        height: 34px;
+        margin: 0;
+        min-width: 0;
+        width: auto;
+    }
+
+    #searchResultsTableContainer,
+    #searchResultsTableDiv {
+        flex: 1;
+        min-height: 0;
+    }
+
+    #searchResultsTableFixedHeaderDiv {
+        display: none;
+    }
+
+    #searchResultsNoPlugins,
+    #searchResultsNoSearches {
+        flex: 1;
+        height: auto !important;
+    }
+
+    /* 72px row slot = 64px card + 8px gap; the slot height is set in dynamicTable.js. */
+    #searchResultsTableDiv tbody tr {
+        grid-template-areas:
+            "name name name name"
+            "size seeds leechers engine";
+        grid-template-columns: auto auto auto 1fr;
+        height: 64px !important;
+
+        & td {
+            color: var(--text-muted);
+            display: none !important;
+            line-height: 18px;
+            max-width: none !important;
+            overflow: hidden;
+            padding: 0 !important;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: auto !important;
+        }
+
+        & td:is([data-column="fileName"], [data-column="fileSize"], [data-column="nbSeeders"], [data-column="nbLeechers"], [data-column="engineName"]) {
+            display: block !important;
+        }
+
+        & td[data-column="fileName"] {
+            color: var(--text);
+            font-weight: 600;
+            grid-area: name;
+            line-height: 20px;
+            padding-right: 24px !important; /* room for the ⋮ */
+        }
+
+        & td[data-column="fileSize"] {
+            grid-area: size;
+        }
+
+        & td[data-column="nbSeeders"] {
+            grid-area: seeds;
+
+            &::before {
+                color: var(--green);
+                content: "↑ ";
+            }
+        }
+
+        & td[data-column="nbLeechers"] {
+            grid-area: leechers;
+
+            &::before {
+                color: var(--orange);
+                content: "↓ ";
+            }
+        }
+
+        & td[data-column="engineName"] {
+            grid-area: engine;
+            text-align: right;
+        }
+    }
+
+    /* Holds "Search plugins…". Stock sizes it 30px border-box with 10px of that as padding, so the button pokes out. */
+    #searchResults > div:last-child {
+        height: auto !important;
+        padding: 8px 12px !important;
+    }
+}
+
+/* An RSS article's description frame (theme.js links this file into it): text on the page's background.
+   Stock gives every framed body the popup color with body:not(:has(#desktop)); repeating it here wins over that. */
+:root.rss-description body:not(:has(#desktop)) {
+    background: none;
+    margin: 0;
+}
+
+/* Mobile RSS: theme.js shows one pane at a time (data-rss-page: feeds, articles or article) and adds a back bar. */
+
+@media (max-width: 640px) {
+    :root #rssView {
+        height: 100%;
+        padding: 0;
+    }
+
+    #rssTopBar {
+        padding-top: 8px;
+    }
+
+    :root #rssFetchingDisabled {
+        margin: 0 12px 8px;
+    }
+
+    /* The filter, then the actions as icons. Their images carry the names. */
+    :root #rssButtonBar {
+        display: flex;
+        gap: 6px;
+        height: auto;
+        padding: 0 12px 8px;
+
+        & button {
+            flex: none;
+            font-size: 0;
+            height: 34px;
+            padding: 0;
+            width: 34px;
+        }
+
+        & img {
+            height: 18px;
+            margin: 0;
+            width: 18px;
+        }
+
+        & #rssFilterToolbar {
+            display: contents;
+        }
+
+        & #rssDownloaderButton {
+            order: 1;
+        }
+    }
+
+    :root #rssFilterInput {
+        flex: 1;
+        min-width: 0;
+        order: -1;
+    }
+
+    [data-rss-page="article"] #rssTopBar {
+        display: none;
+    }
+
+    #rssView #rssSheetBar {
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex: none;
+        gap: 8px;
+        height: 44px;
+        padding: 0 12px 0 4px;
+
+        & h3 {
+            flex: 1;
+            font-size: 16px;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        & .sheetBack {
+            display: flex;
+        }
+    }
+
+    #rssView[data-rss-page="feeds"] #rssSheetBar,
+    :not([data-rss-page="article"]) > #rssSheetBar #rssDownloadButton {
+        display: none;
+    }
+
+    #rssDownloadButton {
+        align-items: center;
+        display: flex;
+        flex: none;
+        gap: 6px;
+        height: 32px;
+
+        & img {
+            height: 16px;
+            width: 16px;
+        }
+    }
+
+    :root :is(#leftRssColumn, #centerRssColumn, #rightRssColumn) {
+        display: none;
+        float: none;
+        height: 100%;
+        margin: 0;
+        width: 100%;
+    }
+
+    [data-rss-page="feeds"] #leftRssColumn,
+    [data-rss-page="articles"] #centerRssColumn,
+    [data-rss-page="article"] #rightRssColumn {
+        display: block;
+    }
+
+    :root :is(#rssFeedTableDiv, #rssArticleTableDiv) {
+        height: 100%;
+    }
+
+    :is(#rssFeedFixedHeaderDiv, #rssArticleFixedHeaderDiv) {
+        display: none;
+    }
+
+    /* 48px rows; the height is set in dynamicTable.js. Each one drills into the next pane. */
+    :is(#rssFeedTableDiv, #rssArticleTableDiv) tbody tr {
+        background: none !important;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        font-size: 15px;
+        padding: 0 12px;
+
+        & td {
+            align-items: center;
+            display: flex !important;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            padding: 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        & td > span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Lucide chevron-right (ISC). */
+        &::after {
+            align-self: center;
+            background-color: var(--text-muted);
+            content: "";
+            flex: none;
+            height: 18px;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+            width: 18px;
+        }
+    }
+
+    #rssArticleTableDiv td {
+        display: block !important;
+        line-height: 47px;
+    }
+
+    #rssDetailsView {
+        padding: 12px 16px;
+        row-gap: 6px;
+    }
+
+    :root #rssTorrentDetailsName {
+        background: none;
+        color: var(--text);
+        font-size: 17px;
+        line-height: 1.35;
+        margin: 0 0 4px;
+        overflow-wrap: anywhere;
+    }
+
+    :root :is(#rssTorrentDetailsDate, #rssTorrentDetailsAuthor, #rssTorrentDetailsLink) {
+        background: none;
+        color: var(--text-muted);
+    }
+
+    #rssTorrentDetailsLink a {
+        color: var(--accent);
+    }
+
+    :root #rssDescription {
+        margin-top: 8px;
+        min-height: 200px;
+    }
+}
+
+/* Mobile RSS Downloader: theme.js shows one column per page (data-rssdl-page: rules, rule or articles).
+   The view's own <style> comes after theme.css and setup() sizes the columns inline, hence :root and !important. */
+
+@media (max-width: 640px) {
+    :root #RssDownloader {
+        display: flex;
+        flex-direction: column;
+    }
+
+    :root :is(#leftRssDownloaderColumn, #centerRssDownloaderColumn, #rightRssDownloaderColumn) {
+        display: none;
+        flex: 1;
+        float: none;
+        height: auto !important;
+        min-height: 0;
+        width: 100%;
+    }
+
+    [data-rssdl-page="rules"] #leftRssDownloaderColumn,
+    [data-rssdl-page="articles"] #rightRssDownloaderColumn {
+        display: flex;
+        flex-direction: column;
+    }
+
+    [data-rssdl-page="rule"] #centerRssDownloaderColumn {
+        display: block;
+        overflow: auto;
+    }
+
+    :root #topMenuBar {
+        align-items: center;
+        display: flex;
+        gap: 6px;
+        height: auto;
+        margin-bottom: 8px;
+
+        & #rulesTableDesc {
+            flex: 1;
+            order: -1;
+        }
+
+        & .imageButton {
+            background-color: var(--surface-2);
+            background-repeat: no-repeat;
+            background-size: 18px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            float: none;
+            height: 34px;
+            margin: 0;
+            width: 34px;
+        }
+    }
+
+    :root #rulesFileButtons {
+        margin-bottom: 8px;
+    }
+
+    :root :is(#rulesTable, #rssDownloaderArticlesTable) {
+        flex: 1;
+        height: auto !important;
+        min-height: 0;
+    }
+
+    :root #rssDownloaderFeeds,
+    :root #rssDownloaderFeedsTable {
+        height: auto !important;
+    }
+
+    /* Labels above their fields, like the other mobile dialogs. */
+    #ruleSettings tr {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px 0;
+
+        & td {
+            padding: 0;
+            width: auto;
+        }
+    }
+
+    :root #lastMatchDiv {
+        float: none;
+    }
+
+    #articleTableDesc {
+        display: none;
+    }
+
+    /* 48px rows; the height is set in dynamicTable.js. */
+    :is(#rssDownloaderRuleTableDiv, #rssDownloaderFeedSelectionTableDiv, #rssDownloaderArticlesTableDiv) tbody tr {
+        background: none !important;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        font-size: 15px;
+
+        & td {
+            align-items: center;
+            display: flex !important;
+            min-width: 0;
+            overflow: hidden;
+            padding: 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        & td:last-child {
+            flex: 1;
+        }
+    }
+
+    #rssDownloaderFeedSelectionTableDiv tbody tr:last-child {
+        border-bottom: 0;
+    }
+
+    :root .articleTableFeed td {
+        color: var(--text-muted);
+        font-size: 13px;
+    }
+
+    /* Rules drill into the rule editor. Lucide chevron-right (ISC). */
+    #rssDownloaderRuleTableDiv tbody tr::after,
+    #rssdlArticlesRow::after {
+        align-self: center;
+        background-color: var(--text-muted);
+        content: "";
+        flex: none;
+        height: 18px;
+        margin-left: auto;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+        width: 18px;
+    }
+
+    #centerRssDownloaderColumn #rssdlArticlesRow {
+        align-items: center;
+        background-color: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        display: flex;
+        font-size: 15px;
+        margin: 10px 0;
+        min-height: 48px;
+        padding: 0 16px;
+        width: 100%;
+    }
+
+    #rssdownloaderpage .sheetBack {
+        left: 8px;
+        position: absolute;
+        top: 10px;
+        z-index: 1;
+    }
+
+    #rssdownloaderpage:not([data-rssdl-page="rules"]) {
+        & .sheetBack {
+            display: flex;
+        }
+
+        & .mochaTitlebar h3 {
+            background-image: none !important;
+        }
+    }
+}
+
 /* Mobile details sheet: theme.js sets .details-open when a card is tapped. Mocha sizes the panel inline, hence the !important. */
 
 #detailsSheetBar,
 #detailsSheetSections,
+#rssSheetBar,
+#rssdlArticlesRow,
 #prefCategoryList,
 .sheetBack {
     display: none;
@@ -1420,7 +2005,8 @@ body:has(> div > h2.vcenter) > div {
         flex: 1 1 100%;
     }
 
-    #preferencesPage_content fieldset.settings td :is(input:is([type="text"], [type="password"]), select, textarea) {
+    #preferencesPage_content fieldset.settings :is(td :is(input:is([type="text"], [type="password"]), select), textarea) {
+        box-sizing: border-box;
         max-width: 100%;
     }
 
@@ -1451,6 +2037,11 @@ body:has(> div > h2.vcenter) > div {
         &::after {
             width: 14px;
         }
+    }
+
+    /* Every window is already full-screen. */
+    .mochaMaximizeButton {
+        display: none !important;
     }
 }
 
@@ -1519,10 +2110,15 @@ body:has(> div > h2.vcenter) > div {
         width: 20px;
     }
 
+    /* Floated, the legend leaves the border and becomes the box's first row, so a label that wraps doesn't straddle the line. */
     fieldset.settings legend:has(input[type="checkbox"]) {
         align-items: center;
         display: flex;
+        float: left;
         gap: 8px;
+        margin-bottom: 8px;
+        padding: 0;
+        width: 100%;
     }
 
     fieldset.settings .formRow {

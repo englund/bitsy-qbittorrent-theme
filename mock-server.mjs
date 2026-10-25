@@ -147,7 +147,7 @@ const preferences = {
     auto_tmm_enabled: false, add_stopped_enabled: false, add_to_top_of_queue: false, torrent_content_layout: "Original",
     torrent_stop_condition: "None", max_ratio: -1, max_ratio_act: 0, max_seeding_time: -1, max_inactive_seeding_time: -1,
     share_limits_mode: 0, queueing_enabled: true, dl_limit: 0, up_limit: 0, alt_dl_limit: 10240, alt_up_limit: 10240,
-    web_ui_port: PORT, rss_processing_enabled: false, status_bar_external_ip: true, confirm_torrent_deletion: true,
+    web_ui_port: PORT, rss_processing_enabled: true, status_bar_external_ip: true, confirm_torrent_deletion: true,
 };
 
 const api = {
@@ -214,9 +214,51 @@ const api = {
         { id: 3, message: "Something serious went wrong", timestamp: now() - 10, type: 8 },
     ],
     "log/peers": () => [],
-    "search/plugins": () => [],
-    "rss/items": () => ({}),
-    "rss/rules": () => ({}),
+    "search/plugins": () => [
+        { name: "example", fullName: "Example Tracker", enabled: true, url: "https://tracker.example.org", version: "1.0", supportedCategories: [{ id: "all", name: "All categories" }, { id: "software", name: "Software" }] },
+    ],
+    "search/start": () => ({ id: 1 }),
+    "search/stop": () => "",
+    "search/status": () => [],
+    "search/results": (q) => ({
+        status: "Stopped",
+        total: 8,
+        results: Number(q.get("offset")) > 0 ? [] : Array.from({ length: 8 }, (_, i) => ({
+            fileName: `ubuntu-${24 - i}.04-desktop-amd64.iso`,
+            fileUrl: `magnet:?xt=urn:btih:${String(i).padStart(40, "0")}`,
+            fileSize: (4 + i * 0.3) * 2 ** 30,
+            nbSeeders: 900 - i * 110,
+            nbLeechers: 40 + i * 7,
+            engineName: "Example Tracker",
+            siteUrl: "https://tracker.example.org",
+            descrLink: `https://tracker.example.org/t/${i}`,
+            pubDate: now() - i * 86400 * 30,
+        })),
+    }),
+    "rss/items": () => {
+        const feed = (uid, name, count) => ({
+            uid, url: `https://feeds.example.org/${uid}.xml`, title: name, lastBuildDate: "", isLoading: false, hasError: false,
+            articles: Array.from({ length: count }, (_, i) => ({
+                id: `${uid}-${i}`, title: `${name} release ${count - i}.0`, date: new Date((now() - i * 86400) * 1000).toUTCString(),
+                link: `https://example.org/${uid}/${i}`, torrentURL: `https://example.org/${uid}/${i}.torrent`, author: "Release team",
+                description: `<p>Release notes for ${name} ${count - i}.0. Bug fixes and new features.</p>`, isRead: i > 1,
+            })),
+        });
+        return { "Linux": { "Ubuntu": feed("ubuntu", "Ubuntu", 6), "Debian": feed("debian", "Debian", 4) }, "Blender": feed("blender", "Blender", 3) };
+    },
+    "rss/rules": () => {
+        const rule = (enabled, mustContain, feeds, extra = {}) => ({
+            enabled, priority: 0, useRegex: false, mustContain, mustNotContain: "beta", episodeFilter: "", smartFilter: false,
+            previouslyMatchedEpisodes: [], affectedFeeds: feeds.map((uid) => `https://feeds.example.org/${uid}.xml`), ignoreDays: 0,
+            lastMatch: "", torrentParams: { category: "", tags: [], save_path: "", stopped: null, content_layout: null }, ...extra,
+        });
+        return {
+            "Ubuntu LTS": rule(true, "Ubuntu *.04", ["ubuntu"], { lastMatch: new Date((now() - 3 * 86400) * 1000).toUTCString() }),
+            "Debian stable": rule(true, "Debian", ["debian"]),
+            "Blender": rule(false, "Blender", ["blender"]),
+        };
+    },
+    "rss/matchingArticles": () => ({ Ubuntu: ["Ubuntu release 6.0", "Ubuntu release 4.0"], Debian: ["Debian release 4.0"] }),
     "torrentcreator/status": () => [],
 };
 

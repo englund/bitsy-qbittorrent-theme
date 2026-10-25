@@ -126,6 +126,20 @@ window.qBittorrent.DynamicTable ??= (() => {
             new ResizeObserver(resizeCallback).observe(this.dynamicTableDiv);
         }
 
+        // Rows are cards on phones. The slot height and breakpoint must match theme.css.
+        useMobileRowHeight(mobileRowHeight) {
+            const desktopRowHeight = this.rowHeight;
+            const mobileQuery = window.matchMedia("(max-width: 640px)");
+            const updateRowHeight = () => {
+                this.rowHeight = mobileQuery.matches ? mobileRowHeight : desktopRowHeight;
+            };
+            updateRowHeight();
+            mobileQuery.addEventListener("change", () => {
+                updateRowHeight();
+                this.rerender();
+            });
+        }
+
         setupCommonEvents() {
             this.dynamicTableDiv.addEventListener("scroll", (e) => {
                 // rerender on vertical scroll
@@ -1192,19 +1206,8 @@ window.qBittorrent.DynamicTable ??= (() => {
     class TorrentsTable extends DynamicTable {
         setupVirtualList() {
             super.setupVirtualList();
-            // Must match the card slot height and breakpoint in theme.css.
-            const mobileQuery = window.matchMedia("(max-width: 640px)");
-            const updateRowHeight = () => {
-                if (mobileQuery.matches)
-                    this.rowHeight = 92;
-                else
-                    this.rowHeight = (clientData.get("display_density") === "compact") ? 18 : 22;
-            };
-            updateRowHeight();
-            mobileQuery.addEventListener("change", () => {
-                updateRowHeight();
-                this.rerender();
-            });
+            this.rowHeight = (clientData.get("display_density") === "compact") ? 18 : 22;
+            this.useMobileRowHeight(92);
         }
 
         initColumns() {
@@ -2019,6 +2022,11 @@ window.qBittorrent.DynamicTable ??= (() => {
     }
 
     class SearchResultsTable extends DynamicTable {
+        setupVirtualList() {
+            super.setupVirtualList();
+            this.useMobileRowHeight(72);
+        }
+
         initColumns() {
             this.newColumn("fileName", "", "QBT_TR(Name)QBT_TR[CONTEXT=SearchResultsTable]", 500, true);
             this.newColumn("fileSize", "", "QBT_TR(Size)QBT_TR[CONTEXT=SearchResultsTable]", 100, true);
@@ -3215,6 +3223,11 @@ window.qBittorrent.DynamicTable ??= (() => {
     }
 
     class RssFeedTable extends DynamicTable {
+        setupVirtualList() {
+            super.setupVirtualList();
+            this.useMobileRowHeight(48);
+        }
+
         initColumns() {
             this.newColumn("name", "", "QBT_TR(RSS feeds)QBT_TR[CONTEXT=FeedListWidget]", -1, true);
 
@@ -3294,6 +3307,11 @@ window.qBittorrent.DynamicTable ??= (() => {
     }
 
     class RssArticleTable extends DynamicTable {
+        setupVirtualList() {
+            super.setupVirtualList();
+            this.useMobileRowHeight(48);
+        }
+
         initColumns() {
             this.newColumn("name", "", "QBT_TR(Torrents: (double-click to download))QBT_TR[CONTEXT=RSSWidget]", -1, true);
 
@@ -3344,6 +3362,11 @@ window.qBittorrent.DynamicTable ??= (() => {
     }
 
     class RssDownloaderRulesTable extends DynamicTable {
+        setupVirtualList() {
+            super.setupVirtualList();
+            this.useMobileRowHeight(48);
+        }
+
         initColumns() {
             this.newColumn("checked", "", "", 30, true);
             this.newColumn("name", "", "", -1, true);
@@ -3402,6 +3425,11 @@ window.qBittorrent.DynamicTable ??= (() => {
     }
 
     class RssDownloaderFeedSelectionTable extends DynamicTable {
+        setupVirtualList() {
+            super.setupVirtualList();
+            this.useMobileRowHeight(48);
+        }
+
         initColumns() {
             this.newColumn("checked", "", "", 30, true);
             this.newColumn("name", "", "", -1, true);
@@ -3442,6 +3470,11 @@ window.qBittorrent.DynamicTable ??= (() => {
     }
 
     class RssDownloaderArticlesTable extends DynamicTable {
+        setupVirtualList() {
+            super.setupVirtualList();
+            this.useMobileRowHeight(48);
+        }
+
         initColumns() {
             this.newColumn("name", "", "", -1, true);
 
