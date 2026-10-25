@@ -2229,7 +2229,8 @@ body:has(> div > h2.vcenter) > div {
         }
     }
 
-    fieldset.settings tbody tr {
+    /* Not the file list: its columns must keep lining up with the header. */
+    fieldset.settings :not(.dynamicTable) > tbody > tr {
         align-items: center;
         display: flex;
         flex-wrap: wrap;
@@ -2237,7 +2238,7 @@ body:has(> div > h2.vcenter) > div {
         padding: 6px 0;
     }
 
-    fieldset.settings td {
+    fieldset.settings :not(.dynamicTable) > tbody > tr > td {
         display: block;
         padding: 0;
         width: auto !important;
@@ -2429,6 +2430,16 @@ body:has(> div > h2.vcenter) > div {
         & input[type="range"] {
             height: var(--touch);
         }
+
+        /* In a 44px table row the whole cell is the target, so the field drops its box. */
+        & .dynamicTable td select {
+            background-color: transparent;
+            border: 0;
+            height: var(--touch);
+            min-height: 0;
+            padding: 0 4px;
+            width: 100%;
+        }
     }
 }
 
@@ -2471,5 +2482,15 @@ body:has(> div > h2.vcenter) > div {
 
     & input[type="range"] {
         height: var(--touch);
+    }
+
+    /* In a 44px table row the whole cell is the target, so the field drops its box. */
+    & .dynamicTable td select {
+        background-color: transparent;
+        border: 0;
+        height: var(--touch);
+        min-height: 0;
+        padding: 0 4px;
+        width: 100%;
     }
 }
