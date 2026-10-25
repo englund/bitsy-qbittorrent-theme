@@ -106,7 +106,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - Unreachable on mobile (the menu bar is hidden and ☰ doesn't list them): Start/Stop all, global speed limits, Shutdown.
 - Other mobile rough edges from a sweep: About's tab row scrolls sideways; Manage Cookies is a cramped table form; Search plugins' table scrolls sideways; Options › Downloads' "Monitored Folder" table is cramped.
 - Long-press context menu on cards: built into the stock UI but not tested on a real touch device (iOS Safari may also select text or show its own callout). The ⋮ tap works in emulation.
-- Mobile context menu: stock styling, opened at the tap point; it's 25 rows of 30px and only just fits at 812px, so it can't reach 44px rows as is. A bottom sheet might suit phones better.
+- Mobile context menu: stock styling, opened at the tap point; it's 25 rows of 30px and only just fits at 812px, so it can't reach 44px rows as is. A bottom sheet was built (full width, 44px rows, the row's name as title, submenus drilling in place) and compared with stock on every menu; the user preferred stock for now, so it was reverted. Its diff is saved outside the repo in the side-session notes as `context-menu-bottom-sheet.patch`. Found while comparing (stock, still open): on phones the filter-list menus open behind the filter popover (it is in the top layer), and in Add torrent a long press on a file row while scrolled down puts the menu above the visible area.
 - Test on a real phone (only emulated so far).
 - Optional: a more compact variant of the tabs for the details-panel header on desktop (currently 53px tall).
 
