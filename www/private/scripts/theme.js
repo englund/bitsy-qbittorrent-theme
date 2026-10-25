@@ -93,7 +93,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (!mobileQuery.matches || !tr)
             return;
         const rect = tr.getBoundingClientRect();
-        if ((event.clientX < rect.right - 44) || (event.clientY > rect.top + 40))
+        if ((event.clientX < rect.right - 44) || (event.clientY > rect.top + 44))
             return;
         // Keep the details sheet from opening, and the menu's own click listeners from closing it again.
         event.stopPropagation();

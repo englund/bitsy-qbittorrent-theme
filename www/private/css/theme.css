@@ -16,6 +16,7 @@
     --red: hsl(0deg 85% 65%);
     --radius: 10px;
     --radius-sm: 6px;
+    --touch: 44px; /* minimum height of anything tappable on phones (Apple's minimum) */
     --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 
     --color-accent-blue: var(--accent);
@@ -555,7 +556,8 @@ td.statusBarSeparator {
 button[type="submit"],
 #addButton,
 #rssdownloaderpage #saveButton,
-input[onclick*="applyPreferences"] {
+input[onclick*="applyPreferences"],
+input#save {
     background-color: var(--accent);
     border-color: var(--accent);
     color: var(--color-text-white);
@@ -566,7 +568,8 @@ input[onclick*="applyPreferences"] {
 button[type="submit"]:hover:not(:disabled),
 #addButton:hover,
 #rssdownloaderpage #saveButton:hover:not(:disabled),
-input[onclick*="applyPreferences"]:hover {
+input[onclick*="applyPreferences"]:hover,
+input#save:hover {
     background-color: hsl(217deg 92% 56%);
 }
 
@@ -664,7 +667,6 @@ fieldset.settings {
     box-shadow: 0 12px 32px hsl(0deg 0% 0% / 45%);
 }
 
-/* Options: Save stays reachable at the bottom while the settings scroll. */
 /* Speed › schedule: stock sets the time inputs inline with bare ":" text between them and no spacing. */
 #preferencesPage_content fieldset:has(> legend > #limitSchedulingCheckbox) .formRow {
     align-items: center;
@@ -690,6 +692,7 @@ fieldset.settings {
     }
 }
 
+/* Options: Save stays reachable at the bottom while the settings scroll. */
 #preferencesPage_content > div:has(> input[onclick*="applyPreferences"]) {
     background-color: var(--surface);
     border-top: 1px solid var(--border);
@@ -792,7 +795,7 @@ body:has(> div > h2.vcenter) > div {
 
     /* Two rows: ☰ and search, then the filter pill on the left and sort on the right. */
     #mochaToolbar {
-        gap: 8px 6px;
+        gap: 8px;
         padding: 8px 12px;
     }
 
@@ -805,9 +808,9 @@ body:has(> div > h2.vcenter) > div {
         border: 0;
         display: flex;
         flex: none;
-        margin-left: -5px; /* lines the icon up with the cards' left edge */
+        margin-left: -10px; /* lines the icon up with the cards' left edge */
         order: -2;
-        padding: 5px;
+        padding: 10px;
     }
 
     #torrentsFilterInput {
@@ -841,8 +844,8 @@ body:has(> div > h2.vcenter) > div {
         display: flex;
         flex: 1 1 0; /* a zero basis keeps the toolbar from wrapping it; it grows to its text and then ellipsizes */
         font-size: 15px;
-        gap: 5px;
-        height: 34px;
+        gap: 4px;
+        height: var(--touch);
         max-width: max-content;
         min-width: 0;
         padding: 0 8px;
@@ -867,7 +870,7 @@ body:has(> div > h2.vcenter) > div {
         display: flex;
         flex: none;
         font-size: 15px;
-        height: 34px;
+        height: var(--touch);
         margin-left: auto;
         max-width: 40%;
         padding: 0 12px 0 32px;
@@ -1131,7 +1134,7 @@ body:has(> div > h2.vcenter) > div {
         background-position: 10px center;
         background-size: 16px;
         font-size: 16px; /* below 16px iOS Safari zooms the page on focus */
-        height: 34px;
+        height: var(--touch);
         padding-left: 34px;
     }
 
@@ -1178,12 +1181,12 @@ body:has(> div > h2.vcenter) > div {
     }
 
     :root #startSearchButton {
-        height: 34px;
+        height: var(--touch);
     }
 
     #searchTabsToolbar {
         flex: none;
-        margin-top: 8px;
+        margin: 8px 12px 0;
     }
 
     :root #searchResultsFilters {
@@ -1219,7 +1222,7 @@ body:has(> div > h2.vcenter) > div {
     :root #searchInNameFilter {
         flex: 1;
         font-size: 16px;
-        height: 34px;
+        height: var(--touch);
         margin: 0;
         min-width: 0;
         width: auto;
@@ -1334,16 +1337,16 @@ body:has(> div > h2.vcenter) > div {
     /* The filter, then the actions as icons. Their images carry the names. */
     :root #rssButtonBar {
         display: flex;
-        gap: 6px;
+        gap: 8px;
         height: auto;
         padding: 0 12px 8px;
 
         & button {
             flex: none;
             font-size: 0;
-            height: 34px;
+            height: var(--touch);
             padding: 0;
-            width: 34px;
+            width: var(--touch);
         }
 
         & img {
@@ -1377,8 +1380,8 @@ body:has(> div > h2.vcenter) > div {
         display: flex;
         flex: none;
         gap: 8px;
-        height: 44px;
-        padding: 0 12px 0 4px;
+        height: 52px;
+        padding: 0 12px 0 2px;
 
         & h3 {
             flex: 1;
@@ -1403,8 +1406,8 @@ body:has(> div > h2.vcenter) > div {
         align-items: center;
         display: flex;
         flex: none;
-        gap: 6px;
-        height: 32px;
+        gap: 4px;
+        height: var(--touch);
 
         & img {
             height: 16px;
@@ -1476,8 +1479,8 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #rssDetailsView {
-        padding: 12px 16px;
-        row-gap: 6px;
+        padding: 12px;
+        row-gap: 8px;
     }
 
     :root #rssTorrentDetailsName {
@@ -1566,7 +1569,7 @@ body:has(> div > h2.vcenter) > div {
     :root #topMenuBar {
         align-items: center;
         display: flex;
-        gap: 6px;
+        gap: 8px;
         height: auto;
         margin-bottom: 8px;
 
@@ -1582,9 +1585,9 @@ body:has(> div > h2.vcenter) > div {
             border: 1px solid var(--border);
             border-radius: var(--radius);
             float: none;
-            height: 34px;
+            height: var(--touch);
             margin: 0;
-            width: 34px;
+            width: var(--touch);
         }
     }
 
@@ -1607,7 +1610,7 @@ body:has(> div > h2.vcenter) > div {
     #ruleSettings tr {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 8px;
         padding: 4px 0;
 
         & td {
@@ -1682,9 +1685,9 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #rssdownloaderpage .sheetBack {
-        left: 8px;
+        left: 2px;
         position: absolute;
-        top: 10px;
+        top: 4px;
         z-index: 1;
     }
 
@@ -1722,10 +1725,10 @@ body:has(> div > h2.vcenter) > div {
         background: none;
         border: 0;
         flex: none;
-        height: 32px;
+        height: var(--touch);
         justify-content: center;
         padding: 0;
-        width: 32px;
+        width: var(--touch);
 
         &::before {
             background-color: var(--text);
@@ -1761,7 +1764,7 @@ body:has(> div > h2.vcenter) > div {
         flex: none;
         gap: 8px;
         height: 52px;
-        padding: 0 12px 0 16px;
+        padding: 0 4px 0 16px;
 
         & h3 {
             flex: 1;
@@ -1777,9 +1780,9 @@ body:has(> div > h2.vcenter) > div {
             border: 0;
             float: none;
             flex: none;
-            height: 32px;
+            height: var(--touch);
             margin: 0;
-            width: 32px;
+            width: var(--touch);
 
             &::before,
             &::after {
@@ -1788,7 +1791,7 @@ body:has(> div > h2.vcenter) > div {
         }
 
         & .sheetBack {
-            margin-left: -8px;
+            margin-left: -14px;
         }
 
         &.subpage .sheetBack {
@@ -1845,6 +1848,7 @@ body:has(> div > h2.vcenter) > div {
 
     :root.details-open #propertiesPanel_header {
         flex: none;
+        padding: 8px 12px;
     }
 
     /* With the tabs hidden it only holds the Content filter. Mocha shows it inline, hence the !important. */
@@ -2006,9 +2010,9 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #preferencesPage .sheetBack {
-        left: 8px;
+        left: 2px;
         position: absolute;
-        top: 10px;
+        top: 4px;
         z-index: 1;
     }
 
@@ -2044,18 +2048,76 @@ body:has(> div > h2.vcenter) > div {
         max-width: 100%;
     }
 
-    #preferencesPage_content fieldset.settings td :is(input[type="text"], input[type="password"], textarea) {
+    #preferencesPage_content fieldset.settings td :is(input[type="text"], input[type="password"], select, textarea) {
         width: 100% !important;
     }
 
+    /* A checkbox stays on its label's line (Advanced has them in a second column), and the label is the target. */
+    #preferencesPage_content fieldset.settings tr:has(> td > input:is([type="checkbox"], [type="radio"])) {
+        flex-wrap: nowrap;
+        gap: 8px;
+
+        & > td:has(> label) {
+            flex: 1;
+        }
+
+        & > td > label {
+            align-items: center;
+            display: flex;
+            min-height: var(--touch);
+        }
+    }
+
+    /* A unit after a field ("ms", "KiB/s", "days") stays beside it. */
+    :is(#preferencesPage_content fieldset.settings, #ruleSettings) td:has(> input:is([type="text"], [type="number"])) {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+
+        & > input {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+    }
+
     /* Otherwise the table shrinks to fit, and a field's 100% is only as wide as the table (Downloads › email). */
-    #preferencesPage_content fieldset.settings table:has(td :is(input[type="text"], input[type="password"], textarea)) {
+    #preferencesPage_content fieldset.settings table:has(td :is(input:is([type="text"], [type="password"], [type="number"]), select, textarea)) {
         width: 100%;
     }
 
-    #preferencesPage_content fieldset.settings .formRow > input[type="text"] {
-        box-sizing: border-box;
-        max-width: 100%;
+    /* As in the dialog frames: floated, the legend becomes the box's first row instead of straddling its border. */
+    #preferencesPage_content fieldset.settings legend:has(input[type="checkbox"]) {
+        float: left;
+        margin-bottom: 8px;
+        padding: 0;
+        width: 100%;
+    }
+
+    /* A label wraps above its field; a checkbox keeps its label beside it. The schedule row has its own layout. */
+    #preferencesPage_content fieldset.settings:not(:has(> legend > #limitSchedulingCheckbox)) .formRow {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 4px 0;
+
+        & > :is(input:is([type="text"], [type="number"], [type="password"]), select) {
+            flex: 1 1 0;
+            margin: 0;
+            min-width: 0;
+        }
+
+        & > label:first-child,
+        & > input[type="checkbox"] ~ :is(input, select) {
+            flex-basis: 100%;
+        }
+
+        & > input[type="checkbox"] + label {
+            align-items: center;
+            display: flex;
+            flex: 1;
+            min-height: var(--touch);
+        }
     }
 
     #preferencesPage_content > div:has(> input[onclick*="applyPreferences"]) {
@@ -2068,14 +2130,66 @@ body:has(> div > h2.vcenter) > div {
         }
     }
 
+    /* Confirm dialogs: the buttons share the bottom row. Mocha pads the content inline. */
+    .modalDialog .mochaContent.pad {
+        padding: 12px !important;
+    }
+
+    :is(.confirmGridItem, .deletionGridItem) {
+        padding: 0;
+    }
+
+    .modalDialog .mochaContent.pad > :last-child {
+        align-self: stretch;
+        display: flex;
+        gap: 8px;
+
+        & > * {
+            flex: 1;
+        }
+    }
+
+    :is(.genericConfirmGrid, .confirmDeletionGrid) {
+        gap: 8px;
+    }
+
+    #rememberBtn {
+        height: var(--touch);
+        width: var(--touch);
+    }
+
+    /* Create torrent loads into the page, not a frame: stack its labels above full-width fields here. */
+    #createTorrentForm {
+        & fieldset.settings > div:has(> label:first-child + :is(input, select)),
+        & tr {
+            align-items: stretch;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 4px 0;
+        }
+
+        & table {
+            border-spacing: 0;
+        }
+
+        & td {
+            padding: 0;
+        }
+
+        & #createTorrentButton {
+            width: 100%;
+        }
+    }
+
     .mochaControls {
-        right: 12px;
-        top: 10px;
+        right: 6px;
+        top: 4px;
     }
 
     .mochaCloseButton {
-        height: 32px;
-        width: 32px;
+        height: var(--touch);
+        width: var(--touch);
 
         &::before,
         &::after {
@@ -2104,6 +2218,15 @@ body:has(> div > h2.vcenter) > div {
     #uploadForm #submitbutton {
         margin: 4px -12px 0 !important;
         padding: 12px;
+
+        & > div {
+            display: flex;
+            width: 100%;
+        }
+
+        & button {
+            width: 100%;
+        }
     }
 
     fieldset.settings tbody tr {
@@ -2185,12 +2308,12 @@ body:has(> div > h2.vcenter) > div {
 
     #uploadForm .vsb-main,
     #uploadForm .vsb-main button {
-        height: 40px;
+        height: var(--touch);
         width: 100% !important;
     }
 
     #uploadForm .select-watched-folder-editable {
-        height: 40px;
+        height: var(--touch);
         width: 100%;
 
         & input:not([type="checkbox"]) {
@@ -2202,5 +2325,151 @@ body:has(> div > h2.vcenter) > div {
     #addButton {
         font-size: 16px !important;
         padding: 10px 22px;
+    }
+
+    /* Share limits: one choice per row, with the custom limits indented under their radio's label. Stock styles inline. */
+    body > div:has(> input[name="shareLimit"]) {
+        align-items: center;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: 20px 1fr;
+        padding: 12px !important;
+
+        & > br {
+            display: none;
+        }
+
+        & > label {
+            align-items: center;
+            display: flex;
+            min-height: var(--touch);
+        }
+
+        & > div {
+            align-items: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            grid-column: 2;
+            margin: 0 !important;
+        }
+
+        & > div > label:first-child {
+            flex-basis: 100%;
+        }
+
+        & > div > input + label {
+            align-items: center;
+            display: flex;
+            flex: 1;
+            min-height: var(--touch);
+        }
+
+        & > div > select {
+            flex: 1;
+            min-width: 0;
+        }
+
+        & > div > input[type="number"] {
+            width: 96px;
+        }
+
+        & > div:last-child {
+            grid-column: 1 / -1;
+            padding-top: 12px !important;
+        }
+
+        & #save {
+            width: 100%;
+        }
+    }
+}
+
+/* Touch targets on phones: everything tappable is at least --touch tall. Checkboxes stay 20px; their label is the target.
+   Dialog frames get the same rules through .mobile-sheet, since a media query there measures the frame. */
+
+@media (max-width: 640px) {
+    :root {
+        & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, button) {
+            box-sizing: border-box;
+            min-height: var(--touch);
+        }
+
+        & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, textarea) {
+            font-size: 16px; /* below 16px iOS Safari zooms the page on focus */
+        }
+
+        & input:is([type="checkbox"], [type="radio"]) {
+            flex: none;
+            height: 20px;
+            margin: 0;
+            width: 20px;
+        }
+
+        /* A box holding one checkbox and its label becomes the row; boxes with more fields keep their own layout. */
+        & :has(> input:is([type="checkbox"], [type="radio"]) + label):not(:has(> :is(input:not([type="hidden"]), select, textarea) ~ :is(input:not([type="hidden"]), select, textarea))) {
+            align-items: center;
+            column-gap: 8px;
+            display: flex;
+
+            & > input + label {
+                align-items: center;
+                display: flex;
+                flex: 1 1 auto;
+                min-height: var(--touch);
+            }
+        }
+
+        & .tab-menu li a {
+            align-items: center;
+            box-sizing: border-box;
+            min-height: var(--touch);
+        }
+
+        & input[type="range"] {
+            height: var(--touch);
+        }
+    }
+}
+
+:root.mobile-sheet {
+    & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, button) {
+        box-sizing: border-box;
+        min-height: var(--touch);
+    }
+
+    & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, textarea) {
+        font-size: 16px;
+    }
+
+    & input:is([type="checkbox"], [type="radio"]) {
+        flex: none;
+        height: 20px;
+        margin: 0;
+        width: 20px;
+    }
+
+    /* A box holding one checkbox and its label becomes the row; boxes with more fields keep their own layout. */
+    & :has(> input:is([type="checkbox"], [type="radio"]) + label):not(:has(> :is(input:not([type="hidden"]), select, textarea) ~ :is(input:not([type="hidden"]), select, textarea))) {
+        align-items: center;
+        column-gap: 8px;
+        display: flex;
+
+        & > input + label {
+            align-items: center;
+            display: flex;
+            flex: 1 1 auto;
+            min-height: var(--touch);
+        }
+    }
+
+    & .tab-menu li a {
+        align-items: center;
+        box-sizing: border-box;
+        min-height: var(--touch);
+    }
+
+    & input[type="range"] {
+        height: var(--touch);
     }
 }

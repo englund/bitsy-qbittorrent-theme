@@ -127,9 +127,10 @@ window.qBittorrent.DynamicTable ??= (() => {
         }
 
         // Rows are cards on phones. The slot height and breakpoint must match theme.css.
+        // window.top: in a dialog frame the media query would measure the frame, not the screen.
         useMobileRowHeight(mobileRowHeight) {
             const desktopRowHeight = this.rowHeight;
-            const mobileQuery = window.matchMedia("(max-width: 640px)");
+            const mobileQuery = window.top.matchMedia("(max-width: 640px)");
             const updateRowHeight = () => {
                 this.rowHeight = mobileQuery.matches ? mobileRowHeight : desktopRowHeight;
             };
@@ -2426,6 +2427,11 @@ window.qBittorrent.DynamicTable ??= (() => {
         fileNameColumn = "name";
         headerCheckboxClickHandler = null;
         headerCheckboxId = "tristateCb";
+
+        setupVirtualList() {
+            super.setupVirtualList();
+            this.useMobileRowHeight(44);
+        }
 
         updateHeaderCheckbox() {
             const checkbox = document.getElementById(this.headerCheckboxId);
