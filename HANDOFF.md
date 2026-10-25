@@ -28,6 +28,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - `public/index.html`: links `login-theme.css` after `login.css`.
 - `private/index.html`: links `theme.css` and `theme.js`; adds the mobile sort button and menu; the toolbar's leading `&nbsp;&nbsp;` is removed.
 - `private/scripts/dynamicTable.js`: each `td` gets `data-column=<name>` so CSS can target columns; `TorrentsTable` uses 92px rows on mobile and updates when the breakpoint is crossed.
+- `private/scripts/client.js`: the window-resize handler doesn't save the filter width and panel split in the mobile layout, where the panel is hidden or full-screen and would save 0 or ~94%.
 - 25 dialog pages (`private/*.html` that link `style.css`): link `theme.css`.
 - `private/images/*.svg`: replaced with Lucide icons.
 
@@ -43,8 +44,9 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - Hidden on mobile: the menu bar (so there's no logout button), queue buttons, torrent creator, the Search/RSS/Log tabs, the properties panel and the table header.
 - The table is virtualized, so the card height is a *JS row height*. The **92px slot** (84px card + 8px gap) is defined in both `dynamicTable.js` and `theme.css`; keep them in sync.
 - Sorting on mobile uses **one dropdown button** (a popover menu) showing the current column. Picking the active column flips the direction. It calls `torrentsTable.setSortedColumn`, so it persists like a header click. (We tried a select plus a separate direction button first; rejected.)
+- Crossing back to desktop (e.g. rotating a phone to landscape) restores the saved panel split in `theme.js`: Mocha laid the hidden panel out at 0px and would keep it there, because it shares space in proportion to current heights.
 - Inputs on mobile use 16px text so iOS Safari doesn't zoom.
-- Tapping a card opens a **details sheet**: the stock properties panel shown full-screen (`:root.details-open`), with a title bar (`#detailsSheetBar`, added by `theme.js`) holding the name and a close button. General's label/value table is restacked into one pair per line; Trackers, Peers and Content scroll sideways; their content is inset 16px while header and row backgrounds run to the edges (the scroller is padded and backgrounds are stretched back with `box-shadow` via `--row-bg`, because cells can't be padded without breaking column alignment). The Content filter gets its own row at the top of the Content page.
+- Tapping a card opens a **details sheet**: the stock properties panel shown full-screen (`:root.details-open`), with a title bar (`#detailsSheetBar`, added by `theme.js`) holding the name and a close button. General's label/value table is restacked into one pair per line; Trackers, Peers and Content scroll sideways; their content is inset 12px on the left only, while header and row backgrounds run to the edge (the scroller is padded and backgrounds are stretched back with `box-shadow` via `--row-bg`, because cells can't be padded without breaking column alignment). There's no right inset: the header's `th` bottom borders can't be stretched that way, and the last column has room anyway. The header line is the `th` bottom border (stock's wrapper border is removed, it doubled it); a 1px gradient on the header wrapper continues it under the inset. Don't give that wrapper `max-content` width: stock header tables are 5000px wide. The stock panel header is hidden unless it holds the Content filter. The Content filter gets its own row at the top of the Content page.
 - The sheet has **no tab row**: it opens on General, and rows under the progress bar (Trackers, Peers, HTTP Sources, Content; cloned from the stock tabs so they stay translated) drill into each tab as its own page, with a back chevron in the title bar. Each level is a `history.pushState` entry, so the phone's back gesture steps back and then closes; the close and back buttons call `history.back()`. Switching tabs goes through clicking the hidden stock tab, but never the already-selected one, because stock would collapse the panel and remember that for desktop. (Compared with icon-only tabs, a bottom tab bar and a picker menu; drill-down was chosen.)
 
 **Dialogs (Mocha windows)**
@@ -68,6 +70,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - A centered card (max 360px; full width with a 16px gutter on phones): logo above the title (moved with `order`, not in the HTML), muted labels above 16px inputs, full-width blue Login button, red error text that wraps.
 
 **Misc**
+- Trackers table: every row reserves room for an expand icon that's hidden unless the tracker has endpoints. When no row has any, the icons are removed so the URLs line up with the header (desktop too).
 - Checkboxes and radios: both the box and its label are `vertical-align: middle`. This was measured to be within 0.3px across all Options tabs.
 
 ## Mock server notes

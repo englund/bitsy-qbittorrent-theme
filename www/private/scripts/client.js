@@ -419,7 +419,7 @@ window.addEventListener("DOMContentLoaded", async (event) => {
 
     window.addEventListener("resize", window.qBittorrent.Misc.createDebounceHandler(500, (e) => {
         // only save sizes if the columns are visible
-        if (!document.getElementById("mainColumn").classList.contains("invisible"))
+        if (!document.getElementById("mainColumn").classList.contains("invisible") && !window.matchMedia("(max-width: 640px)").matches)
             saveColumnSizes();
     }));
 

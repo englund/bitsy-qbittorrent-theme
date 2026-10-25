@@ -56,6 +56,23 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// Mobile hides the properties panel, so Mocha lays it out at 0px, and Mocha splits space in proportion to current heights.
+// Back on desktop (e.g. a phone rotated to landscape), restore the saved split before Mocha lays the column out again.
+{
+    window.matchMedia("(max-width: 640px)").addEventListener("change", (event) => {
+        if (event.matches)
+            return;
+        const panel = document.getElementById("propertiesPanel");
+        const transferList = document.getElementById("transferList");
+        // The saved split is relative to the window, but Mocha only shares out what the two panels have together.
+        const shared = panel.offsetHeight + transferList.offsetHeight;
+        const panelHeight = Number(localStorage.getItem("properties_height_rel") ?? 0.5) * window.innerHeight;
+        panel.style.height = `${panelHeight}px`;
+        transferList.style.height = `${shared - panelHeight}px`;
+        window.dispatchEvent(new CustomEvent("resize"));
+    });
+}
+
 // Mobile hides the properties panel; tapping a card opens it as a full-screen details sheet instead.
 // The sheet opens on General, which links to the other tabs as drill-down pages. Each level is a history
 // entry, so the phone's back gesture steps out of it.

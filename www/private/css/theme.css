@@ -360,6 +360,11 @@ ul.filterList .selectedFilter > .link :is(img, button) {
     font-weight: 600;
 }
 
+/* Stock borders these header wrappers too, doubling the th line. */
+:is(#propertiesPanel .dynamicTableFixedHeaderDiv, #torrentsTableFixedHeaderDiv) {
+    border-bottom: 0;
+}
+
 .dynamicTable th.sorted {
     color: var(--text);
 }
@@ -960,6 +965,11 @@ body:has(> div > h2.vcenter) > div {
     display: none;
 }
 
+/* Every tracker row reserves room for an expand icon, hidden unless it has endpoints. With none to expand, drop the gap. */
+#torrentTrackersTableDiv tbody:not(:has(.filesTableCollapseIcon[style*="visible"])) .filesTableCollapseIcon {
+    display: none !important;
+}
+
 @media (max-width: 640px) {
     /* General links to the other tabs instead (#detailsSheetSections). */
     :root.details-open #propertiesTabs {
@@ -1083,6 +1093,12 @@ body:has(> div > h2.vcenter) > div {
     :root.details-open #propertiesPanel_header {
         flex: none;
     }
+
+    /* With the tabs hidden it only holds the Content filter. Mocha shows it inline, hence the !important. */
+    :root.details-open #propertiesPanel_header:has(#torrentFilesFilterToolbar.invisible) {
+        display: none !important;
+    }
+
     :root.details-open #torrentFilesFilterToolbar {
         float: none;
         margin: 0;
@@ -1116,22 +1132,20 @@ body:has(> div > h2.vcenter) > div {
     }
 
     /* Cells can't take the inset: virtual-list rows size them inline, the header by its colgroup.
-       So the scroller is padded and the header and row backgrounds are stretched back over the padding. */
+       So the scroller is padded and the header and row backgrounds are stretched back over the padding.
+       Left only: on the right the header's th borders can't be stretched, and the last column has room anyway. */
     :root.details-open .propertiesTabContent .dynamicTableDiv {
-        padding-inline: 16px;
+        padding-left: 12px;
 
+        /* The gradient continues the th bottom border under the inset. */
         & .dynamicTableFixedHeaderDiv {
-            background-color: var(--surface);
-            margin-inline: -16px;
-            padding-inline: 16px;
-        }
-
-        & th:last-child {
-            box-shadow: 16px 0 var(--surface);
+            background: linear-gradient(var(--border), var(--border)) left bottom / 12px 1px no-repeat var(--surface);
+            margin-left: -12px;
+            padding-left: 12px;
         }
 
         & tbody tr {
-            box-shadow: -16px 0 var(--row-bg, transparent), 16px 0 var(--row-bg, transparent);
+            box-shadow: -12px 0 var(--row-bg, transparent);
         }
     }
 
