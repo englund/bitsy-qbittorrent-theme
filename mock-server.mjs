@@ -143,6 +143,11 @@ const maindata = () => {
     };
 };
 
+let cookies = [
+    { domain: "tracker.example.org", path: "/", name: "session", value: "f3a9c1e07b", expirationDate: 1830000000 },
+    { domain: ".isos.example.net", path: "/rss", name: "uid", value: "42", expirationDate: 0 }
+];
+
 const preferences = {
     locale: "en", refresh_interval: 1500, save_path: "/downloads", temp_path: "/downloads/incomplete", temp_path_enabled: false,
     auto_tmm_enabled: false, add_stopped_enabled: false, add_to_top_of_queue: false, torrent_content_layout: "Original",
@@ -160,7 +165,11 @@ const api = {
     "app/preferences": () => preferences,
     "app/networkInterfaceList": () => [],
     "app/networkInterfaceAddressList": () => [],
-    "app/cookies": () => [],
+    "app/cookies": () => cookies,
+    "app/setCookies": (_, fields) => {
+        cookies = JSON.parse(fields.get("cookies") ?? "[]");
+        return "";
+    },
     "app/getFreeSpaceAtPath": () => 734 * GiB,
     "clientdata/load": () => ({}),
     "sync/maindata": maindata,

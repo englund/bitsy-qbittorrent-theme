@@ -558,7 +558,7 @@ td.statusBarSeparator {
 
 button[type="submit"],
 #addButton,
-#rssdownloaderpage #saveButton,
+:is(#rssdownloaderpage, #cookiesPage) #saveButton,
 input[onclick*="applyPreferences"],
 input#save {
     background-color: var(--accent);
@@ -570,7 +570,7 @@ input#save {
 
 button[type="submit"]:hover:not(:disabled),
 #addButton:hover,
-#rssdownloaderpage #saveButton:hover:not(:disabled),
+:is(#rssdownloaderpage, #cookiesPage) #saveButton:hover:not(:disabled),
 input[onclick*="applyPreferences"]:hover,
 input#save:hover {
     background-color: hsl(217deg 92% 56%);
@@ -1497,6 +1497,135 @@ body:has(> div > h2.vcenter) > div {
             right: calc(var(--gutter) - 4px);
             top: 22px;
             width: 20px;
+        }
+    }
+}
+
+/* Manage Cookies: on phones each cookie is a card with labelled fields (theme.js adds the labels and text buttons). */
+
+.cookieFieldLabel,
+.cookieRemoveButton,
+.cookieAddButton {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    /* Mocha pads it despite paddingHorizontal: 0. */
+    #cookiesPage_content {
+        padding: 0 !important;
+    }
+
+    :root #manageCookiesContainer {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        min-height: 100%;
+
+        & .buttonContainer {
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            bottom: 0;
+            margin-top: auto;
+            padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+            position: sticky;
+        }
+
+        & #saveButton {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: var(--color-text-white);
+            font-size: 16px;
+            font-weight: 600;
+            min-height: var(--row);
+            width: 100%;
+        }
+    }
+
+    :root #manageCookiesTable {
+        display: block;
+        padding: 16px var(--gutter) 0;
+
+        & thead {
+            display: none;
+        }
+
+        & :is(tbody, tfoot, tr:not(.invisible)) {
+            display: block;
+        }
+
+        & tbody tr.cookieCard {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            display: grid;
+            gap: 12px 8px;
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 12px;
+            padding: 12px;
+        }
+
+        & td {
+            display: block;
+            min-width: 0;
+            padding: 0;
+        }
+
+        & td:is(.domain, .value, .expDate, :last-child) {
+            grid-column: 1 / -1;
+        }
+
+        & label {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        & .cookieFieldLabel {
+            color: var(--text-muted);
+            display: block;
+            font-size: 14px;
+        }
+
+        /* The view's own style sizes the fields, and it loads after this file. */
+        & td input {
+            width: 100% !important;
+        }
+
+        & :is(.removeCookie, .addCookie) {
+            display: none;
+        }
+
+        & td:last-child:has(.cookieRemoveButton) {
+            justify-self: end;
+            margin-right: -4px;
+        }
+
+        & .cookieRemoveButton {
+            background: none;
+            border: 0;
+            color: var(--red);
+            display: block;
+            font-size: 16px;
+            padding: 0 12px;
+        }
+
+        & tfoot td:not(:last-child) {
+            display: none;
+        }
+
+        & .cookieAddButton {
+            align-items: center;
+            display: flex;
+            font-size: 16px;
+            gap: 8px;
+            justify-content: center;
+            width: 100%;
+
+            & img {
+                display: block;
+                height: 18px;
+                width: 18px;
+            }
         }
     }
 }

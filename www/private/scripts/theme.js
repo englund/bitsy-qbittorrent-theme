@@ -515,3 +515,42 @@ drillDownTabs({
     if (history.state?.rssDownloader)
         history.replaceState(null, "");
 }
+
+// Manage Cookies is a table of icon-only images and unlabelled fields. On phones each cookie is a card, so each field
+// gets a visible label (its aria-label) and the add and remove images get text buttons that click them. theme.css
+// hides the additions on desktop.
+new MutationObserver(() => {
+    const table = document.getElementById("manageCookiesTable");
+    if (!table)
+        return;
+    for (const row of table.querySelectorAll("tbody tr:not(.invisible, .cookieCard)")) {
+        row.classList.add("cookieCard");
+        for (const input of row.querySelectorAll("input")) {
+            const label = document.createElement("label");
+            const text = document.createElement("span");
+            text.className = "cookieFieldLabel";
+            text.textContent = input.ariaLabel;
+            input.before(label);
+            label.append(text, input);
+        }
+        const removeImage = row.querySelector(".removeCookie");
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "cookieRemoveButton";
+        removeButton.textContent = removeImage.alt;
+        removeButton.addEventListener("click", () => removeImage.click());
+        removeImage.after(removeButton);
+    }
+    const addImage = table.querySelector("tfoot .addCookie");
+    if (addImage && !table.querySelector(".cookieAddButton")) {
+        const addButton = document.createElement("button");
+        addButton.type = "button";
+        addButton.className = "cookieAddButton";
+        const icon = addImage.cloneNode();
+        icon.className = "";
+        icon.alt = "";
+        addButton.append(icon, addImage.alt);
+        addButton.addEventListener("click", () => addImage.click());
+        addImage.after(addButton);
+    }
+}).observe(document.body, { childList: true, subtree: true });
