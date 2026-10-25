@@ -32,6 +32,29 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - 25 dialog pages (`private/*.html` that link `style.css`): link `theme.css`.
 - `private/images/*.svg`: replaced with Lucide icons. `menu.svg` is new (the mobile ☰ button).
 
+## Design principles (mobile, ≤ 640px)
+
+Distilled from Apple's Human Interface Guidelines and Google's Material Design 3 (Oct 2026). Every new or changed mobile screen follows these. A screen that can't (usually because stock markup or behaviour is in the way) is an exception: ask the user before making it (when working unattended, leave that screen as is and report it), then list it under "Exceptions" with the reason.
+
+1. **Touch targets:** 44×44px minimum on everything tappable (Apple 44pt; Material 48dp), at least 8px between neighbouring targets. List rows, menu items and the primary button are 48px, which satisfies both (chosen by the user). A small visual (20px checkbox, 16px icon) is fine when its row or padding is the target.
+2. **Spacing:** only 4 / 8 / 12 / 16 / 24.
+3. **Gutter:** 16px side margins on every screen (Material and iOS; the login page already used it). Chosen by the user over the earlier 12px.
+4. **Lists and drill-down:** one item per row, full width, a trailing chevron when the row opens another page, each level a history entry with a back chevron at the leading edge of the title bar. Never a horizontally scrolling table or tab row for primary content. Result lists are cards.
+5. **Forms:** label above a full-width field, never a placeholder as the only label, 16px input text (stops iOS zoom). Radios for 2–5 exclusive choices, a select beyond that. A checkbox sits on its label's row, and the whole row is the target.
+6. **One primary action per view:** blue filled, white text, full width in a sticky footer or trailing in the title bar. Other actions are plain (grey) buttons; show priority by style, not size. Destructive actions are red. In a row of buttons the primary is trailing; in a stack it's on top.
+7. **Dialogs:** forms and multi-step tasks are full-screen sheets (title bar with close/back, content, sticky footer). Small centred dialogs are only for short confirmations with at most 3 buttons. One modal at a time; nothing opens behind another layer.
+8. **Menus:** items 44–48px, most-used first, grouped with dividers, one submenu level at most, "…" when more input follows, icons on every item of a group or none. A menu taller than the screen scrolls inside its own box.
+9. **Type:** body 16px (line height 24), secondary 14px, nothing under 11px; sheet titles about 20–22px.
+10. **Contrast:** text at least 4.5:1 (3:1 at 18px+ or bold); icons and control outlines at least 3:1.
+11. **Dark surfaces:** depth shown by lighter tones, not shadows: background < card < sheet/menu < raised control.
+12. **States:** every control has a pressed/active state; disabled controls are dimmed but stay visible.
+13. **Same features at every size:** mobile may move a feature (into ☰, a drill-down, a long-press menu) but never removes it.
+
+Sources: Apple HIG (layout, lists and tables, sheets, buttons, menus, text fields, toggles, accessibility, typography, dark mode, alerts, action sheets); Google accessibility touch-target guidance (support.google.com/accessibility/android/answer/7101858); Material 3 component docs and Compose Material3 tokens (list 56/72dp rows, menu items 48dp, minimum touch size 48dp). m3.material.io itself couldn't be read.
+
+**Exceptions** (approved by the user)
+- Context menus stay stock, 30px rows (below rule 8). The user compared them with a 44px bottom sheet and preferred stock.
+
 ## Decisions
 
 **Approach**
@@ -85,6 +108,9 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - A centered card (max 360px; full width with a 16px gutter on phones): logo above the title (moved with `order`, not in the HTML), muted labels above 16px inputs, full-width blue Login button, red error text that wraps.
 
 **Misc**
+- ☰ also has Start All, Stop All, Alternative speed limits (highlighted while on, via `:has()` on the stock status-bar icon's `src`) and Exit qBittorrent, each clicking the hidden stock element. `#mobileMenu` is capped at the screen height and scrolls. Global speed limits were already reachable: tapping the ↓/↑ speeds in the status bar opens them. The mock now remembers the alternative-speed toggle.
+- About on mobile is a drill-down like Options: the About tab's content with a list of the other tabs under it, each opening its page with a back chevron. Options and About share `drillDownTabs()` in `theme.js` (About's first tab is the list page, so it has no row).
+- Monitored folders (Options › Downloads) on mobile: the header row is hidden and each folder is a card, its path above its save location. Every row keeps a 44px right gutter so the fields line up beside the add button on the last one. The add icon was invisible at all sizes (stock's `padding-left: 170px` inside a 16px border-box width); it's now positioned beside the field.
 - Options › Speed schedule: stock lays the time inputs out inline with bare `:` text and no spacing; it's a wrapping flex row with gaps and centered digits now (all sizes).
 - Trackers table: every row reserves room for an expand icon that's hidden unless the tracker has endpoints. When no row has any, the icons are removed so the URLs line up with the header (desktop too).
 - Checkboxes and radios: both the box and its label are `vertical-align: middle`. This was measured to be within 0.3px across all Options tabs.
@@ -104,8 +130,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - Consistency pass: done for touch targets (an audit of every page, Options category and dialog reached from ☰ and the card menu finds nothing under 44px except inline text links and read-only Log rows). Spacing was normalized where the sweep showed a mismatch; `theme.css` still has stray 5/6/7/10/14px values, mostly desktop or inner paddings. Not covered: the context menu itself (30px rows, see below), About, Search plugins, Manage Cookies' table and the Monitored Folder table (rough edges below).
 - Mobile sideways-scrolling rows are all gone (details sheet, Options, status chips).
 - Mobile details sheet: card-style layouts for the Trackers/Peers/Content tables; item counts on the drill-down rows (skipped because file and web-seed counts aren't in the torrent list data).
-- Unreachable on mobile (the menu bar is hidden and ☰ doesn't list them): Start/Stop all, global speed limits, Shutdown.
-- Other mobile rough edges from a sweep: About's tab row scrolls sideways; Manage Cookies is a cramped table form; Search plugins' table scrolls sideways; Options › Downloads' "Monitored Folder" table is cramped.
+- **Overnight plan** (agreed with the user, not started): the full plan and status are in the side-session notes as `overnight-plan.md`. In short: a 16px gutter and 48px rows pass over every mobile screen; finish Monitored Folder ("Other…" lays its text over the select's label); Search plugins as a list; Manage Cookies as cards; Rename Files stacked; the two stock context-menu bugs; "Use another path for incomplete torrents" (Options › Downloads) squeezes its label into a 4-line column on mobile; leftover spacing; then an audit against the Design principles, an independent review and a report with before/after screenshots.
 - Long-press context menu on cards: built into the stock UI, only tested in emulation. Real-phone testing was dropped: the ⋮ button opens the same menu, so long press is a shortcut.
 - Mobile context menu: stock styling, opened at the tap point; it's 25 rows of 30px and only just fits at 812px, so it can't reach 44px rows as is. A bottom sheet was built (full width, 44px rows, the row's name as title, submenus drilling in place) and compared with stock on every menu; the user preferred stock for now, so it was reverted. Its diff is saved outside the repo in the side-session notes as `context-menu-bottom-sheet.patch`. Found while comparing (stock, still open): on phones the filter-list menus open behind the filter popover (it is in the top layer), and in Add torrent a long press on a file row while scrolled down puts the menu above the visible area.
 - Optional: a more compact variant of the tabs for the details-panel header on desktop (currently 53px tall).
