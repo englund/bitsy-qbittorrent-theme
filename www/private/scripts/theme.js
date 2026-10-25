@@ -89,7 +89,8 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
         // Keep the details sheet from opening, and the menu's own click listeners from closing it again.
         event.stopPropagation();
-        tr.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: event.clientX, clientY: event.clientY }));
+        // Anchor the menu at the ⋮'s centre (theme.css: 20px icon, 8px from the right, 9px from the top), not at the tap.
+        tr.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: rect.right - 18, clientY: rect.top + 19 }));
     }, true);
 }
 
