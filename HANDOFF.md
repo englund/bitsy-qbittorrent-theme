@@ -79,6 +79,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - The native file picker can't be driven by automation. Call `qBittorrent.Client.uploadTorrentFiles([new File(...)])`, which is the same path the picker uses.
 
 ## Open ideas / next steps
+- **Next focus: replace sideways-scrolling tab rows on mobile.** Rows like the details sheet tabs (General, Trackers, Peers, HTTP Sources, Content) and the status chips cut off the last item and hide options off-screen, which doesn't feel native on a phone. Explore better-suited patterns before building: e.g. icon-only tabs that fit the width, a bottom tab bar, a dropdown/segmented picker showing the current tab, or one stacked scrolling page with section headers. This revisits the Tabs decision below (a "⋮ more" overflow menu was already tried and rejected).
 - Mobile details sheet: card-style layouts for the Trackers/Peers/Content tables, and closing it with the phone's back gesture.
 - Mobile: a way to reach logout, Search, RSS and Log (the menu bar is hidden).
 - Mobile: category, tag and tracker filters (only the status chips are shown).
