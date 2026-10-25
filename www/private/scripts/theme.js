@@ -1,5 +1,22 @@
 "use strict";
 
+// Dialogs load in iframes, where media queries see the frame's width, not the screen's.
+// Tag each dialog document so theme.css can style it as a full-screen phone sheet.
+{
+    const mobileQuery = window.matchMedia("(max-width: 640px)");
+    const tagFrame = (iframe) => iframe.contentDocument?.documentElement.classList.toggle("mobile-sheet", mobileQuery.matches);
+
+    // load doesn't bubble, but a capturing listener still sees it for every iframe
+    document.addEventListener("load", (event) => {
+        if (event.target.matches?.(".mochaIframe"))
+            tagFrame(event.target);
+    }, true);
+    mobileQuery.addEventListener("change", () => {
+        for (const iframe of document.querySelectorAll(".mochaIframe"))
+            tagFrame(iframe);
+    });
+}
+
 // Mobile hides the table header, so this menu stands in for clicking a column to sort.
 window.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById("mobileSortButton");

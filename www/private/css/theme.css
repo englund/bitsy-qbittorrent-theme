@@ -61,6 +61,18 @@ textarea:focus-visible {
     outline: 2px solid var(--accent-soft);
 }
 
+/* Both sides of the pair must be middle-aligned; with only the box at middle it sits ~2px low. */
+input[type="checkbox"],
+input[type="radio"],
+:is(input[type="checkbox"], input[type="radio"]) + label {
+    vertical-align: middle;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: var(--accent);
+}
+
 button {
     background-color: var(--surface-3);
     border: 1px solid var(--border);
@@ -430,9 +442,252 @@ td.statusBarSeparator {
     border-radius: var(--radius);
 }
 
+/* Windows (Mocha) and the dialog pages loaded inside them */
+
 .mocha {
-    border-radius: var(--radius);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 24px 64px hsl(0deg 0% 0% / 55%);
     overflow: hidden;
+}
+
+.mocha .mochaOverlay,
+.mochaTitlebar {
+    background-color: var(--surface);
+    border-radius: 0;
+}
+
+/* The stock 15px line-height clips the title; centre text and icon in the bar instead. Mocha sets the bar to 25px inline. */
+.mochaTitlebar h3 {
+    background-position: 8px center !important;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 25px;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.mochaToolbarWrapper {
+    background-color: var(--surface);
+}
+
+.mochaToolbar {
+    border-top-color: var(--border);
+    padding: 10px 12px !important;
+
+    & .tab-menu {
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    & .tab-menu li {
+        flex: none;
+    }
+}
+
+.mochaContentBorder {
+    border-color: var(--border);
+}
+
+.mochaContentWrapper {
+    background-color: var(--surface);
+}
+
+.mochaCloseButton {
+    border-radius: var(--radius-sm);
+    height: 18px;
+    width: 18px;
+}
+
+.mochaCloseButton:hover {
+    background-color: var(--surface-3);
+}
+
+button[type="submit"],
+#addButton,
+input[onclick*="applyPreferences"] {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--color-text-white);
+    font-weight: 600;
+    padding: 6px 18px;
+}
+
+button[type="submit"]:hover:not(:disabled),
+#addButton:hover,
+input[onclick*="applyPreferences"]:hover {
+    background-color: hsl(217deg 92% 56%);
+}
+
+body:has(#uploadForm, > div > h2.vcenter) {
+    background-color: var(--surface);
+}
+
+fieldset.settings {
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin: 0 0 12px;
+    min-width: 0; /* fieldsets default to min-content, which lets the file table push them off-screen */
+    padding: 8px 14px 12px;
+
+    & fieldset.settings {
+        background-color: var(--surface);
+        margin: 8px 0 0;
+    }
+
+    & legend {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        padding: 0 6px;
+        text-transform: uppercase;
+    }
+
+    & legend label {
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    & td {
+        padding: 5px 0;
+    }
+
+    & td.noWrap label {
+        color: var(--text-muted);
+        padding-right: 16px;
+    }
+}
+
+#uploadForm {
+    padding: 14px 16px 0 !important;
+}
+
+#uploadForm .column + .column {
+    margin-left: 12px;
+}
+
+/* Type-or-pick combo (category): the wrapper is the visible field, the select's arrow peeks out from under the input. */
+.select-watched-folder-editable {
+    background-color: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    height: 30px;
+    width: 220px;
+
+    & select,
+    & input:not([type="checkbox"]) {
+        background-color: transparent;
+        border: 0;
+        border-radius: 0;
+        height: 100%;
+    }
+
+    & select {
+        width: 100%;
+    }
+
+    & input:not([type="checkbox"]) {
+        padding: 0 8px;
+        width: calc(100% - 28px);
+    }
+}
+
+/* Tags multi-select (vanillaSelectBox), made to match the other fields. */
+#uploadForm .vsb-main button {
+    background-color: var(--surface-2) !important;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    height: 30px;
+    min-width: 220px;
+    padding: 0 10px;
+    text-align: left;
+}
+
+#uploadForm .vsb-menu {
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px hsl(0deg 0% 0% / 45%);
+}
+
+/* Options: Save stays reachable at the bottom while the settings scroll. */
+#preferencesPage_content > div:has(> input[onclick*="applyPreferences"]) {
+    background-color: var(--surface);
+    border-top: 1px solid var(--border);
+    bottom: 0;
+    margin: 12px -12px -10px !important;
+    padding: 12px 16px 16px;
+    position: sticky;
+    text-align: right !important;
+}
+
+#diskInfo {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+/* The Download button stays reachable while the options scroll. */
+#uploadForm #submitbutton {
+    background-color: var(--surface);
+    border-top: 1px solid var(--border);
+    bottom: 0;
+    margin: 4px -16px 0 !important;
+    padding: 12px 16px;
+    position: sticky !important;
+    z-index: 1;
+
+    & > div {
+        margin-left: auto;
+        position: static !important;
+        transform: none !important;
+    }
+}
+
+#metadataStatus,
+#saveTorrent {
+    color: var(--text-muted);
+}
+
+/* Simple dialogs (add links, confirm add): a heading, some text, one button */
+body:has(> div > h2.vcenter) > div {
+    padding: 16px !important;
+    text-align: left !important;
+
+    & > br {
+        display: none;
+    }
+
+    & h2 {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+
+    & #urls {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+        height: 150px;
+        resize: vertical;
+        width: 100% !important;
+    }
+
+    & p {
+        color: var(--text-muted);
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    & p i {
+        font-style: normal;
+    }
+
+    & > div:last-child {
+        text-align: right !important;
+    }
 }
 
 /* Mobile: one column, status chips on top, torrents as cards. */
@@ -677,5 +932,219 @@ td.statusBarSeparator {
     td.speedLabel {
         min-width: 0;
         padding: 0 8px;
+    }
+}
+
+/* Mobile windows: every dialog becomes a full-screen sheet. Mocha sizes windows inline, hence the !important. */
+
+@media (max-width: 640px) {
+    .mocha {
+        border: 0;
+        border-radius: 0;
+        height: auto !important;
+        inset: 0 !important;
+        position: fixed !important;
+        width: auto !important;
+    }
+
+    .mocha .mochaOverlay {
+        display: flex;
+        flex-direction: column;
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    .mochaTitlebar {
+        align-items: center;
+        display: flex;
+        flex: none;
+        height: 52px !important;
+        width: 100% !important;
+    }
+
+    .mochaTitlebar h3 {
+        background-position: 16px center !important;
+        background-size: 20px !important;
+        font-size: 16px;
+        line-height: 52px;
+        padding: 0 56px 0 44px !important;
+    }
+
+    .mochaContentBorder {
+        flex: 1;
+        min-height: 0;
+    }
+
+    .mochaContentWrapper,
+    .mochaContent,
+    .mochaIframe {
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    .mocha .handle {
+        display: none;
+    }
+
+    /* Options tables: a field that shares a row with its label drops below it instead of squeezing it. */
+    #preferencesPage_content fieldset.settings tbody tr {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 12px;
+        padding: 4px 0;
+    }
+
+    #preferencesPage_content fieldset.settings td {
+        display: block;
+        padding: 0;
+    }
+
+    #preferencesPage_content fieldset.settings td:has(input:is([type="text"], [type="password"], [type="number"]), select, textarea) {
+        flex: 1 1 100%;
+    }
+
+    #preferencesPage_content fieldset.settings td :is(input:is([type="text"], [type="password"]), select, textarea) {
+        max-width: 100%;
+    }
+
+    #preferencesPage_content fieldset.settings td input:is([type="text"], [type="password"]) {
+        width: 100% !important;
+    }
+
+    #preferencesPage_content > div:has(> input[onclick*="applyPreferences"]) {
+        padding: 12px 12px calc(20px + env(safe-area-inset-bottom));
+
+        & input {
+            font-size: 16px;
+            padding: 10px 22px;
+            width: 100%;
+        }
+    }
+
+    .mochaControls {
+        right: 12px;
+        top: 10px;
+    }
+
+    .mochaCloseButton {
+        height: 32px;
+        width: 32px;
+
+        &::before,
+        &::after {
+            width: 14px;
+        }
+    }
+}
+
+/* Dialog pages on a phone. Media queries inside a frame measure the frame, not the screen,
+   so theme.js tags the frame's <html> with .mobile-sheet instead. */
+
+:root.mobile-sheet {
+    #uploadForm {
+        padding: 12px 12px 0 !important;
+    }
+
+    #uploadForm .column + .column {
+        margin-left: 0;
+    }
+
+    #uploadForm #submitbutton {
+        margin: 4px -12px 0 !important;
+        padding: 12px;
+    }
+
+    fieldset.settings tbody tr {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 12px;
+        padding: 6px 0;
+    }
+
+    fieldset.settings td {
+        display: block;
+        padding: 0;
+        width: auto !important;
+    }
+
+    fieldset.settings td.noWrap {
+        flex: 1 1 0;
+        white-space: normal;
+    }
+
+    fieldset.settings td.noWrap:empty {
+        display: none;
+    }
+
+    fieldset.settings td.fullWidth:has(input[type="text"], select, textarea, span) {
+        flex-basis: 100%;
+    }
+
+    #uploadForm input:not([type="checkbox"], [type="radio"], [type="hidden"]),
+    #uploadForm select,
+    #uploadForm textarea,
+    #urls {
+        font-size: 16px; /* below 16px iOS Safari zooms the page on focus */
+        max-width: none !important;
+        padding: 8px 10px;
+        width: 100% !important;
+    }
+
+    #uploadForm #torrentFilesFilterInput {
+        background-position: 12px center;
+        background-size: 16px;
+        padding-left: 38px;
+    }
+
+    #uploadForm input[type="checkbox"] {
+        height: 20px;
+        width: 20px;
+    }
+
+    fieldset.settings legend:has(input[type="checkbox"]) {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+    }
+
+    fieldset.settings .formRow {
+        align-items: stretch !important;
+        flex-direction: column;
+        gap: 6px;
+
+        & label {
+            color: var(--text-muted);
+        }
+
+        & input {
+            margin: 0 !important;
+        }
+    }
+
+    body:has(> div > h2.vcenter) :is(#submitButton, #addButton) {
+        width: 100%;
+    }
+
+    #uploadForm .vsb-main,
+    #uploadForm .vsb-main button {
+        height: 40px;
+        width: 100% !important;
+    }
+
+    #uploadForm .select-watched-folder-editable {
+        height: 40px;
+        width: 100%;
+
+        & input:not([type="checkbox"]) {
+            width: calc(100% - 32px) !important;
+        }
+    }
+
+    button[type="submit"],
+    #addButton {
+        font-size: 16px !important;
+        padding: 10px 22px;
     }
 }
