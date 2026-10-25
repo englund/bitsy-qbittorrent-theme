@@ -2679,12 +2679,17 @@ body:has(> div > h2.vcenter) > div {
         margin-left: 0;
     }
 
+    /* The metadata status and Save as .torrent take a row above a full-width Download. */
     #uploadForm #submitbutton {
+        column-gap: 8px;
+        flex-wrap: wrap;
         margin: 4px calc(-1 * var(--gutter)) 0 !important;
         padding: 12px var(--gutter);
+        row-gap: 8px;
 
         & > div {
             display: flex;
+            flex-basis: 100%;
             width: 100%;
         }
 
@@ -2806,6 +2811,40 @@ body:has(> div > h2.vcenter) > div {
 
     :is(#submitButton, #renameButton, #setLocationButton, #applyButton, #categoryNameButton, #tagNameButton, #addTrackersButton, #addWebSeedsButton, #editTrackerButton, #editWebSeedButton) {
         width: 100%;
+    }
+
+    /* New/edit category: the gutter, labels above their fields, and the share limits grid as label, then mode | value | unit. */
+    body > div:has(#shareLimitsGrid) {
+        padding: 16px var(--gutter) 0 !important;
+
+        & div[style*="display: flex"] {
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px !important;
+
+            & > label {
+                flex-basis: 100%;
+            }
+
+            & > :is(input, select) {
+                flex: 1;
+                margin-left: 0 !important;
+            }
+        }
+    }
+
+    #shareLimitsGrid {
+        gap: 8px !important;
+        grid-template-columns: 1fr 96px auto !important;
+
+        & > label,
+        & > .shareLimitsWideSelect {
+            grid-column: 1 / -1;
+        }
+
+        & input[type="number"] {
+            min-width: 0 !important;
+        }
     }
 
     /* Per-torrent speed limit: the gutter, and the label above its field and unit. Stock centres it with inline styles. */
