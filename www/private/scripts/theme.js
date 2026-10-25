@@ -554,3 +554,14 @@ new MutationObserver(() => {
         addImage.after(addButton);
     }
 }).observe(document.body, { childList: true, subtree: true });
+
+// Bulk rename names these fields only by placeholder or aria-label; theme.css shows these labels on phones.
+new MutationObserver(() => {
+    for (const field of document.querySelectorAll(":is(#multiRenameSearch, #multiRenameReplace, #applies_to_option):not(.sheetFieldLabel + *)")) {
+        const label = document.createElement("label");
+        label.className = "sheetFieldLabel";
+        label.htmlFor = field.id;
+        label.textContent = field.ariaLabel;
+        field.before(label);
+    }
+}).observe(document.body, { childList: true, subtree: true });

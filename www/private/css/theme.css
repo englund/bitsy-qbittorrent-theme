@@ -2768,6 +2768,163 @@ body:has(> div > h2.vcenter) > div {
     }
 }
 
+/* Bulk rename on phones: the file list on top (about half the screen, scrolling), the search and replace controls
+   below, Replace and Close in a footer. Stock lays it out with inline floats and absolute positions. It loads into
+   the page, not a frame. */
+
+.sheetFieldLabel {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    #multiRenamePage_content {
+        height: 100% !important;
+        padding: 0 !important;
+
+        & > div {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 0 !important;
+        }
+
+        & #torrentFiles {
+            border-bottom: 1px solid var(--border) !important;
+            flex: 0 0 45%;
+            margin: 0 !important;
+            min-height: 0;
+            order: 1;
+            position: static !important;
+        }
+
+        & #bulkRenameFilesTableDiv {
+            height: 100%;
+        }
+
+        /* Original and Renamed share the width, so the preview is on screen without scrolling sideways. */
+        & #bulkRenameFilesTableDiv col {
+            width: calc((100vw - 44px) / 2) !important;
+
+            &:first-child {
+                width: 44px !important;
+            }
+        }
+
+        & > div > div:first-child {
+            flex: 1;
+            float: none !important;
+            height: auto !important;
+            min-height: 0;
+            order: 2;
+            overflow: auto;
+            padding: 12px var(--gutter);
+            width: auto !important;
+        }
+
+        & .sheetFieldLabel {
+            color: var(--text-muted);
+            display: block;
+            font-size: 14px;
+            margin: 4px 0 8px;
+        }
+
+        & textarea {
+            display: block;
+            min-height: var(--touch) !important;
+            width: 100% !important;
+        }
+
+        & #applies_to_option {
+            margin: 0 !important;
+        }
+
+        & hr {
+            border: 0;
+            border-top: 1px solid var(--border);
+            margin: 12px 0;
+        }
+
+        /* Label above the number field, like every other field. */
+        & .formRow:has(> #file_counter) {
+            align-items: stretch;
+            flex-direction: column-reverse;
+            gap: 8px;
+
+            & > label {
+                min-height: 0;
+            }
+
+            & > input {
+                width: 100% !important;
+            }
+        }
+
+        & #operation_btns {
+            align-items: center;
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0 !important;
+            order: 3;
+            padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+            position: static !important;
+            width: auto !important;
+
+            & > hr,
+            & > div:first-child:has(#rename_error:empty) {
+                display: none;
+            }
+
+            & > div:first-child {
+                flex-basis: 100%;
+            }
+
+            /* Replace is the primary action, so it goes last in the row. */
+            & > div:has(#renameButton) {
+                display: flex;
+                flex: 2;
+                float: none !important;
+                order: 1;
+                width: auto !important;
+            }
+
+            & #renameButton {
+                background-color: var(--accent);
+                border-color: var(--accent);
+                border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+                color: var(--color-text-white);
+                flex: 1;
+                font-weight: 600;
+                min-height: var(--row);
+                width: auto !important;
+            }
+
+            /* Only its arrow shows; the options name themselves when it opens. */
+            & #renameOptions {
+                border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+                flex: none;
+                font-size: 0;
+                min-height: var(--row);
+                padding: 0;
+                width: var(--touch) !important;
+
+                & option {
+                    font-size: 16px;
+                }
+            }
+
+            & #closeButton {
+                flex: 1;
+                float: none !important;
+                min-height: var(--row);
+                width: auto !important;
+            }
+        }
+    }
+}
+
 /* Touch targets on phones: everything tappable is at least --touch tall. Checkboxes stay 20px; their label is the target.
    Dialog frames get the same rules through .mobile-sheet, since a media query there measures the frame. */
 
