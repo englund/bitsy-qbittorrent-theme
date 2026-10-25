@@ -57,36 +57,80 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // Mobile hides the properties panel; tapping a card opens it as a full-screen details sheet instead.
+// The sheet opens on General, which links to the other tabs as drill-down pages. Each level is a history
+// entry, so the phone's back gesture steps out of it.
 {
     const mobileQuery = window.matchMedia("(max-width: 640px)");
+    let bar;
     let title;
+    let torrentName = "";
 
-    const close = () => document.documentElement.classList.remove("details-open");
+    const selectTab = (tabId) => {
+        const tab = document.getElementById(tabId);
+        // Stock collapses the panel when the selected tab is clicked again, and remembers that for desktop.
+        if (!tab.classList.contains("selected"))
+            tab.click();
+    };
 
-    const open = (rowId) => {
-        const wrapper = document.getElementById("propertiesPanel_wrapper");
-        if (!title) {
-            const bar = document.createElement("div");
-            bar.id = "detailsSheetBar";
-            title = document.createElement("h3");
-            const closeButton = document.createElement("button");
-            closeButton.type = "button";
-            closeButton.className = "mochaCloseButton";
-            closeButton.ariaLabel = "Close";
-            closeButton.addEventListener("click", close);
-            bar.append(title, closeButton);
-            wrapper.prepend(bar);
+    const render = () => {
+        const page = mobileQuery.matches && bar ? history.state?.detailsSheet : undefined;
+        document.documentElement.classList.toggle("details-open", page !== undefined);
+        if (page === undefined)
+            return;
+        const isSubpage = page !== "propGeneralLink";
+        bar.classList.toggle("subpage", isSubpage);
+        title.textContent = isSubpage ? document.getElementById(page).textContent.trim() : torrentName;
+        selectTab(page);
+    };
+
+    const go = (page) => {
+        history.pushState({ detailsSheet: page }, "");
+        render();
+    };
+
+    const build = () => {
+        bar = document.createElement("div");
+        bar.id = "detailsSheetBar";
+        const backButton = document.createElement("button");
+        backButton.type = "button";
+        backButton.id = "detailsSheetBack";
+        backButton.ariaLabel = "Back";
+        title = document.createElement("h3");
+        const closeButton = document.createElement("button");
+        closeButton.type = "button";
+        closeButton.className = "mochaCloseButton";
+        closeButton.ariaLabel = "Close";
+        for (const button of [backButton, closeButton])
+            button.addEventListener("click", () => history.back());
+        bar.append(backButton, title, closeButton);
+        document.getElementById("propertiesPanel_wrapper").prepend(bar);
+
+        const sections = document.createElement("nav");
+        sections.id = "detailsSheetSections";
+        for (const tab of document.querySelectorAll("#propertiesTabs li:not(#propGeneralLink)")) {
+            const row = document.createElement("button");
+            row.type = "button";
+            row.append(...tab.firstElementChild.cloneNode(true).childNodes);
+            row.addEventListener("click", () => go(tab.id));
+            sections.append(row);
         }
-        title.textContent = torrentsTable.getRow(rowId).full_data.name;
-        document.documentElement.classList.add("details-open");
+        document.getElementById("propBarsWrapper").after(sections);
     };
 
     document.addEventListener("click", (event) => {
         if (!mobileQuery.matches || event.ctrlKey || event.metaKey || event.shiftKey)
             return;
         const tr = event.target.closest("#torrentsTableDiv tr");
-        if (tr?.rowId !== undefined)
-            open(tr.rowId);
+        if (tr?.rowId === undefined)
+            return;
+        torrentName = torrentsTable.getRow(tr.rowId).full_data.name;
+        if (!bar)
+            build();
+        go("propGeneralLink");
     });
-    mobileQuery.addEventListener("change", close);
+    window.addEventListener("popstate", render);
+    mobileQuery.addEventListener("change", render);
+    // history.state survives a reload; a sheet left open then shouldn't count as open now.
+    if (history.state?.detailsSheet)
+        history.replaceState(null, "");
 }
