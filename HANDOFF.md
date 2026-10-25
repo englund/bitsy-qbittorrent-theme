@@ -20,13 +20,13 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 | `www/` | Stock WebUI from tag `release-5.3.0` (`src/webui/www`), plus our edits. The first commit is the pristine copy, so `git diff 4874bbe` shows every theme change. |
 | `www/private/css/theme.css` | **All theme styling.** Loaded last; overrides the stock CSS instead of editing it. |
 | `www/public/css/login-theme.css` | Login page styling. Self-contained (repeats the tokens it needs) because `private/` isn't served before login. Not named `theme.css` because the mock resolves `private/` first and would shadow it. |
-| `www/private/scripts/theme.js` | Theme behaviour: the mobile sort menu, the mobile details sheet, tagging dialog frames for phones, and the shared `placeBelow` popover helper. |
+| `www/private/scripts/theme.js` | Theme behaviour: the mobile sort and status filter menus, the mobile details sheet, the mobile Options category list, tagging dialog frames for phones, and the shared `placeBelow` popover helper. |
 | `mock-server.mjs` | Serves `www/` the way qBittorrent does: it fills in `QBT_TR(...)`, `${LANG}`, `${CACHEID}` and `${LANGUAGE_OPTIONS}`, and fakes `/api/v2`. Unknown endpoints are logged as `unmocked:`. |
 | `icons.mjs` | Regenerates the icons from Lucide (see Icons). |
 
 ### Stock files we edited (keep these edits small; they matter when upgrading)
 - `public/index.html`: links `login-theme.css` after `login.css`.
-- `private/index.html`: links `theme.css` and `theme.js`; adds the mobile sort button and menu; the toolbar's leading `&nbsp;&nbsp;` is removed.
+- `private/index.html`: links `theme.css` and `theme.js`; adds the mobile sort button and menu, and the mobile status filter button (in the top toolbar, before Options); the toolbar's leading `&nbsp;&nbsp;` is removed.
 - `private/scripts/dynamicTable.js`: each `td` gets `data-column=<name>` so CSS can target columns; `TorrentsTable` uses 92px rows on mobile and updates when the breakpoint is crossed.
 - `private/scripts/client.js`: the window-resize handler doesn't save the filter width and panel split in the mobile layout, where the panel is hidden or full-screen and would save 0 or ~94%.
 - 25 dialog pages (`private/*.html` that link `style.css`): link `theme.css`.
@@ -40,11 +40,12 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - Colors are CSS custom properties at the top of `theme.css` (`--bg`, `--surface`, `--surface-2/3`, `--accent` (blue), `--green`, `--orange`, `--red`, etc.). The stock `--color-*` variables are mapped onto them.
 
 **Mobile (≤ 640px)**
-- One column. The status filters become a horizontal chip row; categories, tags and trackers are hidden. Torrents show as **cards**: name and state icon, progress bar, then status, ↓ speed, ↑ speed and ETA.
+- One column. Categories, tags and trackers are hidden. Torrents show as **cards**: name and state icon, progress bar, then status, ↓ speed, ↑ speed and ETA.
 - Hidden on mobile: the menu bar (so there's no logout button), queue buttons, torrent creator, the Search/RSS/Log tabs, the properties panel and the table header.
 - The table is virtualized, so the card height is a *JS row height*. The **92px slot** (84px card + 8px gap) is defined in both `dynamicTable.js` and `theme.css`; keep them in sync.
 - Sorting on mobile uses **one dropdown button** (a popover menu) showing the current column. Picking the active column flips the direction. It calls `torrentsTable.setSortedColumn`, so it persists like a header click. (We tried a select plus a separate direction button first; rejected.)
 - Crossing back to desktop (e.g. rotating a phone to landscape) restores the saved panel split in `theme.js`: Mocha laid the hidden panel out at 0px and would keep it there, because it shares space in proportion to current heights.
+- The status filter is **one pill button** in the top toolbar (between the action icons and Options) showing the current filter's icon and name, without the count; it opens the status list as a popover menu with counts. The popover *is* the stock `#statusFilterList` (`theme.js` sets `popover` and `.popoverMenu` on it on mobile and removes them on desktop), so stock click handlers, live counts and auto-hidden zero filters keep working with no syncing. Its column can't be `display: none`, because a popover under a hidden ancestor doesn't render; the closed popover is `display: none` itself, so the column collapses. The pill has a zero flex basis so the wrapping toolbar never pushes it (or Options) to a second line; it grows to its text and ellipsizes. "Downloading" just fits at 375px. (Replaced a sideways-scrolling chip row that hid most options. The pill was first in the search row next to Sort, but that squeezed the search field to ~10 characters.)
 - Inputs on mobile use 16px text so iOS Safari doesn't zoom.
 - Tapping a card opens a **details sheet**: the stock properties panel shown full-screen (`:root.details-open`), with a title bar (`#detailsSheetBar`, added by `theme.js`) holding the name and a close button. General's label/value table is restacked into one pair per line; Trackers, Peers and Content scroll sideways; their content is inset 12px on the left only, while header and row backgrounds run to the edge (the scroller is padded and backgrounds are stretched back with `box-shadow` via `--row-bg`, because cells can't be padded without breaking column alignment). There's no right inset: the header's `th` bottom borders can't be stretched that way, and the last column has room anyway. The header line is the `th` bottom border (stock's wrapper border is removed, it doubled it); a 1px gradient on the header wrapper continues it under the inset. Don't give that wrapper `max-content` width: stock header tables are 5000px wide. The stock panel header is hidden unless it holds the Content filter. The Content filter gets its own row at the top of the Content page.
 - The sheet has **no tab row**: it opens on General, and rows under the progress bar (Trackers, Peers, HTTP Sources, Content; cloned from the stock tabs so they stay translated) drill into each tab as its own page, with a back chevron in the title bar. Each level is a `history.pushState` entry, so the phone's back gesture steps back and then closes; the close and back buttons call `history.back()`. Switching tabs goes through clicking the hidden stock tab, but never the already-selected one, because stock would collapse the panel and remember that for desktop. (Compared with icon-only tabs, a bottom tab bar and a picker menu; drill-down was chosen.)
@@ -59,7 +60,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 **Tabs**
 - A segmented control: a dark track, 34px tabs, 4px gaps, a subtle grey hover, and a blue selected pill.
 - Rules are prefixed with `:root` because some windows (Options) load a **second copy of `Tabs.css`** after `theme.css`.
-- Tab rows that don't fit **scroll sideways**, like the status chips. (A "⋮ more" overflow menu was built and then reverted; don't reintroduce it.)
+- Tab rows that don't fit **scroll sideways** (desktop only now: mobile replaced every such row with drill-down lists or a menu). (A "⋮ more" overflow menu was built and then reverted; don't reintroduce it.)
 
 **Icons**
 - **Lucide** (ISC license; each SVG keeps its license comment). `icons.mjs` maps stock filename → Lucide name + color. Colors are baked into the SVG because `<img>` doesn't inherit `currentColor`.
@@ -86,7 +87,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - The native file picker can't be driven by automation. Call `qBittorrent.Client.uploadTorrentFiles([new File(...)])`, which is the same path the picker uses.
 
 ## Open ideas / next steps
-- **Next focus: replace sideways-scrolling tab rows on mobile.** The details sheet is done (drill-down, see Decisions). Options is done too (category list). Still open: the status chips. They cut off the last item and hide options off-screen, which doesn't feel native on a phone. Explore better-suited patterns before building: e.g. icon-only tabs that fit the width, a bottom tab bar, a dropdown/segmented picker showing the current tab, or one stacked scrolling page with section headers. This revisits the Tabs decision below (a "⋮ more" overflow menu was already tried and rejected).
+- Mobile sideways-scrolling rows are all gone (details sheet, Options, status chips). The status filter menu could also host categories, tags and trackers as sections (see below).
 - Mobile details sheet: card-style layouts for the Trackers/Peers/Content tables; item counts on the drill-down rows (skipped because file and web-seed counts aren't in the torrent list data).
 - Mobile: a way to reach logout, Search, RSS and Log (the menu bar is hidden).
 - Mobile: category, tag and tracker filters (only the status chips are shown).

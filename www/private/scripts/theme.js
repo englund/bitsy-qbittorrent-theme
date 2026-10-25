@@ -56,6 +56,46 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// On mobile the stock status list itself becomes the popover menu, so its click handlers and live counts keep working.
+// It can't be hidden with its column: a popover under a display: none ancestor doesn't render.
+{
+    const mobileQuery = window.matchMedia("(max-width: 640px)");
+    let list;
+
+    const renderButton = () => {
+        const selected = list.querySelector(".selectedFilter > .link") ?? list.querySelector(".link");
+        const button = document.getElementById("mobileFilterButton");
+        button.firstElementChild.src = selected.querySelector("img").src;
+        // The menu has the counts; the button only has room for the name.
+        button.lastElementChild.textContent = selected.textContent.replace(/\s*\(\d+\)\s*$/, "").trim();
+    };
+    const setUp = () => {
+        list.toggleAttribute("popover", mobileQuery.matches);
+        list.classList.toggle("popoverMenu", mobileQuery.matches);
+    };
+
+    // filters.html is loaded by XHR after the page.
+    const waitForList = new MutationObserver(() => {
+        list = document.getElementById("statusFilterList");
+        if (!list)
+            return;
+        waitForList.disconnect();
+        setUp();
+        renderButton();
+        new MutationObserver(renderButton).observe(list, { subtree: true, characterData: true, attributeFilter: ["class"] });
+        list.addEventListener("toggle", (event) => {
+            if (event.newState === "open")
+                placeBelow(list, document.getElementById("mobileFilterButton"));
+        });
+        list.addEventListener("click", (event) => {
+            if (event.target.closest(".link") && list.matches(":popover-open"))
+                list.hidePopover();
+        });
+        mobileQuery.addEventListener("change", setUp);
+    });
+    waitForList.observe(document.body, { childList: true, subtree: true });
+}
+
 // Mobile hides the properties panel, so Mocha lays it out at 0px, and Mocha splits space in proportion to current heights.
 // Back on desktop (e.g. a phone rotated to landscape), restore the saved split before Mocha lays the column out again.
 {

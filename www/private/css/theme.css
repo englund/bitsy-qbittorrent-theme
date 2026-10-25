@@ -235,6 +235,7 @@ fieldset {
     background-color: var(--accent-soft);
 }
 
+#mobileFilterButton,
 #mobileSortButton {
     display: none;
 }
@@ -499,7 +500,7 @@ td.statusBarSeparator {
     border-top-color: var(--border);
     padding: 10px 12px !important;
 
-    /* Tabs that don't fit scroll sideways, like the status chips. */
+    /* Tabs that don't fit scroll sideways. */
     & .tab-menu {
         overflow-x: auto;
         scrollbar-width: none;
@@ -769,7 +770,7 @@ body:has(> div > h2.vcenter) > div {
         margin-left: 0;
     }
 
-    #preferencesButton {
+    #mobileFilterButton {
         margin-left: auto;
     }
 
@@ -786,6 +787,32 @@ body:has(> div > h2.vcenter) > div {
         flex: 1;
         min-width: 0;
         width: auto;
+    }
+
+    #mobileFilterButton {
+        align-items: center;
+        background-color: var(--surface-2);
+        border-radius: 999px;
+        display: flex;
+        flex: 1 1 0; /* a zero basis keeps the toolbar from wrapping it; it grows to its text and then ellipsizes */
+        font-size: 15px;
+        gap: 5px;
+        height: 34px;
+        max-width: max-content;
+        min-width: 0;
+        padding: 0 8px;
+
+        & img {
+            flex: none;
+            height: 16px;
+            width: 16px;
+        }
+
+        & span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 
     #mobileSortButton {
@@ -828,23 +855,16 @@ body:has(> div > h2.vcenter) > div {
         overflow: hidden !important;
     }
 
+    /* theme.js makes the status list a popover menu under #mobileFilterButton. */
     #statusFilterList {
-        display: flex;
-        gap: 6px;
-        overflow-x: auto;
-        padding: 8px 12px;
-        scrollbar-width: none;
-    }
-
-    #statusFilterList li {
-        flex: none;
+        max-height: calc(100dvh - 120px);
+        overflow-y: auto;
     }
 
     #statusFilterList span.link {
-        background-color: var(--surface-2);
-        border-radius: 999px;
-        padding: 6px 12px;
-        white-space: nowrap;
+        font-size: 15px;
+        gap: 10px;
+        padding: 10px 12px;
     }
 
     #mainColumn {
