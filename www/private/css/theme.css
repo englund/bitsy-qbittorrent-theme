@@ -770,6 +770,11 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #desktopNavbar,
+    #uploadButton,
+    #downloadButton,
+    #deleteButton,
+    #startButton,
+    #stopButton,
     #queueingButtons,
     #torrentCreatorButton,
     #mainWindowTabs,
@@ -783,22 +788,14 @@ body:has(> div > h2.vcenter) > div {
         display: none !important;
     }
 
+    /* Two rows: ☰ and search, then the filter pill on the left and sort on the right. */
     #mochaToolbar {
-        gap: 4px;
+        gap: 8px 6px;
         padding: 8px 12px;
     }
 
-    #mochaToolbar .divider {
-        margin-left: 0;
-    }
-
-    #mobileFilterButton {
-        margin-left: auto;
-    }
-
-    /* Its menu lives in the filters column, which stock hides outside Transfers. */
-    :root:has(#mainColumn.invisible) #mobileFilterButton {
-        visibility: hidden;
+    #torrentsFilterToolbar:not(.invisible) {
+        display: contents;
     }
 
     #mobileMenuButton {
@@ -806,7 +803,19 @@ body:has(> div > h2.vcenter) > div {
         border: 0;
         display: flex;
         flex: none;
+        margin-left: -5px; /* lines the icon up with the cards' left edge */
+        order: -2;
         padding: 5px;
+    }
+
+    #torrentsFilterInput {
+        flex: 1 1 calc(100% - 48px); /* wide enough that everything after it wraps to the second row */
+        order: -1;
+    }
+
+    /* Its menu lives in the filters column, which stock hides outside Transfers. */
+    :root:has(#mainColumn.invisible) #mobileFilterButton {
+        display: none;
     }
 
     .mochaToolButton {
@@ -819,7 +828,6 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #torrentsFilterInput {
-        flex: 1;
         min-width: 0;
         width: auto;
     }
@@ -858,6 +866,7 @@ body:has(> div > h2.vcenter) > div {
         flex: none;
         font-size: 15px;
         height: 34px;
+        margin-left: auto;
         max-width: 40%;
         padding: 0 12px 0 32px;
 
@@ -976,6 +985,18 @@ body:has(> div > h2.vcenter) > div {
         row-gap: 6px;
     }
 
+    /* Lucide ellipsis-vertical (ISC). theme.js opens the context menu when it's tapped. */
+    #torrentsTableDiv tbody tr::after {
+        background-color: var(--text-muted);
+        content: "";
+        height: 20px;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3Ccircle cx='12' cy='5' r='1'/%3E%3Ccircle cx='12' cy='19' r='1'/%3E%3C/svg%3E") center / contain no-repeat;
+        position: absolute;
+        right: 8px;
+        top: 9px;
+        width: 20px;
+    }
+
     #torrentsTableDiv tbody tr.selected {
         background-color: var(--surface-2) !important;
         border-color: var(--accent);
@@ -1008,6 +1029,7 @@ body:has(> div > h2.vcenter) > div {
         font-weight: 600;
         grid-area: name;
         line-height: 20px !important;
+        padding-right: 24px !important; /* room for the ⋮ */
     }
 
     #torrentsTableDiv td[data-column="name"] .stateIcon {

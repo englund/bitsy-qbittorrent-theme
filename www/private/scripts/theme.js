@@ -3,7 +3,10 @@
 const placeBelow = (popover, button) => {
     const rect = button.getBoundingClientRect();
     popover.style.top = `${rect.bottom + 6}px`;
-    popover.style.right = `${window.innerWidth - rect.right}px`;
+    // Hang it from whichever edge of the button is nearer the screen edge.
+    const fromLeft = rect.left < window.innerWidth / 2;
+    popover.style.left = fromLeft ? `${rect.left}px` : "auto";
+    popover.style.right = fromLeft ? "auto" : `${window.innerWidth - rect.right}px`;
 };
 
 // Dialogs load in iframes, where media queries see the frame's width, not the screen's.
@@ -72,6 +75,23 @@ window.addEventListener("DOMContentLoaded", () => {
         document.getElementById(item.dataset.click).click();
     });
 });
+
+// The ⋮ on each mobile card is a pseudo-element (the rows are virtualized and rebuilt by stock), so a tap in its
+// corner opens the stock context menu, the same one a long press opens.
+{
+    const mobileQuery = window.matchMedia("(max-width: 640px)");
+    document.addEventListener("click", (event) => {
+        const tr = event.target.closest?.("#torrentsTableDiv tr");
+        if (!mobileQuery.matches || !tr)
+            return;
+        const rect = tr.getBoundingClientRect();
+        if ((event.clientX < rect.right - 44) || (event.clientY > rect.top + 40))
+            return;
+        // Keep the details sheet from opening, and the menu's own click listeners from closing it again.
+        event.stopPropagation();
+        tr.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: event.clientX, clientY: event.clientY }));
+    }, true);
+}
 
 // On mobile the stock filters panel itself becomes the popover menu, so its click handlers and live counts keep working.
 // It can't be hidden with its column: a popover under a display: none ancestor doesn't render.
