@@ -567,7 +567,8 @@ button[type="submit"],
 #addButton,
 :is(#rssdownloaderpage, #cookiesPage) #saveButton,
 input[onclick*="applyPreferences"],
-input#save {
+input#save,
+:is(#submitButton, #renameButton, #setLocationButton, #applyButton, #categoryNameButton, #tagNameButton, #addTrackersButton, #addWebSeedsButton, #editTrackerButton, #editWebSeedButton) {
     background-color: var(--accent);
     border-color: var(--accent);
     color: var(--color-text-white);
@@ -577,6 +578,7 @@ input#save {
 
 button[type="submit"]:hover:not(:disabled),
 #addButton:hover,
+:is(#submitButton, #renameButton, #setLocationButton, #applyButton, #categoryNameButton, #tagNameButton, #addTrackersButton, #addWebSeedsButton, #editTrackerButton, #editWebSeedButton):hover,
 :is(#rssdownloaderpage, #cookiesPage) #saveButton:hover:not(:disabled),
 input[onclick*="applyPreferences"]:hover,
 input#save:hover {
@@ -584,11 +586,13 @@ input#save:hover {
 }
 
 /* Destructive: red text rather than a red fill, which white text can't reach 4.5:1 on. */
-#confirmDeletionButton {
+/* #confirmBtn is the yes of the feed, rule and tracker deletion and rule clearing confirmations. */
+#confirmDeletionButton,
+#confirmBtn {
     color: var(--red);
 }
 
-#confirmDeletionButton:hover {
+:is(#confirmDeletionButton, #confirmBtn):hover {
     background-color: hsl(0deg 50% 22%);
     border-color: var(--red);
 }
@@ -2621,6 +2625,13 @@ body:has(> div > h2.vcenter) > div {
         }
     }
 
+    /* Global speed limits loads into the page, so the frame rules don't reach its Apply. */
+    #globalSpeedLimitsPage #applyButton {
+        font-size: 16px;
+        min-height: var(--row);
+        width: 100%;
+    }
+
     /* Every window is already full-screen. */
     .mochaMaximizeButton {
         display: none !important;
@@ -2765,10 +2776,15 @@ body:has(> div > h2.vcenter) > div {
 
     button[type="submit"],
     #addButton,
-    input#save {
+    input#save,
+    :is(#submitButton, #renameButton, #setLocationButton, #applyButton, #categoryNameButton, #tagNameButton, #addTrackersButton, #addWebSeedsButton, #editTrackerButton, #editWebSeedButton) {
         font-size: 16px !important;
         min-height: var(--row);
         padding: 0 24px;
+    }
+
+    :is(#submitButton, #renameButton, #setLocationButton, #applyButton, #categoryNameButton, #tagNameButton, #addTrackersButton, #addWebSeedsButton, #editTrackerButton, #editWebSeedButton) {
+        width: 100%;
     }
 
     /* Share limits: one choice per row, with the custom limits indented under their radio's label. Stock styles inline. */
