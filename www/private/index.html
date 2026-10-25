@@ -46,6 +46,7 @@
     <script defer src="scripts/contextmenu.js?locale=${LANG}&v=${CACHEID}"></script>
     <script defer src="scripts/pathAutofill.js?v=${CACHEID}"></script>
     <script defer src="scripts/statistics.js?v=${CACHEID}"></script>
+    <script defer src="scripts/theme.js?v=${CACHEID}"></script>
 </head>
 
 <body>
@@ -124,7 +125,6 @@
                 </ul>
             </div>
             <div id="mochaToolbar">
-                &nbsp;&nbsp;
                 <div id="uploadButton" style="display: inline-block;">
                     <label for="fileselectButton" style="cursor: pointer;">
                         <img class="mochaToolButton" title="QBT_TR(Add Torrent File...)QBT_TR[CONTEXT=MainWindow]" src="images/list-add.svg" alt="QBT_TR(Add Torrent File...)QBT_TR[CONTEXT=MainWindow]" width="24" height="24">
@@ -165,6 +165,19 @@
                     <input type="checkbox" id="torrentsFilterRegexBox">
                     <label for="torrentsFilterRegexBox" aria-label="QBT_TR(Use regular expression)QBT_TR[CONTEXT=MainWindow]" title="QBT_TR(Use regular expression)QBT_TR[CONTEXT=MainWindow]"></label>
                     <label for="torrentsFilterSelect">QBT_TR(Filter by:)QBT_TR[CONTEXT=MainWindow]</label>
+                    <button type="button" id="mobileSortButton" popovertarget="mobileSortMenu" aria-label="QBT_TR(Sort by)QBT_TR[CONTEXT=MainWindow]"><span></span></button>
+                    <div id="mobileSortMenu" popover role="menu">
+                        <button type="button" role="menuitemradio" data-column="priority">QBT_TR(Queue)QBT_TR[CONTEXT=TransferListWidget]</button>
+                        <button type="button" role="menuitemradio" data-column="name">QBT_TR(Name)QBT_TR[CONTEXT=TransferListModel]</button>
+                        <button type="button" role="menuitemradio" data-column="added_on">QBT_TR(Added On)QBT_TR[CONTEXT=TransferListModel]</button>
+                        <button type="button" role="menuitemradio" data-column="progress">QBT_TR(Progress)QBT_TR[CONTEXT=TransferListModel]</button>
+                        <button type="button" role="menuitemradio" data-column="status">QBT_TR(Status)QBT_TR[CONTEXT=TransferListModel]</button>
+                        <button type="button" role="menuitemradio" data-column="size">QBT_TR(Size)QBT_TR[CONTEXT=TransferListModel]</button>
+                        <button type="button" role="menuitemradio" data-column="dlspeed">QBT_TR(Down Speed)QBT_TR[CONTEXT=TransferListModel]</button>
+                        <button type="button" role="menuitemradio" data-column="upspeed">QBT_TR(Up Speed)QBT_TR[CONTEXT=TransferListModel]</button>
+                        <button type="button" role="menuitemradio" data-column="eta">QBT_TR(ETA)QBT_TR[CONTEXT=TransferListModel]</button>
+                        <button type="button" role="menuitemradio" data-column="ratio">QBT_TR(Ratio)QBT_TR[CONTEXT=TransferListModel]</button>
+                    </div>
                     <select id="torrentsFilterSelect">
                         <option value="name" selected>QBT_TR(Name)QBT_TR[CONTEXT=MainWindow]</option>
                         <option value="save_path">QBT_TR(Save Path)QBT_TR[CONTEXT=MainWindow]</option>

@@ -136,6 +136,11 @@ fieldset {
     display: flex;
 }
 
+/* Cancels the first button's padding so its icon lines up with the search bar's left edge. */
+#mochaToolbar > :first-child {
+    margin-left: -5px;
+}
+
 #queueingButtons {
     display: inline-flex;
     gap: 2px;
@@ -207,6 +212,49 @@ fieldset {
 
 #torrentsFilterRegexBox:checked + label {
     background-color: var(--accent-soft);
+}
+
+#mobileSortButton {
+    display: none;
+}
+
+#mobileSortMenu {
+    background-color: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px hsl(0deg 0% 0% / 45%);
+    color: var(--text);
+    inset: auto; /* positioned under the button by theme.js */
+    margin: 0;
+    min-width: 200px;
+    padding: 4px;
+    position: fixed;
+
+    & button {
+        background: none;
+        border: 0;
+        border-radius: var(--radius-sm);
+        display: block;
+        font-size: 15px;
+        padding: 10px 12px;
+        text-align: left;
+        width: 100%;
+    }
+
+    & button:hover {
+        background-color: var(--surface-3);
+        border: 0;
+    }
+
+    & button[aria-checked="true"] {
+        background: var(--accent-soft) url("../images/sort-ascending.svg") right 12px center / 16px no-repeat;
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    &.reversed button[aria-checked="true"] {
+        background-image: url("../images/sort-descending.svg");
+    }
 }
 
 /* Layout chrome */
@@ -398,7 +446,7 @@ td.statusBarSeparator {
     #queueingButtons,
     #torrentCreatorButton,
     #mainWindowTabs,
-    #torrentsFilterToolbar > :not(#torrentsFilterInput),
+    #torrentsFilterToolbar > :not(#torrentsFilterInput, #mobileSortButton, #mobileSortMenu),
     #filtersColumn_handle,
     #transferList_handle,
     #propertiesPanel_wrapper,
@@ -429,7 +477,34 @@ td.statusBarSeparator {
 
     #torrentsFilterInput {
         font-size: 16px; /* below 16px iOS Safari zooms the page on focus */
-        width: 100%;
+    }
+
+    #torrentsFilterInput {
+        flex: 1;
+        min-width: 0;
+        width: auto;
+    }
+
+    #mobileSortButton {
+        align-items: center;
+        background: var(--surface-2) url("../images/sort-ascending.svg") 10px center / 16px no-repeat;
+        border-radius: 999px;
+        display: flex;
+        flex: none;
+        font-size: 15px;
+        height: 34px;
+        max-width: 40%;
+        padding: 0 12px 0 32px;
+
+        & span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &.reversed {
+            background-image: url("../images/sort-descending.svg");
+        }
     }
 
     #pageWrapper {

@@ -80,6 +80,8 @@ const icons = {
     "regex": ["regex", muted],
     "set-location": ["folder-input", muted],
     "slow": ["gauge", orange],
+    "sort-ascending": ["arrow-down-narrow-wide", muted],
+    "sort-descending": ["arrow-down-wide-narrow", muted],
     "slow_off": ["gauge", muted],
     "stalledDL": ["arrow-down", muted],
     "stalledUP": ["arrow-up", muted],
