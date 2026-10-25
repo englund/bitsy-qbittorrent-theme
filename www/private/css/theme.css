@@ -290,7 +290,8 @@ fieldset {
 :root:has(#transfersTabLink.selected) #mobileMenu [data-click="transfersTabLink"],
 :root:has(#searchTabLink.selected) #mobileMenu [data-click="searchTabLink"],
 :root:has(#rssTabLink.selected) #mobileMenu [data-click="rssTabLink"],
-:root:has(#logTabLink.selected) #mobileMenu [data-click="logTabLink"] {
+:root:has(#logTabLink.selected) #mobileMenu [data-click="logTabLink"],
+:root:has(#alternativeSpeedLimits[src$="/slow.svg"]) #mobileMenu [data-click="alternativeSpeedLimits"] {
     background-color: var(--accent-soft);
     color: var(--accent);
     font-weight: 600;
@@ -625,6 +626,15 @@ fieldset.settings {
     margin-left: 12px;
 }
 
+/* Stock pushes the add icon past the field with padding-left: 170px, which border-box collapses to nothing. */
+#watched_folders_tab img[id^="addFolderImg"] {
+    left: calc(100% + 8px);
+    padding: 0 !important;
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+}
+
 /* Type-or-pick combo (category): the wrapper is the visible field, the select's arrow peeks out from under the input. */
 .select-watched-folder-editable {
     background-color: var(--surface-2);
@@ -645,7 +655,9 @@ fieldset.settings {
         width: 100%;
     }
 
+    /* Opaque, so the select's own label doesn't show through when the typed text differs (monitored folder › Other…). */
     & input:not([type="checkbox"]) {
+        background-color: var(--surface-2);
         padding: 0 8px;
         width: calc(100% - 28px);
     }
@@ -924,6 +936,10 @@ body:has(> div > h2.vcenter) > div {
         max-height: calc(100dvh - 120px);
         max-width: calc(100vw - 24px);
         overflow-y: auto;
+    }
+
+    #mobileMenu {
+        max-height: calc(100dvh - 72px);
     }
 
     /* Mocha sets display: block inline, which would keep the closed popover in the page. */
@@ -1724,6 +1740,7 @@ body:has(> div > h2.vcenter) > div {
 #rssSheetBar,
 #rssdlArticlesRow,
 #prefCategoryList,
+#aboutSectionList,
 .sheetBack {
     display: none;
 }
@@ -1818,7 +1835,7 @@ body:has(> div > h2.vcenter) > div {
         }
     }
 
-    :is(:root.details-open #detailsSheetSections, #preferencesPage.prefs-list #prefCategoryList) {
+    :is(:root.details-open #detailsSheetSections, #preferencesPage.prefs-list #prefCategoryList, #aboutpage.about-list #aboutSectionList) {
         background-color: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius);
@@ -1997,8 +2014,8 @@ body:has(> div > h2.vcenter) > div {
     }
 
     /* Options tables: a field that shares a row with its label drops below it instead of squeezing it. */
-    /* Options drill-down (theme.js): .prefs-list shows #prefCategoryList, .prefs-subpage one category with a back button. */
-    #preferencesPage_toolbarWrapper {
+    /* Options and About drill-downs (theme.js): .prefs-list/.about-list show the list, .prefs-subpage/.about-subpage one tab with a back button. */
+    :is(#preferencesPage_toolbarWrapper, #aboutpage_toolbarWrapper) {
         display: none !important;
     }
 
@@ -2014,6 +2031,10 @@ body:has(> div > h2.vcenter) > div {
 
     }
 
+    #aboutpage.about-list #aboutSectionList {
+        margin: 16px 0 0;
+    }
+
     /* Pin Save to the bottom on pages shorter than the screen. Mocha and the footer rule set these with priority. */
     #preferencesPage_content {
         display: flex !important;
@@ -2024,14 +2045,14 @@ body:has(> div > h2.vcenter) > div {
         }
     }
 
-    #preferencesPage .sheetBack {
+    :is(#preferencesPage, #aboutpage) .sheetBack {
         left: 2px;
         position: absolute;
         top: 4px;
         z-index: 1;
     }
 
-    #preferencesPage.prefs-subpage {
+    :is(#preferencesPage.prefs-subpage, #aboutpage.about-subpage) {
         & .sheetBack {
             display: flex;
         }
@@ -2098,6 +2119,49 @@ body:has(> div > h2.vcenter) > div {
     /* Otherwise the table shrinks to fit, and a field's 100% is only as wide as the table (Downloads › email). */
     #preferencesPage_content fieldset.settings table:has(td :is(input:is([type="text"], [type="password"], [type="number"]), select, textarea)) {
         width: 100%;
+    }
+
+    /* Monitored folders: one card per folder, its path above its save location. Stock borders the table inline. */
+    #preferencesPage_content #watched_folders_tab {
+        border: 0 !important;
+
+        & thead {
+            display: none;
+        }
+
+        /* Room for the add button beside the last folder, on every row so the fields line up. */
+        & td {
+            border: 0;
+            padding-right: var(--touch);
+        }
+
+        & tbody tr {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            gap: 8px;
+            padding: 12px;
+        }
+
+        & tbody tr + tr {
+            margin-top: 8px;
+        }
+
+        & .select-watched-folder-editable {
+            height: var(--touch);
+            width: 100%;
+
+            & input:not([type="checkbox"]) {
+                width: calc(100% - 32px) !important;
+            }
+        }
+
+        & img[id^="addFolderImg"] {
+            box-sizing: border-box;
+            height: var(--touch);
+            left: 100%;
+            padding: 14px !important;
+            width: var(--touch) !important;
+        }
     }
 
     /* As in the dialog frames: floated, the legend becomes the box's first row instead of straddling its border. */

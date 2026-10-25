@@ -116,6 +116,7 @@ const tick = () => {
 };
 
 let rid = 0;
+let altSpeed = false;
 const maindata = () => {
     tick();
     const list = Object.values(torrents);
@@ -133,7 +134,7 @@ const maindata = () => {
             connection_status: "connected", dht_nodes: 312, refresh_interval: 1500,
             dl_info_speed: list.reduce((s, t) => s + t.dlspeed, 0), dl_info_data: 48 * GiB, dl_rate_limit: 0,
             up_info_speed: list.reduce((s, t) => s + t.upspeed, 0), up_info_data: 31 * GiB, up_rate_limit: 0,
-            use_alt_speed_limits: false, queueing: true, free_space_on_disk: 734 * GiB,
+            use_alt_speed_limits: altSpeed, queueing: true, free_space_on_disk: 734 * GiB,
             last_external_address_v4: "203.0.113.7", last_external_address_v6: "",
             alltime_dl: 1.2 * 1024 * GiB, alltime_ul: 0.9 * 1024 * GiB, global_ratio: "0.75",
             total_peer_connections: 87, total_buffers_size: 0, queued_io_jobs: 0, average_time_queue: 0,
@@ -206,7 +207,8 @@ const api = {
     "torrents/categories": () => maindata().categories,
     "torrents/tags": () => ["favorite", "hd"],
     "transfer/info": () => maindata().server_state,
-    "transfer/speedLimitsMode": () => "0",
+    "transfer/speedLimitsMode": () => (altSpeed ? "1" : "0"),
+    "transfer/toggleSpeedLimitsMode": () => { altSpeed = !altSpeed; return ""; },
     "log/main": () => [
         { id: 0, message: "qBittorrent v5.3.0 started", timestamp: now() - 600, type: 1 },
         { id: 1, message: "Trying to listen on 0.0.0.0:6881", timestamp: now() - 590, type: 2 },

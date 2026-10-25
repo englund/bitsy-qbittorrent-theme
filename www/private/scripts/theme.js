@@ -252,38 +252,40 @@ window.addEventListener("DOMContentLoaded", () => {
         history.replaceState(null, "");
 }
 
-// Mobile Options: a list of the categories that drills into each one, instead of the scrolling tab row.
+// Mobile Options and About: a list of the tabs that drills into each one, instead of the scrolling tab row.
 // Like the details sheet, each level is a history entry, so the back gesture steps back and then closes the window.
-{
+// About's first tab is the list page itself (its content above the list), so it gets no row.
+const drillDownTabs = ({ winId, tabsId, readyId, key, listId, listClass, subpageClass, homeTabId }) => {
     const mobileQuery = window.matchMedia("(max-width: 640px)");
     let ownsHistory = false;
-    let optionsTitle;
+    let windowTitle;
 
     const render = () => {
-        const win = document.getElementById("preferencesPage");
+        const win = document.getElementById(winId);
         if (!win || !ownsHistory)
             return;
-        const page = history.state?.options;
+        const page = history.state?.[key];
         if (page === undefined) {
             ownsHistory = false;
             MochaUI.closeWindow(win);
             return;
         }
         const isList = page === "list";
-        win.classList.toggle("prefs-list", mobileQuery.matches && isList);
-        win.classList.toggle("prefs-subpage", mobileQuery.matches && !isList);
-        document.getElementById("preferencesPage_title").textContent = isList ? optionsTitle : document.getElementById(page).textContent.trim();
-        if (!isList)
-            document.getElementById(page).click();
+        win.classList.toggle(listClass, mobileQuery.matches && isList);
+        win.classList.toggle(subpageClass, mobileQuery.matches && !isList);
+        document.getElementById(`${winId}_title`).textContent = isList ? windowTitle : document.getElementById(page).textContent.trim();
+        const tabId = isList ? homeTabId : page;
+        if (tabId)
+            document.getElementById(tabId).click();
     };
 
     const go = (page) => {
-        history.pushState({ options: page }, "");
+        history.pushState({ [key]: page }, "");
         render();
     };
 
     const setUp = (win) => {
-        optionsTitle = document.getElementById("preferencesPage_title").textContent;
+        windowTitle = document.getElementById(`${winId}_title`).textContent;
 
         const backButton = document.createElement("button");
         backButton.type = "button";
@@ -292,18 +294,24 @@ window.addEventListener("DOMContentLoaded", () => {
         // Keep Mocha from starting a window drag from the title bar.
         backButton.addEventListener("mousedown", (event) => event.stopPropagation());
         backButton.addEventListener("click", () => history.back());
-        document.getElementById("preferencesPage_titleBar").prepend(backButton);
+        document.getElementById(`${winId}_titleBar`).prepend(backButton);
 
         const list = document.createElement("nav");
-        list.id = "prefCategoryList";
-        for (const tab of document.querySelectorAll("#preferencesTabs li")) {
+        list.id = listId;
+        for (const tab of document.querySelectorAll(`#${tabsId} li`)) {
+            if (tab.id === homeTabId)
+                continue;
             const row = document.createElement("button");
             row.type = "button";
             row.append(...tab.firstElementChild.cloneNode(true).childNodes);
             row.addEventListener("click", () => go(tab.id));
             list.append(row);
         }
-        document.getElementById("preferencesPage_content").prepend(list);
+        const content = document.getElementById(`${winId}_content`);
+        if (homeTabId)
+            content.append(list);
+        else
+            content.prepend(list);
 
         ownsHistory = true;
         go("list");
@@ -311,17 +319,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // The window, its toolbar (tabs) and its content all arrive asynchronously.
     const check = () => {
-        const win = document.getElementById("preferencesPage");
+        const win = document.getElementById(winId);
         if (!win) {
-            // Closed with × or Save: drop the history entries it left behind.
-            if (ownsHistory && history.state?.options) {
+            // Closed with × (or Options' Save): drop the history entries it left behind.
+            if (ownsHistory && history.state?.[key]) {
                 ownsHistory = false;
-                history.go(history.state.options === "list" ? -1 : -2);
+                history.go(history.state[key] === "list" ? -1 : -2);
             }
             return;
         }
-        if (mobileQuery.matches && !ownsHistory && !document.getElementById("prefCategoryList")
-            && document.getElementById("preferencesTabs") && document.getElementById("BehaviorTab"))
+        if (mobileQuery.matches && !ownsHistory && !document.getElementById(listId)
+            && document.getElementById(tabsId) && document.getElementById(readyId))
             setUp(win);
     };
 
@@ -332,9 +340,18 @@ window.addEventListener("DOMContentLoaded", () => {
         render();
     });
     // history.state survives a reload; a window left open then shouldn't count as open now.
-    if (history.state?.options)
+    if (history.state?.[key])
         history.replaceState(null, "");
-}
+};
+
+drillDownTabs({
+    winId: "preferencesPage", tabsId: "preferencesTabs", readyId: "BehaviorTab", key: "options",
+    listId: "prefCategoryList", listClass: "prefs-list", subpageClass: "prefs-subpage"
+});
+drillDownTabs({
+    winId: "aboutpage", tabsId: "aboutTabs", readyId: "aboutAboutContent", key: "about",
+    listId: "aboutSectionList", listClass: "about-list", subpageClass: "about-subpage", homeTabId: "aboutAboutLink"
+});
 
 // Mobile RSS: the three panes (feeds, articles, article) become drill-down pages. Like the details sheet,
 // each level is a history entry, so the back gesture steps out of it.
