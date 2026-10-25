@@ -1,5 +1,11 @@
 "use strict";
 
+const placeBelow = (popover, button) => {
+    const rect = button.getBoundingClientRect();
+    popover.style.top = `${rect.bottom + 6}px`;
+    popover.style.right = `${window.innerWidth - rect.right}px`;
+};
+
 // Dialogs load in iframes, where media queries see the frame's width, not the screen's.
 // Tag each dialog document so theme.css can style it as a full-screen phone sheet.
 {
@@ -35,11 +41,8 @@ window.addEventListener("DOMContentLoaded", () => {
     render(localStorage.getItem("sorted_column_torrentsTableDiv"), localStorage.getItem("reverse_sort_torrentsTableDiv"));
 
     menu.addEventListener("toggle", (event) => {
-        if (event.newState !== "open")
-            return;
-        const rect = button.getBoundingClientRect();
-        menu.style.top = `${rect.bottom + 6}px`;
-        menu.style.right = `${window.innerWidth - rect.right}px`;
+        if (event.newState === "open")
+            placeBelow(menu, button);
     });
 
     // Picking the current column again flips the direction, same as clicking its header.
