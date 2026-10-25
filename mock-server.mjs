@@ -1,10 +1,10 @@
 // Serves ./www the way qBittorrent does and fakes /api/v2 so the WebUI can be themed without a real server.
-// Usage: node mock-server.mjs [port]   (then open http://localhost:8080, /login for the login page)
+// Usage: node mock-server.mjs [port]   (then open http://localhost:8090, /login for the login page)
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { join, extname, normalize } from "node:path";
 
-const PORT = Number(process.argv[2] ?? 8080);
+const PORT = Number(process.argv[2] ?? 8090);
 const WWW = join(import.meta.dirname, "www");
 const MIME = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".png": "image/png", ".gif": "image/gif", ".ico": "image/x-icon", ".json": "application/json" };
 
@@ -35,7 +35,7 @@ const seeds = [
     ["Stopped and done", "stoppedUP", 1, 512 * MiB, "Movies"],
 ];
 
-const torrents = Object.fromEntries(seeds.map(([name, state, progress, size, category], i) => {
+const makeTorrent = ([name, state, progress, size, category], i) => {
     const hash = (i + 1).toString(16).padStart(40, "a");
     const downloaded = Math.floor(size * progress);
     return [hash, {
@@ -57,7 +57,48 @@ const torrents = Object.fromEntries(seeds.map(([name, state, progress, size, cat
         seeding_time: 0, time_active: 3600 * (i + 1), last_activity: now(), seen_complete: now(), reannounce: 1200,
         magnet_uri: `magnet:?xt=urn:btih:${hash}`,
     }];
-}));
+};
+const torrents = Object.fromEntries(seeds.map(makeTorrent));
+
+// What parseMetadata/fetchMetadata hand to the add dialog. Files get added back by hash, so remember their names.
+const namesByHash = new Map();
+const fakeMetadata = (name, i) => {
+    const hash = (1000 + i).toString(16).padStart(40, "b");
+    namesByHash.set(hash, name);
+    return metadataFor(name, hash);
+};
+const metadataFor = (name, hash) => ({
+    infohash_v1: hash,
+    infohash_v2: "",
+    creation_date: now() - 30 * 86400,
+    comment: "Mock torrent for the add dialog",
+    info: {
+        name,
+        files: [
+            { path: `${name}/${name}.mkv`, length: 1.4 * GiB },
+            { path: `${name}/Subs/English.srt`, length: 82 * 1024 },
+            { path: `${name}/Subs/Swedish.srt`, length: 79 * 1024 },
+            { path: `${name}/README.txt`, length: 2048 },
+        ],
+    },
+});
+
+const nameFromSource = (source) => {
+    const dn = source.startsWith("magnet:") && new URLSearchParams(source.split("?")[1] ?? "").get("dn");
+    return dn || namesByHash.get(source) || source.split("/").pop().replace(/\.torrent$/, "") || "New torrent";
+};
+
+const addTorrents = (fields) => {
+    const sources = (fields.get("urls") ?? "").split(/\r?\n/).filter(Boolean);
+    for (const source of sources.length ? sources : ["file"]) {
+        const i = Object.keys(torrents).length;
+        const name = fields.get("rename") || nameFromSource(source);
+        const paused = fields.get("stopped") === "true";
+        const [hash, torrent] = makeTorrent([name, paused ? "stoppedDL" : "downloading", 0, 1.4 * GiB, fields.get("category") ?? ""], i);
+        torrents[hash] = { ...torrent, added_on: now(), tags: fields.get("tags") ?? "" };
+    }
+    return "Ok.";
+};
 
 // Keeps the list alive: active torrents get fresh speeds and progress on every poll.
 const tick = () => {
@@ -158,6 +199,9 @@ const api = {
         const t = torrents[q.get("hash")] ?? Object.values(torrents)[0];
         return Array.from({ length: 200 }, (_, i) => (i / 200 < t.progress ? 2 : i % 17 === 0 ? 1 : 0));
     },
+    "torrents/parseMetadata": (q, fields) => fields.getAll("file").map((_, i) => fakeMetadata(`Sample Movie ${i + 1}`, i)),
+    "torrents/fetchMetadata": (q, fields) => fakeMetadata(nameFromSource(fields.get("source") ?? ""), 0),
+    "torrents/add": (q, fields) => addTorrents(fields),
     "torrents/pieceAvailability": () => Array.from({ length: 200 }, (_, i) => 1 + (i % 7)),
     "torrents/categories": () => maindata().categories,
     "torrents/tags": () => ["favorite", "hd"],
@@ -203,7 +247,8 @@ createServer(async (req, res) => {
 
     if (path.startsWith("/api/v2/")) {
         const handler = api[path.slice("/api/v2/".length)];
-        const result = handler ? handler(url.searchParams) : "";
+        const fields = req.method === "POST" ? await new Response(req, { headers: req.headers }).formData().catch(() => new FormData()) : new FormData();
+        const result = handler ? handler(url.searchParams, fields) : "";
         if (!handler)
             console.log(`unmocked: ${req.method} ${path}`);
         return typeof result === "string"
