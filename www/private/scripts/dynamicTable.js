@@ -1192,11 +1192,19 @@ window.qBittorrent.DynamicTable ??= (() => {
     class TorrentsTable extends DynamicTable {
         setupVirtualList() {
             super.setupVirtualList();
-            // Must match the card height in theme.css. Read once at load, so crossing the breakpoint needs a reload.
-            if (window.matchMedia("(max-width: 640px)").matches)
-                this.rowHeight = 92;
-            else
-                this.rowHeight = (clientData.get("display_density") === "compact") ? 18 : 22;
+            // Must match the card slot height and breakpoint in theme.css.
+            const mobileQuery = window.matchMedia("(max-width: 640px)");
+            const updateRowHeight = () => {
+                if (mobileQuery.matches)
+                    this.rowHeight = 92;
+                else
+                    this.rowHeight = (clientData.get("display_density") === "compact") ? 18 : 22;
+            };
+            updateRowHeight();
+            mobileQuery.addEventListener("change", () => {
+                updateRowHeight();
+                this.rerender();
+            });
         }
 
         initColumns() {
