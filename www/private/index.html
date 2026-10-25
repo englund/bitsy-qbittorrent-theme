@@ -144,6 +144,16 @@
                 <a id="torrentCreatorButton" class="divider"><img class="mochaToolButton" title="QBT_TR(Torrent Creator)QBT_TR[CONTEXT=MainWindow]" src="images/torrent-creator.svg" alt="QBT_TR(Torrent Creator)QBT_TR[CONTEXT=MainWindow]" width="24" height="24"></a>
                 <button type="button" id="mobileFilterButton" popovertarget="Filters_pad" aria-label="QBT_TR(Status)QBT_TR[CONTEXT=TransferListFiltersWidget]"><img alt=""><span></span></button>
                 <a id="preferencesButton" class="divider"><img class="mochaToolButton" title="QBT_TR(Options)QBT_TR[CONTEXT=OptionsDialog]" src="images/configure.svg" alt="QBT_TR(Options)QBT_TR[CONTEXT=OptionsDialog]" width="24" height="24"></a>
+                <button type="button" id="mobileMenuButton" popovertarget="mobileMenu" aria-label="QBT_TR(Menu)QBT_TR[CONTEXT=MainWindow]"><img class="mochaToolButton" src="images/menu.svg" alt="" width="24" height="24"></button>
+                <div id="mobileMenu" class="popoverMenu" popover role="menu">
+                    <button type="button" role="menuitem" data-click="transfersTabLink"><img src="images/filter-all.svg" alt="" width="16" height="16">QBT_TR(Transfers)QBT_TR[CONTEXT=MainWindow]</button>
+                    <button type="button" role="menuitem" data-click="searchTabLink"><img src="images/edit-find.svg" alt="" width="16" height="16">QBT_TR(Search)QBT_TR[CONTEXT=MainWindow]</button>
+                    <button type="button" role="menuitem" data-click="rssTabLink"><img src="images/application-rss.svg" alt="" width="16" height="16">QBT_TR(RSS)QBT_TR[CONTEXT=MainWindow]</button>
+                    <button type="button" role="menuitem" data-click="logTabLink"><img src="images/help-contents.svg" alt="" width="16" height="16">QBT_TR(Execution Log)QBT_TR[CONTEXT=MainWindow]</button>
+                    <hr>
+                    <button type="button" role="menuitem" data-click="preferencesButton"><img src="images/configure.svg" alt="" width="16" height="16">QBT_TR(Options)QBT_TR[CONTEXT=OptionsDialog]</button>
+                    <button type="button" role="menuitem" data-click="logoutLink"><img src="images/system-log-out.svg" alt="" width="16" height="16">QBT_TR(Logout)QBT_TR[CONTEXT=HttpServer]</button>
+                </div>
                 <div id="mainWindowTabs" class="toolbarTabs">
                     <menu id="mainWindowTabsList" class="tab-menu">
                         <li id="transfersTabLink" class="selected">

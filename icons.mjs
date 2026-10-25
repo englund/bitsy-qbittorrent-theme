@@ -60,6 +60,7 @@ const icons = {
     "list-add": ["circle-plus", accent],
     "list-remove": ["trash-2", red],
     "mail-inbox": ["inbox", muted],
+    "menu": ["menu", muted],
     "name": ["type", muted],
     "network-connect": ["network", muted],
     "network-server": ["server", muted],

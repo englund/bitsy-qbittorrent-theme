@@ -236,6 +236,7 @@ fieldset {
 }
 
 #mobileFilterButton,
+#mobileMenuButton,
 #mobileSortButton {
     display: none;
 }
@@ -270,6 +271,28 @@ fieldset {
         background-color: var(--surface-3);
         border: 0;
     }
+
+    & > hr {
+        border: 0;
+        border-top: 1px solid var(--border);
+        margin: 4px 0;
+    }
+}
+
+/* Mirror the hidden stock tabs: preferences can turn Search, RSS and Log off. */
+:root:has(#searchTabLink.invisible) #mobileMenu [data-click="searchTabLink"],
+:root:has(#rssTabLink.invisible) #mobileMenu [data-click="rssTabLink"],
+:root:has(#logTabLink.invisible) #mobileMenu [data-click="logTabLink"] {
+    display: none;
+}
+
+:root:has(#transfersTabLink.selected) #mobileMenu [data-click="transfersTabLink"],
+:root:has(#searchTabLink.selected) #mobileMenu [data-click="searchTabLink"],
+:root:has(#rssTabLink.selected) #mobileMenu [data-click="rssTabLink"],
+:root:has(#logTabLink.selected) #mobileMenu [data-click="logTabLink"] {
+    background-color: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
 }
 
 #mobileSortMenu {
@@ -750,6 +773,7 @@ body:has(> div > h2.vcenter) > div {
     #queueingButtons,
     #torrentCreatorButton,
     #mainWindowTabs,
+    #preferencesButton,
     #torrentsFilterToolbar > :not(#torrentsFilterInput, #mobileSortButton, #mobileSortMenu),
     #filtersColumn_handle,
     #transferList_handle,
@@ -770,6 +794,19 @@ body:has(> div > h2.vcenter) > div {
 
     #mobileFilterButton {
         margin-left: auto;
+    }
+
+    /* Its menu lives in the filters column, which stock hides outside Transfers. */
+    :root:has(#mainColumn.invisible) #mobileFilterButton {
+        visibility: hidden;
+    }
+
+    #mobileMenuButton {
+        background: none;
+        border: 0;
+        display: flex;
+        flex: none;
+        padding: 5px;
     }
 
     .mochaToolButton {
@@ -882,6 +919,17 @@ body:has(> div > h2.vcenter) > div {
         flex-direction: column;
         height: auto !important;
         min-height: 0;
+        width: 100% !important;
+
+        &.invisible {
+            display: none;
+        }
+    }
+
+    /* Mocha sizes these next to the hidden filters column, which leaves them 0px wide. */
+    #searchTabColumn,
+    #rssTabColumn,
+    #logTabColumn {
         width: 100% !important;
     }
 

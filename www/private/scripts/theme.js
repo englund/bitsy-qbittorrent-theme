@@ -56,6 +56,23 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// Mobile hides the menu bar, the main tabs and Options; this menu clicks the hidden stock elements instead.
+window.addEventListener("DOMContentLoaded", () => {
+    const button = document.getElementById("mobileMenuButton");
+    const menu = document.getElementById("mobileMenu");
+    menu.addEventListener("toggle", (event) => {
+        if (event.newState === "open")
+            placeBelow(menu, button);
+    });
+    menu.addEventListener("click", (event) => {
+        const item = event.target.closest("[data-click]");
+        if (!item)
+            return;
+        menu.hidePopover();
+        document.getElementById(item.dataset.click).click();
+    });
+});
+
 // On mobile the stock filters panel itself becomes the popover menu, so its click handlers and live counts keep working.
 // It can't be hidden with its column: a popover under a display: none ancestor doesn't render.
 {

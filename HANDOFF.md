@@ -20,17 +20,17 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 | `www/` | Stock WebUI from tag `release-5.3.0` (`src/webui/www`), plus our edits. The first commit is the pristine copy, so `git diff 4874bbe` shows every theme change. |
 | `www/private/css/theme.css` | **All theme styling.** Loaded last; overrides the stock CSS instead of editing it. |
 | `www/public/css/login-theme.css` | Login page styling. Self-contained (repeats the tokens it needs) because `private/` isn't served before login. Not named `theme.css` because the mock resolves `private/` first and would shadow it. |
-| `www/private/scripts/theme.js` | Theme behaviour: the mobile sort and filter menus, the mobile details sheet, the mobile Options category list, tagging dialog frames for phones, and the shared `placeBelow` popover helper. |
+| `www/private/scripts/theme.js` | Theme behaviour: the mobile sort, filter and main menus, the mobile details sheet, the mobile Options category list, tagging dialog frames for phones, and the shared `placeBelow` popover helper. |
 | `mock-server.mjs` | Serves `www/` the way qBittorrent does: it fills in `QBT_TR(...)`, `${LANG}`, `${CACHEID}` and `${LANGUAGE_OPTIONS}`, and fakes `/api/v2`. Unknown endpoints are logged as `unmocked:`. |
 | `icons.mjs` | Regenerates the icons from Lucide (see Icons). |
 
 ### Stock files we edited (keep these edits small; they matter when upgrading)
 - `public/index.html`: links `login-theme.css` after `login.css`.
-- `private/index.html`: links `theme.css` and `theme.js`; adds the mobile sort button and menu, and the mobile filter button (in the top toolbar, before Options); the toolbar's leading `&nbsp;&nbsp;` is removed.
+- `private/index.html`: links `theme.css` and `theme.js`; adds the mobile sort button and menu, the mobile filter button (in the top toolbar, before Options), and the mobile main menu button and menu (after Options); the toolbar's leading `&nbsp;&nbsp;` is removed.
 - `private/scripts/dynamicTable.js`: each `td` gets `data-column=<name>` so CSS can target columns; `TorrentsTable` uses 92px rows on mobile and updates when the breakpoint is crossed.
 - `private/scripts/client.js`: the window-resize handler doesn't save the filter width and panel split in the mobile layout, where the panel is hidden or full-screen and would save 0 or ~94%.
 - 25 dialog pages (`private/*.html` that link `style.css`): link `theme.css`.
-- `private/images/*.svg`: replaced with Lucide icons.
+- `private/images/*.svg`: replaced with Lucide icons. `menu.svg` is new (the mobile ☰ button).
 
 ## Decisions
 
@@ -41,7 +41,8 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 
 **Mobile (≤ 640px)**
 - One column. Torrents show as **cards**: name and state icon, progress bar, then status, ↓ speed, ↑ speed and ETA.
-- Hidden on mobile: the menu bar (so there's no logout button), queue buttons, torrent creator, the Search/RSS/Log tabs, the properties panel and the table header.
+- Hidden on mobile: the menu bar, queue buttons, torrent creator, the main tabs, the ⚙ Options button, the properties panel and the table header.
+- A **☰ menu button** (`#mobileMenuButton`, last in the top toolbar) replaces ⚙ and opens `#mobileMenu`: Transfers, Search, RSS, Execution Log, then Options and Logout. Each item clicks the hidden stock element named in its `data-click`, so stock behaviour is reused; labels use the stock `QBT_TR` strings. Items for tabs hidden by preferences (`.invisible` on the stock tab) are hidden, and the current tab is highlighted, both with CSS `:has()` on the stock tabs, so nothing is synced. ⚙ was folded into the menu (instead of adding ☰ next to it) so the filter pill keeps its full width. Outside Transfers the filter pill is `visibility: hidden`: its menu lives in the filters column, which stock hides there. Mobile `#mainColumn` needs its own `.invisible` rule (its `display: flex` beats stock's), and the Search/RSS/Log columns get `width: 100%` because Mocha leaves them 0px wide.
 - The table is virtualized, so the card height is a *JS row height*. The **92px slot** (84px card + 8px gap) is defined in both `dynamicTable.js` and `theme.css`; keep them in sync.
 - Sorting on mobile uses **one dropdown button** (a popover menu) showing the current column. Picking the active column flips the direction. It calls `torrentsTable.setSortedColumn`, so it persists like a header click. (We tried a select plus a separate direction button first; rejected.)
 - Crossing back to desktop (e.g. rotating a phone to landscape) restores the saved panel split in `theme.js`: Mocha laid the hidden panel out at 0px and would keep it there, because it shares space in proportion to current heights.
@@ -89,7 +90,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 ## Open ideas / next steps
 - Mobile sideways-scrolling rows are all gone (details sheet, Options, status chips).
 - Mobile details sheet: card-style layouts for the Trackers/Peers/Content tables; item counts on the drill-down rows (skipped because file and web-seed counts aren't in the torrent list data).
-- Mobile: a way to reach logout, Search, RSS and Log (the menu bar is hidden).
+- Mobile Search, RSS and Log views render but aren't laid out for phones: RSS's three panes are cramped, Log's filter row overlaps the results line, Search's controls are stock. The transfer action icons stay in the toolbar on those views (as on desktop).
 - Long-press context menu on cards: built into the stock UI but not tested on a real touch device.
 - Test on a real phone (only emulated so far).
 - Optional: a more compact variant of the tabs for the details-panel header on desktop (currently 53px tall).
