@@ -2329,8 +2329,29 @@ body:has(> div > h2.vcenter) > div {
     }
 
     /* Windows Mocha pads by default (Options, About, ...); the frame windows set 0 and pad inside the frame. */
-    .mocha .mochaContent[style*="padding: 10px 12px"] {
+    .mocha .mochaContent[style*="padding: 10px 12px"],
+    #statisticspage_content {
         padding-inline: var(--gutter) !important;
+    }
+
+    /* Global speed limits: icon | label | slider | field | unit didn't fit; the label goes above its slider and
+       field instead, and the icon goes (each fieldset's legend already names the limits). */
+    :root .speedGrid {
+        gap: 8px;
+        grid-template-columns: 1fr 88px auto;
+
+        & .speedIcon {
+            display: none;
+        }
+
+        & label {
+            grid-column: 1 / -1;
+        }
+
+        & input[type="text"] {
+            min-width: 0;
+            width: 100%;
+        }
     }
 
     /* Options tables: a field that shares a row with its label drops below it instead of squeezing it. */
@@ -2785,6 +2806,32 @@ body:has(> div > h2.vcenter) > div {
 
     :is(#submitButton, #renameButton, #setLocationButton, #applyButton, #categoryNameButton, #tagNameButton, #addTrackersButton, #addWebSeedsButton, #editTrackerButton, #editWebSeedButton) {
         width: 100%;
+    }
+
+    /* Per-torrent speed limit: the gutter, and the label above its field and unit. Stock centres it with inline styles. */
+    body > div:has(> .slider) {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px var(--gutter) !important;
+        text-align: left !important;
+
+        & .update {
+            align-items: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        & .update label {
+            flex-basis: 100%;
+        }
+
+        & #limitUpdateValue {
+            flex: 1;
+            min-width: 0;
+        }
     }
 
     /* Share limits: one choice per row, with the custom limits indented under their radio's label. Stock styles inline. */
