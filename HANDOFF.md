@@ -92,6 +92,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 ## Mock server notes
 - Fakes 12 torrents in every state, speeds that change on each refresh, peers, trackers, files, pieces, the log and preferences; RSS feeds in a folder with read and unread articles (fetching enabled); one search plugin, and any search returns the same 8 results; three RSS Downloader rules (one disabled) with the same matching articles for each.
 - The add flow works end to end: `parseMetadata`/`fetchMetadata` return believable metadata, and `torrents/add` actually adds to the list (name, category, tags, stopped). It remembers names by hash, and URLs are split on `\r?\n`.
+- Desktop Add torrent: the Torrent settings fields are `width: 100%; max-width: 16em`, as stock does for Rename only. At their natural widths (category 220px, tags 220px, content layout 174px), together with the one-line labels ("Download first and last pieces first" is 227px), they pushed the table ~44px past its fieldset at ~900px. Letting the labels wrap instead squeezed them to 78px. Stock's `td.fullWidth { word-break: break-all }` is reset there so "Set as default category" wraps between words.
 - Known gap: preferences lack the scheduler times, which logs one harmless console error when Options opens.
 
 ## Verifying
@@ -105,9 +106,8 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - Mobile details sheet: card-style layouts for the Trackers/Peers/Content tables; item counts on the drill-down rows (skipped because file and web-seed counts aren't in the torrent list data).
 - Unreachable on mobile (the menu bar is hidden and ☰ doesn't list them): Start/Stop all, global speed limits, Shutdown.
 - Other mobile rough edges from a sweep: About's tab row scrolls sideways; Manage Cookies is a cramped table form; Search plugins' table scrolls sideways; Options › Downloads' "Monitored Folder" table is cramped.
-- Long-press context menu on cards: built into the stock UI but not tested on a real touch device (iOS Safari may also select text or show its own callout). The ⋮ tap works in emulation.
+- Long-press context menu on cards: built into the stock UI, only tested in emulation. Real-phone testing was dropped: the ⋮ button opens the same menu, so long press is a shortcut.
 - Mobile context menu: stock styling, opened at the tap point; it's 25 rows of 30px and only just fits at 812px, so it can't reach 44px rows as is. A bottom sheet was built (full width, 44px rows, the row's name as title, submenus drilling in place) and compared with stock on every menu; the user preferred stock for now, so it was reverted. Its diff is saved outside the repo in the side-session notes as `context-menu-bottom-sheet.patch`. Found while comparing (stock, still open): on phones the filter-list menus open behind the filter popover (it is in the top layer), and in Add torrent a long press on a file row while scrolled down puts the menu above the visible area.
-- Test on a real phone (only emulated so far).
 - Optional: a more compact variant of the tabs for the details-panel header on desktop (currently 53px tall).
 
 ## History
