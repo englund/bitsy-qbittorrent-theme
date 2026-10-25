@@ -2409,6 +2409,19 @@ body:has(> div > h2.vcenter) > div {
         }
     }
 
+    /* A cell holding a checkbox and its label, maybe followed by a path field (Downloads › incomplete torrents, backup
+       .torrent files): the cell is one row and the field drops below, instead of the label squeezing into a column. */
+    #preferencesPage_content fieldset.settings tr:has(> td > input[type="checkbox"] + label) {
+        flex-wrap: wrap;
+
+        & > td:has(> input[type="checkbox"]) {
+            align-items: center;
+            display: flex;
+            flex-basis: 100%;
+            gap: 8px;
+        }
+    }
+
     /* A unit after a field ("ms", "KiB/s", "days") stays beside it. */
     :is(#preferencesPage_content fieldset.settings, #ruleSettings) td:has(> input:is([type="text"], [type="number"])) {
         align-items: center;
