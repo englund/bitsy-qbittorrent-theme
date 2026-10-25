@@ -583,6 +583,16 @@ input#save:hover {
     background-color: hsl(217deg 92% 56%);
 }
 
+/* Destructive: red text rather than a red fill, which white text can't reach 4.5:1 on. */
+#confirmDeletionButton {
+    color: var(--red);
+}
+
+#confirmDeletionButton:hover {
+    background-color: hsl(0deg 50% 22%);
+    border-color: var(--red);
+}
+
 body:has(#uploadForm, > div > h2.vcenter) {
     background-color: var(--surface);
 }
@@ -2341,6 +2351,11 @@ body:has(> div > h2.vcenter) > div {
         margin: 16px 0 0;
     }
 
+    /* The license's section headings are h5s, which stock renders at 10px. */
+    #aboutpage_content h5 {
+        font-size: 14px;
+    }
+
     /* Pin Save to the bottom on pages shorter than the screen. Mocha and the footer rule set these with priority. */
     #preferencesPage_content {
         display: flex !important;
@@ -2670,6 +2685,15 @@ body:has(> div > h2.vcenter) > div {
         display: none;
     }
 
+    /* Add torrent's label | checkbox rows, and its legend, where a hidden input separates the checkbox from its label. */
+    fieldset.settings tr:has(> td > input[type="checkbox"]) > td.noWrap > label,
+    fieldset.settings legend:has(input[type="checkbox"]) > label {
+        align-items: center;
+        display: flex;
+        flex: 1;
+        min-height: var(--touch);
+    }
+
     fieldset.settings td.fullWidth:has(input[type="text"], select, textarea, span) {
         flex-basis: 100%;
     }
@@ -2967,9 +2991,14 @@ body:has(> div > h2.vcenter) > div {
 
 @media (max-width: 640px) {
     :root {
-        & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, button) {
+        & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, button, textarea) {
             box-sizing: border-box;
             min-height: var(--touch);
+        }
+
+        /* Header cells sort when tapped, and file lists hold the select-all checkbox there. */
+        & .dynamicTableFixedHeaderDiv th {
+            height: var(--touch);
         }
 
         & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, textarea) {
@@ -3020,9 +3049,14 @@ body:has(> div > h2.vcenter) > div {
 }
 
 :root.mobile-sheet {
-    & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, button) {
+    & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, button, textarea) {
         box-sizing: border-box;
         min-height: var(--touch);
+    }
+
+    /* Header cells sort when tapped, and file lists hold the select-all checkbox there. */
+    & .dynamicTableFixedHeaderDiv th {
+        height: var(--touch);
     }
 
     & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, textarea) {

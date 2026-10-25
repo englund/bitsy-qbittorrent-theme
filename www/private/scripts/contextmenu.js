@@ -90,8 +90,10 @@ window.qBittorrent.ContextMenu ??= (() => {
 
             // position the menu, kept inside the visible part of the page (pageX/Y include the scroll)
             const { scrollX, scrollY } = window;
-            let xPosMenu = e.pageX + this.options.offsets.x;
-            let yPosMenu = e.pageY + this.options.offsets.y;
+            // A long press passes its touchstart event, whose coordinates are on the touch, not the event.
+            const point = e.changedTouches?.[0] ?? e;
+            let xPosMenu = point.pageX + this.options.offsets.x;
+            let yPosMenu = point.pageY + this.options.offsets.y;
             if ((xPosMenu + this.menu.offsetWidth) > (scrollX + document.documentElement.clientWidth))
                 xPosMenu -= this.menu.offsetWidth;
             if ((yPosMenu + this.menu.offsetHeight) > (scrollY + document.documentElement.clientHeight))
