@@ -98,6 +98,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - The native file picker can't be driven by automation. Call `qBittorrent.Client.uploadTorrentFiles([new File(...)])`, which is the same path the picker uses.
 
 ## Open ideas / next steps
+- **Consistency pass over every page and dialog, mobile first:** the same spacing between elements everywhere, and every tappable or editable control (buttons, fields, selects, checkboxes, list rows, icon buttons) big enough to hit with a finger. Agree on a minimum touch size and a spacing scale with the user first.
 - Mobile sideways-scrolling rows are all gone (details sheet, Options, status chips).
 - Mobile details sheet: card-style layouts for the Trackers/Peers/Content tables; item counts on the drill-down rows (skipped because file and web-seed counts aren't in the torrent list data).
 - Unreachable on mobile (the menu bar is hidden and ☰ doesn't list them): Start/Stop all, global speed limits, Shutdown.
