@@ -56,44 +56,51 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// On mobile the stock status list itself becomes the popover menu, so its click handlers and live counts keep working.
+// On mobile the stock filters panel itself becomes the popover menu, so its click handlers and live counts keep working.
 // It can't be hidden with its column: a popover under a display: none ancestor doesn't render.
 {
     const mobileQuery = window.matchMedia("(max-width: 640px)");
-    let list;
+    let menu;
+    let button;
+    // The menu has the counts; the button only has room for the names.
+    const nameOf = (item) => item.textContent.replace(/\s*\(\d+\)\s*$/, "").trim();
 
     const renderButton = () => {
-        const selected = list.querySelector(".selectedFilter > .link") ?? list.querySelector(".link");
-        const button = document.getElementById("mobileFilterButton");
-        button.firstElementChild.src = selected.querySelector("img").src;
-        // The menu has the counts; the button only has room for the name.
-        button.lastElementChild.textContent = selected.textContent.replace(/\s*\(\d+\)\s*$/, "").trim();
+        const status = menu.querySelector("#statusFilterList .selectedFilter") ?? document.getElementById("all_filter");
+        if (!status)
+            return;
+        // The first item of the other lists is their "All".
+        const others = [...menu.querySelectorAll(":is(#categoryFilterList, #tagFilterList, #trackerFilterList) .selectedFilter:not(:first-child)")];
+        button.firstElementChild.src = status.querySelector("img").src;
+        // The icon already shows the status, and there's only room for one name at 375px.
+        button.lastElementChild.textContent = (others.length ? others : [status]).map(nameOf).join(" · ");
     };
     const setUp = () => {
-        list.toggleAttribute("popover", mobileQuery.matches);
-        list.classList.toggle("popoverMenu", mobileQuery.matches);
+        menu.toggleAttribute("popover", mobileQuery.matches);
+        menu.classList.toggle("popoverMenu", mobileQuery.matches);
     };
 
-    // filters.html is loaded by XHR after the page.
-    const waitForList = new MutationObserver(() => {
-        list = document.getElementById("statusFilterList");
-        if (!list)
+    // client.js creates the panel after an async start-up step, then loads filters.html into it by XHR,
+    // and the category, tag and tracker lists fill in after that.
+    const waitForMenu = new MutationObserver(() => {
+        menu = document.getElementById("Filters_pad");
+        if (!menu)
             return;
-        waitForList.disconnect();
+        waitForMenu.disconnect();
+        button = document.getElementById("mobileFilterButton");
         setUp();
-        renderButton();
-        new MutationObserver(renderButton).observe(list, { subtree: true, characterData: true, attributeFilter: ["class"] });
-        list.addEventListener("toggle", (event) => {
-            if (event.newState === "open")
-                placeBelow(list, document.getElementById("mobileFilterButton"));
-        });
-        list.addEventListener("click", (event) => {
-            if (event.target.closest(".link") && list.matches(":popover-open"))
-                list.hidePopover();
-        });
         mobileQuery.addEventListener("change", setUp);
+        new MutationObserver(renderButton).observe(menu, { subtree: true, childList: true, characterData: true, attributeFilter: ["class"] });
+        menu.addEventListener("toggle", (event) => {
+            if (event.newState === "open")
+                placeBelow(menu, button);
+        });
+        menu.addEventListener("click", (event) => {
+            if (event.target.closest(".link") && menu.matches(":popover-open"))
+                menu.hidePopover();
+        });
     });
-    waitForList.observe(document.body, { childList: true, subtree: true });
+    waitForMenu.observe(document.body, { childList: true, subtree: true });
 }
 
 // Mobile hides the properties panel, so Mocha lays it out at 0px, and Mocha splits space in proportion to current heights.

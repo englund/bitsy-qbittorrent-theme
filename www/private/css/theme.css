@@ -253,7 +253,7 @@ fieldset {
     padding: 4px;
     position: fixed;
 
-    & button {
+    & > button {
         align-items: center;
         background: none;
         border: 0;
@@ -266,7 +266,7 @@ fieldset {
         width: 100%;
     }
 
-    & button:hover {
+    & > button:hover {
         background-color: var(--surface-3);
         border: 0;
     }
@@ -755,8 +755,6 @@ body:has(> div > h2.vcenter) > div {
     #transferList_handle,
     #propertiesPanel_wrapper,
     #torrentsTableFixedHeaderDiv,
-    #Filters .filterWrapper:not(:first-child),
-    #Filters .filterTitle,
     #desktopFooter td:not(.speedLabel) {
         display: none !important;
     }
@@ -855,16 +853,27 @@ body:has(> div > h2.vcenter) > div {
         overflow: hidden !important;
     }
 
-    /* theme.js makes the status list a popover menu under #mobileFilterButton. */
-    #statusFilterList {
+    /* theme.js makes the filters panel a popover menu under #mobileFilterButton. */
+    #Filters_pad {
         max-height: calc(100dvh - 120px);
+        max-width: calc(100vw - 24px);
         overflow-y: auto;
     }
 
-    #statusFilterList span.link {
+    /* Mocha sets display: block inline, which would keep the closed popover in the page. */
+    #Filters_pad:not(:popover-open) {
+        display: none !important;
+    }
+
+    #Filters_pad span.link {
         font-size: 15px;
         gap: 10px;
         padding: 10px 12px;
+    }
+
+    /* client.js indents categories with an inline padding-left of depth * 20 + 6px; make up the rest of the 12px here. */
+    #categoryFilterList span.link[style*="padding-left"] > img {
+        margin-left: 6px;
     }
 
     #mainColumn {
