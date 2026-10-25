@@ -17,6 +17,8 @@
     --radius: 10px;
     --radius-sm: 6px;
     --touch: 44px; /* minimum height of anything tappable on phones (Apple's minimum) */
+    --row: 48px; /* phone list rows, menu items and the primary button */
+    --gutter: 16px; /* phone side margins */
     --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 
     --color-accent-blue: var(--accent);
@@ -823,7 +825,7 @@ body:has(> div > h2.vcenter) > div {
     /* Two rows: ☰ and search, then the filter pill on the left and sort on the right. */
     #mochaToolbar {
         gap: 8px;
-        padding: 8px 12px;
+        padding: 8px var(--gutter);
     }
 
     #torrentsFilterToolbar:not(.invisible) {
@@ -934,7 +936,7 @@ body:has(> div > h2.vcenter) > div {
     /* theme.js makes the filters panel a popover menu under #mobileFilterButton. */
     #Filters_pad {
         max-height: calc(100dvh - 120px);
-        max-width: calc(100vw - 24px);
+        max-width: calc(100vw - 2 * var(--gutter));
         overflow-y: auto;
     }
 
@@ -948,9 +950,19 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #Filters_pad span.link {
+        align-items: center;
+        box-sizing: border-box;
         font-size: 15px;
-        gap: 10px;
-        padding: 10px 12px;
+        gap: 12px;
+        min-height: var(--row);
+        padding: 0 12px;
+    }
+
+    /* :root outranks the touch-target minimum at the end of this file. */
+    :root .popoverMenu > button {
+        gap: 12px;
+        min-height: var(--row);
+        padding: 0 12px;
     }
 
     /* client.js indents categories with an inline padding-left of depth * 20 + 6px; make up the rest of the 12px here. */
@@ -1015,9 +1027,9 @@ body:has(> div > h2.vcenter) > div {
         border-radius: var(--radius);
         column-gap: 12px;
         display: grid;
-        left: 10px;
+        left: var(--gutter);
         padding: 9px 12px;
-        right: 10px;
+        right: var(--gutter);
         row-gap: 6px;
     }
 
@@ -1133,11 +1145,11 @@ body:has(> div > h2.vcenter) > div {
 
 @media (max-width: 640px) {
     :root #logView {
-        padding: 0 12px;
+        padding: 0 var(--gutter);
     }
 
     #panelTabs {
-        margin: 0 12px;
+        margin: 0 var(--gutter);
     }
 
     /* Stock fixes the bar at 24px, so its wrapped second row overlaps the results line. */
@@ -1189,7 +1201,7 @@ body:has(> div > h2.vcenter) > div {
     :root #searchResultsHeader {
         flex: none;
         height: auto;
-        padding: 8px 12px 0;
+        padding: 8px var(--gutter) 0;
     }
 
     :root #searchResultsHeaderContainer {
@@ -1217,7 +1229,7 @@ body:has(> div > h2.vcenter) > div {
 
     #searchTabsToolbar {
         flex: none;
-        margin: 8px 12px 0;
+        margin: 8px var(--gutter) 0;
     }
 
     :root #searchResultsFilters {
@@ -1228,7 +1240,7 @@ body:has(> div > h2.vcenter) > div {
         gap: 8px;
         height: auto;
         overflow: visible;
-        padding: 8px 12px 0;
+        padding: 8px var(--gutter) 0;
 
         &.invisible {
             display: none;
@@ -1338,7 +1350,7 @@ body:has(> div > h2.vcenter) > div {
     /* Holds "Search plugins…". Stock sizes it 30px border-box with 10px of that as padding, so the button pokes out. */
     #searchResults > div:last-child {
         height: auto !important;
-        padding: 8px 12px !important;
+        padding: 8px var(--gutter) !important;
     }
 }
 
@@ -1362,7 +1374,7 @@ body:has(> div > h2.vcenter) > div {
     }
 
     :root #rssFetchingDisabled {
-        margin: 0 12px 8px;
+        margin: 0 var(--gutter) 8px;
     }
 
     /* The filter, then the actions as icons. Their images carry the names. */
@@ -1370,7 +1382,7 @@ body:has(> div > h2.vcenter) > div {
         display: flex;
         gap: 8px;
         height: auto;
-        padding: 0 12px 8px;
+        padding: 0 var(--gutter) 8px;
 
         & button {
             flex: none;
@@ -1412,7 +1424,7 @@ body:has(> div > h2.vcenter) > div {
         flex: none;
         gap: 8px;
         height: 52px;
-        padding: 0 12px 0 2px;
+        padding: 0 var(--gutter) 0 2px;
 
         & h3 {
             flex: 1;
@@ -1474,7 +1486,7 @@ body:has(> div > h2.vcenter) > div {
         border-bottom: 1px solid var(--border);
         display: flex;
         font-size: 15px;
-        padding: 0 12px;
+        padding: 0 var(--gutter);
 
         & td {
             align-items: center;
@@ -1510,7 +1522,7 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #rssDetailsView {
-        padding: 12px;
+        padding: 12px var(--gutter);
         row-gap: 8px;
     }
 
@@ -1715,6 +1727,11 @@ body:has(> div > h2.vcenter) > div {
         width: 100%;
     }
 
+    #rssdownloaderpage #saveButton {
+        min-height: var(--row);
+        width: 100%;
+    }
+
     #rssdownloaderpage .sheetBack {
         left: 2px;
         position: absolute;
@@ -1841,7 +1858,7 @@ body:has(> div > h2.vcenter) > div {
         border-radius: var(--radius);
         display: flex;
         flex-direction: column;
-        margin: 10px 12px;
+        margin: 12px var(--gutter);
         overflow: hidden;
 
         & button {
@@ -1880,7 +1897,7 @@ body:has(> div > h2.vcenter) > div {
 
     :root.details-open #propertiesPanel_header {
         flex: none;
-        padding: 8px 12px;
+        padding: 8px var(--gutter);
     }
 
     /* With the tabs hidden it only holds the Content filter. Mocha shows it inline, hence the !important. */
@@ -1917,30 +1934,30 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #propBarsWrapper {
-        padding: 0 12px;
+        padding: 0 var(--gutter);
     }
 
     /* Cells can't take the inset: virtual-list rows size them inline, the header by its colgroup.
        So the scroller is padded and the header and row backgrounds are stretched back over the padding.
        Left only: on the right the header's th borders can't be stretched, and the last column has room anyway. */
     :root.details-open .propertiesTabContent .dynamicTableDiv {
-        padding-left: 12px;
+        padding-left: var(--gutter);
 
         /* The gradient continues the th bottom border under the inset. */
         & .dynamicTableFixedHeaderDiv {
-            background: linear-gradient(var(--border), var(--border)) left bottom / 12px 1px no-repeat var(--surface);
-            margin-left: -12px;
-            padding-left: 12px;
+            background: linear-gradient(var(--border), var(--border)) left bottom / var(--gutter) 1px no-repeat var(--surface);
+            margin-left: calc(-1 * var(--gutter));
+            padding-left: var(--gutter);
         }
 
         & tbody tr {
-            box-shadow: -12px 0 var(--row-bg, transparent);
+            box-shadow: calc(-1 * var(--gutter)) 0 var(--row-bg, transparent);
         }
     }
 
     /* General's three label/value column pairs become one pair per line. */
     #propGeneral fieldset {
-        margin: 10px 12px;
+        margin: 12px var(--gutter);
     }
 
     #propGeneral tbody {
@@ -2011,6 +2028,11 @@ body:has(> div > h2.vcenter) > div {
 
     .mocha .handle {
         display: none;
+    }
+
+    /* Windows Mocha pads by default (Options, About, ...); the frame windows set 0 and pad inside the frame. */
+    .mocha .mochaContent[style*="padding: 10px 12px"] {
+        padding-inline: var(--gutter) !important;
     }
 
     /* Options tables: a field that shares a row with its label drops below it instead of squeezing it. */
@@ -2121,7 +2143,8 @@ body:has(> div > h2.vcenter) > div {
         width: 100%;
     }
 
-    /* Monitored folders: one card per folder, its path above its save location. Stock borders the table inline. */
+    /* Monitored folders: one block per folder, its path above its save location, dividers between them (a card here
+       would nest inside the fieldset's card). Stock borders the table inline. */
     #preferencesPage_content #watched_folders_tab {
         border: 0 !important;
 
@@ -2136,14 +2159,13 @@ body:has(> div > h2.vcenter) > div {
         }
 
         & tbody tr {
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
             gap: 8px;
-            padding: 12px;
+            padding: 8px 0;
         }
 
         & tbody tr + tr {
-            margin-top: 8px;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
         }
 
         & .select-watched-folder-editable {
@@ -2200,18 +2222,20 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #preferencesPage_content > div:has(> input[onclick*="applyPreferences"]) {
-        padding: 12px 12px calc(20px + env(safe-area-inset-bottom));
+        margin-inline: calc(-1 * var(--gutter)) !important;
+        padding: 12px var(--gutter) calc(16px + env(safe-area-inset-bottom));
 
         & input {
             font-size: 16px;
-            padding: 10px 22px;
+            min-height: var(--row);
+            padding: 0 24px;
             width: 100%;
         }
     }
 
     /* Confirm dialogs: the buttons share the bottom row. Mocha pads the content inline. */
     .modalDialog .mochaContent.pad {
-        padding: 12px !important;
+        padding: 16px var(--gutter) !important;
     }
 
     :is(.confirmGridItem, .deletionGridItem) {
@@ -2257,6 +2281,7 @@ body:has(> div > h2.vcenter) > div {
         }
 
         & #createTorrentButton {
+            min-height: var(--row);
             width: 100%;
         }
     }
@@ -2287,7 +2312,7 @@ body:has(> div > h2.vcenter) > div {
 
 :root.mobile-sheet {
     #uploadForm {
-        padding: 12px 12px 0 !important;
+        padding: 12px var(--gutter) 0 !important;
     }
 
     #uploadForm .column + .column {
@@ -2295,8 +2320,8 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #uploadForm #submitbutton {
-        margin: 4px -12px 0 !important;
-        padding: 12px;
+        margin: 4px calc(-1 * var(--gutter)) 0 !important;
+        padding: 12px var(--gutter);
 
         & > div {
             display: flex;
@@ -2402,9 +2427,11 @@ body:has(> div > h2.vcenter) > div {
     }
 
     button[type="submit"],
-    #addButton {
+    #addButton,
+    input#save {
         font-size: 16px !important;
-        padding: 10px 22px;
+        min-height: var(--row);
+        padding: 0 24px;
     }
 
     /* Share limits: one choice per row, with the custom limits indented under their radio's label. Stock styles inline. */
@@ -2413,7 +2440,7 @@ body:has(> div > h2.vcenter) > div {
         display: grid;
         gap: 8px;
         grid-template-columns: 20px 1fr;
-        padding: 12px !important;
+        padding: 16px var(--gutter) !important;
 
         & > br {
             display: none;
@@ -2510,7 +2537,7 @@ body:has(> div > h2.vcenter) > div {
             height: var(--touch);
         }
 
-        /* In a 44px table row the whole cell is the target, so the field drops its box. */
+        /* In a 48px table row the whole cell is the target, so the field drops its box. */
         & .dynamicTable td select {
             background-color: transparent;
             border: 0;
@@ -2563,7 +2590,7 @@ body:has(> div > h2.vcenter) > div {
         height: var(--touch);
     }
 
-    /* In a 44px table row the whole cell is the target, so the field drops its box. */
+    /* In a 48px table row the whole cell is the target, so the field drops its box. */
     & .dynamicTable td select {
         background-color: transparent;
         border: 0;

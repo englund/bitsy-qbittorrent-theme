@@ -2430,7 +2430,7 @@ window.qBittorrent.DynamicTable ??= (() => {
 
         setupVirtualList() {
             super.setupVirtualList();
-            this.useMobileRowHeight(44);
+            this.useMobileRowHeight(48);
         }
 
         updateHeaderCheckbox() {
