@@ -158,6 +158,7 @@ const api = {
         const t = torrents[q.get("hash")] ?? Object.values(torrents)[0];
         return Array.from({ length: 200 }, (_, i) => (i / 200 < t.progress ? 2 : i % 17 === 0 ? 1 : 0));
     },
+    "torrents/pieceAvailability": () => Array.from({ length: 200 }, (_, i) => 1 + (i % 7)),
     "torrents/categories": () => maindata().categories,
     "torrents/tags": () => ["favorite", "hd"],
     "transfer/info": () => maindata().server_state,
