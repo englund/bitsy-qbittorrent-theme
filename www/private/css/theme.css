@@ -662,6 +662,21 @@ fieldset.settings {
     text-align: left;
 }
 
+/* Stock sizes only Rename like this; fields at their natural width pushed the table past its fieldset at ~900px. */
+@media (min-width: 641px) {
+    #uploadForm td.fullWidth > :is(select, input[type="text"], .select-watched-folder-editable),
+    #uploadForm .vsb-main,
+    #uploadForm .vsb-main button {
+        max-width: 16em;
+        min-width: 0;
+        width: 100%;
+    }
+
+    #uploadForm td.fullWidth {
+        word-break: normal;
+    }
+}
+
 #uploadForm .vsb-menu {
     border-radius: var(--radius);
     box-shadow: 0 12px 32px hsl(0deg 0% 0% / 45%);
