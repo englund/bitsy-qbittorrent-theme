@@ -639,6 +639,31 @@ fieldset.settings {
 }
 
 /* Options: Save stays reachable at the bottom while the settings scroll. */
+/* Speed › schedule: stock sets the time inputs inline with bare ":" text between them and no spacing. */
+#preferencesPage_content fieldset:has(> legend > #limitSchedulingCheckbox) .formRow {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 6px;
+
+    & + .formRow {
+        margin-top: 10px;
+    }
+
+    & > label:first-child {
+        min-width: 3.5em;
+    }
+
+    & input {
+        margin: 0;
+        text-align: center;
+    }
+
+    & #scheduleToHourLabel {
+        margin-left: 10px;
+    }
+}
+
 #preferencesPage_content > div:has(> input[onclick*="applyPreferences"]) {
     background-color: var(--surface);
     border-top: 1px solid var(--border);
@@ -1250,14 +1275,15 @@ body:has(> div > h2.vcenter) > div {
             margin: 0;
         }
 
-        /* Pin Save to the bottom; the short list doesn't push it there. Mocha and the footer rule set these with priority. */
-        & #preferencesPage_content {
-            display: flex !important;
-            flex-direction: column;
+    }
 
-            & > div:has(> input[onclick*="applyPreferences"]) {
-                margin-top: auto !important;
-            }
+    /* Pin Save to the bottom on pages shorter than the screen. Mocha and the footer rule set these with priority. */
+    #preferencesPage_content {
+        display: flex !important;
+        flex-direction: column;
+
+        & > div:has(> input[onclick*="applyPreferences"]) {
+            margin-top: auto !important;
         }
     }
 
