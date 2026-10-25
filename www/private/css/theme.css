@@ -1354,6 +1354,153 @@ body:has(> div > h2.vcenter) > div {
     }
 }
 
+/* Mobile Search plugins: one list row per plugin (name and version, URL below, Enabled on the right) whose ⋮ opens
+   the stock menu (theme.js), with Install and Check for updates pinned at the bottom. Close duplicates ×. */
+
+@media (max-width: 640px) {
+    /* Mocha pads it despite paddingHorizontal: 0; the rows and footer run edge to edge instead. */
+    #searchPlugins_content {
+        padding: 0 !important;
+    }
+
+    :root #searchPluginsContainer {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+
+        & h2 {
+            font-size: 16px;
+            margin: 16px var(--gutter) 8px;
+        }
+
+        & > span {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin: 8px var(--gutter) 0;
+        }
+
+        & > div:last-child {
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            margin-top: 16px !important;
+            padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+        }
+
+        & > div:last-child button {
+            flex: 1;
+            padding: 0 8px;
+            width: auto !important;
+        }
+
+        & > div:last-child button:last-child {
+            display: none;
+        }
+    }
+
+    :root #searchPluginsTable {
+        flex: 1;
+        height: auto;
+        min-height: 0;
+    }
+
+    :root #searchPluginsTableDiv {
+        height: 100%;
+    }
+
+    #searchPluginsTableFixedHeaderDiv {
+        display: none;
+    }
+
+    /* 64px rows; the height is set in dynamicTable.js. */
+    #searchPluginsTableDiv {
+        & table.dynamicTable {
+            width: 100% !important;
+        }
+
+        & colgroup {
+            display: none;
+        }
+
+        & tbody tr {
+            background: none !important;
+            border-bottom: 1px solid var(--border);
+            column-gap: 8px;
+            display: grid;
+            font-size: 16px;
+            grid-template-areas:
+                "name version enabled"
+                "url url enabled";
+            grid-template-columns: auto 1fr auto;
+            height: 64px;
+            left: 0;
+            padding: 0 calc(var(--gutter) + 28px) 0 var(--gutter);
+            right: 0;
+        }
+
+        & tbody tr.selected {
+            background-color: var(--accent-soft) !important;
+        }
+
+        & td {
+            align-self: end;
+            color: var(--text);
+            max-width: none !important;
+            overflow: hidden;
+            padding: 0 !important;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: auto !important;
+        }
+
+        & td[data-column="fullName"] {
+            font-weight: 600;
+            grid-area: name;
+        }
+
+        & td[data-column="version"] {
+            color: var(--text-muted);
+            grid-area: version;
+        }
+
+        & td[data-column="url"] {
+            align-self: start;
+            color: var(--text-muted);
+            font-size: 14px;
+            grid-area: url;
+        }
+
+        & td[data-column="enabled"] {
+            align-self: center;
+            font-size: 14px;
+            grid-area: enabled;
+        }
+
+        & tr.green td[data-column="enabled"] {
+            color: var(--green);
+        }
+
+        & tr.red td[data-column="enabled"] {
+            color: var(--red);
+        }
+
+        /* Lucide ellipsis-vertical (ISC), as on the cards. */
+        & tbody tr::after {
+            background-color: var(--text-muted);
+            content: "";
+            height: 20px;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3Ccircle cx='12' cy='5' r='1'/%3E%3Ccircle cx='12' cy='19' r='1'/%3E%3C/svg%3E") center / contain no-repeat;
+            position: absolute;
+            right: calc(var(--gutter) - 4px);
+            top: 22px;
+            width: 20px;
+        }
+    }
+}
+
 /* An RSS article's description frame (theme.js links this file into it): text on the page's background.
    Stock gives every framed body the popup color with body:not(:has(#desktop)); repeating it here wins over that. */
 :root.rss-description body:not(:has(#desktop)) {

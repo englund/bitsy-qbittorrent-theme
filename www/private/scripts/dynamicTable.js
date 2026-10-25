@@ -2145,6 +2145,11 @@ window.qBittorrent.DynamicTable ??= (() => {
             this.initColumnsFunctions();
         }
 
+        setupVirtualList() {
+            super.setupVirtualList();
+            this.useMobileRowHeight(64);
+        }
+
         initColumnsFunctions() {
             this.columns["enabled"].updateTd = function(td, row) {
                 const value = this.getRowValue(row);

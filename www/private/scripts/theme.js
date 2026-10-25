@@ -101,6 +101,16 @@ window.addEventListener("DOMContentLoaded", () => {
         tr.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: rect.right - 18, clientY: rect.top + 19 }));
     }, true);
 
+    // A search plugin row has no other tap action, so a tap anywhere on it opens its menu (Enabled, Uninstall) at the ⋮.
+    document.addEventListener("click", (event) => {
+        const tr = event.target.closest?.("#searchPluginsTableDiv tr");
+        if (!mobileQuery.matches || !tr)
+            return;
+        event.stopPropagation();
+        const rect = tr.getBoundingClientRect();
+        tr.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: rect.right - 22, clientY: rect.top + 32 }));
+    }, true);
+
     // Tapping a search result opens the download window, which is what a double-click does on desktop.
     document.addEventListener("click", (event) => {
         const tr = event.target.closest("#searchResultsTableDiv tr");

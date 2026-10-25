@@ -218,6 +218,7 @@ const api = {
     "log/peers": () => [],
     "search/plugins": () => [
         { name: "example", fullName: "Example Tracker", enabled: true, url: "https://tracker.example.org", version: "1.0", supportedCategories: [{ id: "all", name: "All categories" }, { id: "software", name: "Software" }] },
+        { name: "archive", fullName: "Linux ISO Archive", enabled: false, url: "https://isos.example.net", version: "2.3", supportedCategories: [{ id: "all", name: "All categories" }] },
     ],
     "search/start": () => ({ id: 1 }),
     "search/stop": () => "",
