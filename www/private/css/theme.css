@@ -492,6 +492,13 @@ td.statusBarSeparator {
     border-radius: var(--radius);
 }
 
+/* Lifted into the top layer by theme.js; undo the popover defaults so stock's positioning still applies. */
+.contextMenu:popover-open {
+    inset: auto;
+    margin: 0;
+    overflow: visible;
+}
+
 /* Windows (Mocha) and the dialog pages loaded inside them */
 
 .mocha {

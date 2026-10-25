@@ -88,17 +88,18 @@ window.qBittorrent.ContextMenu ??= (() => {
             this.menu.style.left = "-999em";
             this.menu.style.top = "-999em";
 
-            // position the menu
+            // position the menu, kept inside the visible part of the page (pageX/Y include the scroll)
+            const { scrollX, scrollY } = window;
             let xPosMenu = e.pageX + this.options.offsets.x;
             let yPosMenu = e.pageY + this.options.offsets.y;
-            if ((xPosMenu + this.menu.offsetWidth) > document.documentElement.clientWidth)
+            if ((xPosMenu + this.menu.offsetWidth) > (scrollX + document.documentElement.clientWidth))
                 xPosMenu -= this.menu.offsetWidth;
-            if ((yPosMenu + this.menu.offsetHeight) > document.documentElement.clientHeight)
-                yPosMenu = document.documentElement.clientHeight - this.menu.offsetHeight;
-            if (xPosMenu < 0)
-                xPosMenu = 0;
-            if (yPosMenu < 0)
-                yPosMenu = 0;
+            if ((yPosMenu + this.menu.offsetHeight) > (scrollY + document.documentElement.clientHeight))
+                yPosMenu = scrollY + document.documentElement.clientHeight - this.menu.offsetHeight;
+            if (xPosMenu < scrollX)
+                xPosMenu = scrollX;
+            if (yPosMenu < scrollY)
+                yPosMenu = scrollY;
             this.menu.style.left = `${xPosMenu}px`;
             this.menu.style.top = `${yPosMenu}px`;
             this.menu.style.position = "absolute";

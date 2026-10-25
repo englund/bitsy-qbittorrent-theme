@@ -565,3 +565,22 @@ new MutationObserver(() => {
         field.before(label);
     }
 }).observe(document.body, { childList: true, subtree: true });
+
+// Stock context menus are plain absolutely positioned lists, so one opened from inside the filter popover (which is in
+// the top layer) would sit behind it. While a popover is open, a menu that opens is lifted into the top layer too.
+new MutationObserver((records) => {
+    for (const { target } of records) {
+        if (!target.classList.contains("contextMenu"))
+            continue;
+        const visible = target.classList.contains("visible");
+        if (visible && !target.popover && document.querySelector(":popover-open")) {
+            target.popover = "manual";
+            target.showPopover();
+        }
+        else if (!visible && target.popover) {
+            if (target.matches(":popover-open"))
+                target.hidePopover();
+            target.removeAttribute("popover");
+        }
+    }
+}).observe(document.body, { attributes: true, attributeFilter: ["class"], subtree: true });
