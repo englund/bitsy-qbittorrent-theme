@@ -2515,7 +2515,7 @@ body:has(> div > h2.vcenter) > div {
     }
 
     /* A label wraps above its field; a checkbox keeps its label beside it. The schedule row has its own layout. */
-    #preferencesPage_content fieldset.settings:not(:has(> legend > #limitSchedulingCheckbox)) .formRow {
+    #preferencesPage_content :is(fieldset.settings:not(:has(> legend > #limitSchedulingCheckbox)) .formRow, .PrefTab > .formRow) {
         align-items: center;
         display: flex;
         flex-wrap: wrap;
