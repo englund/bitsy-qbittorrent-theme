@@ -1190,7 +1190,7 @@ body:has(> div > h2.vcenter) > div {
 
     :root #logFilterSummary {
         color: var(--text-muted);
-        margin: 10px 0 6px;
+        margin: 8px 0;
     }
 }
 
@@ -2004,8 +2004,8 @@ body:has(> div > h2.vcenter) > div {
         border-radius: var(--radius);
         display: flex;
         font-size: 15px;
-        margin: 10px 0;
-        min-height: 48px;
+        margin: 12px 0;
+        min-height: var(--row);
         padding: 0 16px;
         width: 100%;
     }
@@ -2241,13 +2241,14 @@ body:has(> div > h2.vcenter) > div {
     /* General's three label/value column pairs become one pair per line. */
     #propGeneral fieldset {
         margin: 12px var(--gutter);
+        padding: 8px 12px 12px;
     }
 
     #propGeneral tbody {
         column-gap: 16px;
         display: grid;
         grid-template-columns: auto 1fr;
-        row-gap: 6px;
+        row-gap: 8px;
     }
 
     #propGeneral tr {
@@ -2367,11 +2368,19 @@ body:has(> div > h2.vcenter) > div {
         }
     }
 
+    :root fieldset.settings {
+        padding: 8px 12px 12px;
+
+        & legend {
+            padding: 0 4px;
+        }
+    }
+
     #preferencesPage_content fieldset.settings tbody tr {
         align-items: center;
         display: flex;
         flex-wrap: wrap;
-        gap: 6px 12px;
+        gap: 8px 12px;
         padding: 4px 0;
     }
 
@@ -2607,6 +2616,14 @@ body:has(> div > h2.vcenter) > div {
    so theme.js tags the frame's <html> with .mobile-sheet instead. */
 
 :root.mobile-sheet {
+    fieldset.settings {
+        padding: 8px 12px 12px;
+
+        & legend {
+            padding: 0 4px;
+        }
+    }
+
     #uploadForm {
         padding: 12px var(--gutter) 0 !important;
     }
@@ -2634,8 +2651,8 @@ body:has(> div > h2.vcenter) > div {
         align-items: center;
         display: flex;
         flex-wrap: wrap;
-        gap: 6px 12px;
-        padding: 6px 0;
+        gap: 8px 12px;
+        padding: 4px 0;
     }
 
     fieldset.settings :not(.dynamicTable) > tbody > tr > td {
@@ -2663,7 +2680,7 @@ body:has(> div > h2.vcenter) > div {
     #urls {
         font-size: 16px; /* below 16px iOS Safari zooms the page on focus */
         max-width: none !important;
-        padding: 8px 10px;
+        padding: 8px 12px;
         width: 100% !important;
     }
 
@@ -2692,7 +2709,7 @@ body:has(> div > h2.vcenter) > div {
     fieldset.settings .formRow {
         align-items: stretch !important;
         flex-direction: column;
-        gap: 6px;
+        gap: 8px;
 
         & label {
             color: var(--text-muted);
