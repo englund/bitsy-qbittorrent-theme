@@ -1500,6 +1500,36 @@ body:has(> div > h2.vcenter) > div {
     }
 }
 
+/* Desktop RSS Downloader: setup() sizes the feeds list to what the rule settings leave, which our taller rows
+   shrink to nothing. Let it fill the rest of the column instead, and scroll the column when that's too little. */
+
+@media (min-width: 641px) {
+    :root #centerRssDownloaderColumn {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+    }
+
+    :root #rssDownloaderFeeds {
+        display: flex;
+        flex: 1 0 120px;
+        flex-direction: column;
+        height: auto !important;
+    }
+
+    :root #rssDownloaderFeedsTable {
+        flex: 1;
+        height: auto !important;
+        min-height: 0;
+    }
+
+    #rssdownloaderpage #saveButton {
+        bottom: 0;
+        flex: none;
+        position: sticky;
+    }
+}
+
 /* Mobile RSS Downloader: theme.js shows one column per page (data-rssdl-page: rules, rule or articles).
    The view's own <style> comes after theme.css and setup() sizes the columns inline, hence :root and !important. */
 
