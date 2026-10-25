@@ -51,6 +51,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 
 **Dialogs (Mocha windows)**
 - Desktop: rounded, shadowed windows; form sections (`fieldset.settings`) are cards with small uppercase headings; the primary action (`button[type=submit]`, `#addButton`, Options Save) is blue in a **sticky footer**.
+- Mobile Options has **no tab row**: it opens on a list of the 8 categories (`#prefCategoryList`, rows cloned from the stock tabs), and each row drills into its category with a back chevron and the category as the title. It works like the details sheet: each level is a `history.pushState` entry (`{ options: ... }`), so the back gesture steps back and then closes the window, and closing with × or Save drops the entries it left (`history.go`). `theme.js` notices the window through a `MutationObserver`, because the window, its toolbar and its content load separately. × stays on the category pages (unlike the details sheet), since it's the way to leave without saving. Save stays at the bottom on every level, so edits across categories save together.
 - Mobile: every window becomes a **full-screen sheet** (52px title bar, large close button). Rows stack: the label sits above its field, and checkboxes sit on the right.
 - Dialog content lives in iframes, where media queries measure the *frame*, not the screen. `theme.js` adds `.mobile-sheet` to each dialog frame's `<html>` when the screen is phone-sized, and in-dialog mobile rules use `:root.mobile-sheet`, never `@media`.
 - Mocha splits panel heights in proportion to their current height, so a panel must never be 0px tall. That's why `.panel` keeps a transparent 1px border.
@@ -63,7 +64,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 **Icons**
 - **Lucide** (ISC license; each SVG keeps its license comment). `icons.mjs` maps stock filename → Lucide name + color. Colors are baked into the SVG because `<img>` doesn't inherit `currentColor`.
 - Color meaning: muted grey by default; green = start/downloading; blue = seeding/add/links; orange = queued/stop/stalled; red = remove/error; yellow = warning; purple = completed. Stalled torrents use grey arrows.
-- Exception: the details sheet's back chevron is Lucide `chevron-left` inlined in `theme.css` as a CSS mask, so it takes `--text`. It's nudged up 1px to line up with the title's capitals. (A rotated CSS-border chevron was tried; it rendered lopsided.)
+- Exception: the drill-down chevrons are Lucide `chevron-left` (`.sheetBack`, shared by the details sheet and Options) and `chevron-right` (the list rows), inlined in `theme.css` as CSS masks so they take the text color. The back one is nudged up 1px to line up with the title's capitals. (Rotated CSS-border chevrons were tried; they rendered lopsided.)
 - To regenerate: download `lucide-static@1.61.0` (the command is in the header of `icons.mjs`), then run `node icons.mjs <path>/package/icons`.
 
 **Login page**
@@ -84,7 +85,7 @@ node --watch mock-server.mjs        # http://localhost:8090  (/login shows the l
 - The native file picker can't be driven by automation. Call `qBittorrent.Client.uploadTorrentFiles([new File(...)])`, which is the same path the picker uses.
 
 ## Open ideas / next steps
-- **Next focus: replace sideways-scrolling tab rows on mobile.** The details sheet is done (drill-down, see Decisions). Still open: the status chips and dialog tab rows like Options. They cut off the last item and hide options off-screen, which doesn't feel native on a phone. Explore better-suited patterns before building: e.g. icon-only tabs that fit the width, a bottom tab bar, a dropdown/segmented picker showing the current tab, or one stacked scrolling page with section headers. This revisits the Tabs decision below (a "⋮ more" overflow menu was already tried and rejected).
+- **Next focus: replace sideways-scrolling tab rows on mobile.** The details sheet is done (drill-down, see Decisions). Options is done too (category list). Still open: the status chips. They cut off the last item and hide options off-screen, which doesn't feel native on a phone. Explore better-suited patterns before building: e.g. icon-only tabs that fit the width, a bottom tab bar, a dropdown/segmented picker showing the current tab, or one stacked scrolling page with section headers. This revisits the Tabs decision below (a "⋮ more" overflow menu was already tried and rejected).
 - Mobile details sheet: card-style layouts for the Trackers/Peers/Content tables; item counts on the drill-down rows (skipped because file and web-seed counts aren't in the torrent list data).
 - Mobile: a way to reach logout, Search, RSS and Log (the menu bar is hidden).
 - Mobile: category, tag and tracker filters (only the status chips are shown).

@@ -110,7 +110,7 @@ window.addEventListener("DOMContentLoaded", () => {
         bar.id = "detailsSheetBar";
         const backButton = document.createElement("button");
         backButton.type = "button";
-        backButton.id = "detailsSheetBack";
+        backButton.className = "sheetBack";
         backButton.ariaLabel = "Back";
         title = document.createElement("h3");
         const closeButton = document.createElement("button");
@@ -149,5 +149,89 @@ window.addEventListener("DOMContentLoaded", () => {
     mobileQuery.addEventListener("change", render);
     // history.state survives a reload; a sheet left open then shouldn't count as open now.
     if (history.state?.detailsSheet)
+        history.replaceState(null, "");
+}
+
+// Mobile Options: a list of the categories that drills into each one, instead of the scrolling tab row.
+// Like the details sheet, each level is a history entry, so the back gesture steps back and then closes the window.
+{
+    const mobileQuery = window.matchMedia("(max-width: 640px)");
+    let ownsHistory = false;
+    let optionsTitle;
+
+    const render = () => {
+        const win = document.getElementById("preferencesPage");
+        if (!win || !ownsHistory)
+            return;
+        const page = history.state?.options;
+        if (page === undefined) {
+            ownsHistory = false;
+            MochaUI.closeWindow(win);
+            return;
+        }
+        const isList = page === "list";
+        win.classList.toggle("prefs-list", mobileQuery.matches && isList);
+        win.classList.toggle("prefs-subpage", mobileQuery.matches && !isList);
+        document.getElementById("preferencesPage_title").textContent = isList ? optionsTitle : document.getElementById(page).textContent.trim();
+        if (!isList)
+            document.getElementById(page).click();
+    };
+
+    const go = (page) => {
+        history.pushState({ options: page }, "");
+        render();
+    };
+
+    const setUp = (win) => {
+        optionsTitle = document.getElementById("preferencesPage_title").textContent;
+
+        const backButton = document.createElement("button");
+        backButton.type = "button";
+        backButton.className = "sheetBack";
+        backButton.ariaLabel = "Back";
+        // Keep Mocha from starting a window drag from the title bar.
+        backButton.addEventListener("mousedown", (event) => event.stopPropagation());
+        backButton.addEventListener("click", () => history.back());
+        document.getElementById("preferencesPage_titleBar").prepend(backButton);
+
+        const list = document.createElement("nav");
+        list.id = "prefCategoryList";
+        for (const tab of document.querySelectorAll("#preferencesTabs li")) {
+            const row = document.createElement("button");
+            row.type = "button";
+            row.append(...tab.firstElementChild.cloneNode(true).childNodes);
+            row.addEventListener("click", () => go(tab.id));
+            list.append(row);
+        }
+        document.getElementById("preferencesPage_content").prepend(list);
+
+        ownsHistory = true;
+        go("list");
+    };
+
+    // The window, its toolbar (tabs) and its content all arrive asynchronously.
+    const check = () => {
+        const win = document.getElementById("preferencesPage");
+        if (!win) {
+            // Closed with × or Save: drop the history entries it left behind.
+            if (ownsHistory && history.state?.options) {
+                ownsHistory = false;
+                history.go(history.state.options === "list" ? -1 : -2);
+            }
+            return;
+        }
+        if (mobileQuery.matches && !ownsHistory && !document.getElementById("prefCategoryList")
+            && document.getElementById("preferencesTabs") && document.getElementById("BehaviorTab"))
+            setUp(win);
+    };
+
+    new MutationObserver(check).observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("popstate", render);
+    mobileQuery.addEventListener("change", () => {
+        check();
+        render();
+    });
+    // history.state survives a reload; a window left open then shouldn't count as open now.
+    if (history.state?.options)
         history.replaceState(null, "");
 }

@@ -961,7 +961,9 @@ body:has(> div > h2.vcenter) > div {
 /* Mobile details sheet: theme.js sets .details-open when a card is tapped. Mocha sizes the panel inline, hence the !important. */
 
 #detailsSheetBar,
-#detailsSheetSections {
+#detailsSheetSections,
+#prefCategoryList,
+.sheetBack {
     display: none;
 }
 
@@ -971,6 +973,29 @@ body:has(> div > h2.vcenter) > div {
 }
 
 @media (max-width: 640px) {
+    /* Back button of the drill-down sheets. Lucide chevron-left (ISC), as a mask so it takes the text color. */
+    .sheetBack {
+        align-items: center;
+        background: none;
+        border: 0;
+        flex: none;
+        height: 32px;
+        justify-content: center;
+        padding: 0;
+        width: 32px;
+
+        &::before {
+            background-color: var(--text);
+            content: "";
+            flex: none;
+            height: 24px;
+            /* Lines up with the title's capitals, which sit above the line box's center. */
+            translate: 0 -1px;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m15 18-6-6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+            width: 24px;
+        }
+    }
+
     /* General links to the other tabs instead (#detailsSheetSections). */
     :root.details-open #propertiesTabs {
         display: none;
@@ -1004,7 +1029,7 @@ body:has(> div > h2.vcenter) > div {
             white-space: nowrap;
         }
 
-        & :is(.mochaCloseButton, #detailsSheetBack) {
+        & .mochaCloseButton {
             background: none;
             border: 0;
             float: none;
@@ -1019,28 +1044,12 @@ body:has(> div > h2.vcenter) > div {
             }
         }
 
-        & #detailsSheetBack {
-            display: none;
+        & .sheetBack {
             margin-left: -8px;
-            padding: 0;
-
-            /* Lucide chevron-left (ISC), as a mask so it takes the text color. */
-            &::before {
-                background-color: var(--text);
-                content: "";
-                flex: none;
-                height: 24px;
-                /* Lines up with the title's capitals, which sit above the line box's center. */
-                translate: 0 -1px;
-                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m15 18-6-6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
-                width: 24px;
-            }
         }
 
-        &.subpage #detailsSheetBack {
-            align-items: center;
+        &.subpage .sheetBack {
             display: flex;
-            justify-content: center;
         }
 
         &.subpage .mochaCloseButton {
@@ -1048,7 +1057,7 @@ body:has(> div > h2.vcenter) > div {
         }
     }
 
-    :root.details-open #detailsSheetSections {
+    :is(:root.details-open #detailsSheetSections, #preferencesPage.prefs-list #prefCategoryList) {
         background-color: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius);
@@ -1069,14 +1078,15 @@ body:has(> div > h2.vcenter) > div {
             padding: 0 16px;
             text-align: left;
 
+            /* Lucide chevron-right (ISC). */
             &::after {
-                border: solid var(--text-muted);
-                border-width: 2px 2px 0 0;
+                background-color: var(--text-muted);
                 content: "";
-                height: 7px;
+                flex: none;
+                height: 18px;
                 margin-left: auto;
-                transform: rotate(45deg);
-                width: 7px;
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+                width: 18px;
             }
         }
 
@@ -1225,6 +1235,49 @@ body:has(> div > h2.vcenter) > div {
     }
 
     /* Options tables: a field that shares a row with its label drops below it instead of squeezing it. */
+    /* Options drill-down (theme.js): .prefs-list shows #prefCategoryList, .prefs-subpage one category with a back button. */
+    #preferencesPage_toolbarWrapper {
+        display: none !important;
+    }
+
+    #preferencesPage.prefs-list {
+        & .PrefTab {
+            display: none;
+        }
+
+        /* The content already has the inset. */
+        & #prefCategoryList {
+            margin: 0;
+        }
+
+        /* Pin Save to the bottom; the short list doesn't push it there. Mocha and the footer rule set these with priority. */
+        & #preferencesPage_content {
+            display: flex !important;
+            flex-direction: column;
+
+            & > div:has(> input[onclick*="applyPreferences"]) {
+                margin-top: auto !important;
+            }
+        }
+    }
+
+    #preferencesPage .sheetBack {
+        left: 8px;
+        position: absolute;
+        top: 10px;
+        z-index: 1;
+    }
+
+    #preferencesPage.prefs-subpage {
+        & .sheetBack {
+            display: flex;
+        }
+
+        & .mochaTitlebar h3 {
+            background-image: none !important;
+        }
+    }
+
     #preferencesPage_content fieldset.settings tbody tr {
         align-items: center;
         display: flex;
