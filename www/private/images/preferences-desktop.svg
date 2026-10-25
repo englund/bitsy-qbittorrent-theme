@@ -1,1 +1,16 @@
-<svg height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path d="m64 144h226.75a48 48 0 0 0 90.5 0h66.75a16 16 0 0 0 0-32h-66.75a48 48 0 0 0 -90.5 0h-226.75a16 16 0 0 0 0 32zm384 224h-66.75a48 48 0 0 0 -90.5 0h-226.75a16 16 0 0 0 0 32h226.75a48 48 0 0 0 90.5 0h66.75a16 16 0 0 0 0-32zm0-128h-226.75a48 48 0 0 0 -90.5 0h-66.75a16 16 0 0 0 0 32h66.75a48 48 0 0 0 90.5 0h226.75a16 16 0 0 0 0-32z" fill="#1e90ff" transform="matrix(.06730769 0 0 .07955163 -1.230769 -4.365217)"/></svg>
+<!-- @license lucide-static v1.61.0 - ISC -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#aeb6c8"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</svg>

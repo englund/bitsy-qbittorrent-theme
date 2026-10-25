@@ -1,1 +1,15 @@
-<svg height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path d="m16 1.9999999a14 14 0 0 0 -14.0000001 14.0000001 14 14 0 0 0 14.0000001 14 14 14 0 0 0 14-14 14 14 0 0 0 -14-14.0000001zm-7.5000001 12.0000001h15.0000001v4h-15.0000001z" fill="#f00" stroke-width="1.27272"/></svg>
+<!-- @license lucide-static v1.61.0 - ISC -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#aeb6c8"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M18 6 6 18" />
+  <path d="m6 6 12 12" />
+</svg>
