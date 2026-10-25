@@ -1102,6 +1102,10 @@ body:has(> div > h2.vcenter) > div {
         padding: 0 12px;
     }
 
+    #panelTabs {
+        margin: 0 12px;
+    }
+
     /* Stock fixes the bar at 24px, so its wrapped second row overlaps the results line. */
     :root #logFilterBar {
         gap: 8px;
@@ -2040,8 +2044,18 @@ body:has(> div > h2.vcenter) > div {
         max-width: 100%;
     }
 
-    #preferencesPage_content fieldset.settings td input:is([type="text"], [type="password"]) {
+    #preferencesPage_content fieldset.settings td :is(input[type="text"], input[type="password"], textarea) {
         width: 100% !important;
+    }
+
+    /* Otherwise the table shrinks to fit, and a field's 100% is only as wide as the table (Downloads › email). */
+    #preferencesPage_content fieldset.settings table:has(td :is(input[type="text"], input[type="password"], textarea)) {
+        width: 100%;
+    }
+
+    #preferencesPage_content fieldset.settings .formRow > input[type="text"] {
+        box-sizing: border-box;
+        max-width: 100%;
     }
 
     #preferencesPage_content > div:has(> input[onclick*="applyPreferences"]) {
