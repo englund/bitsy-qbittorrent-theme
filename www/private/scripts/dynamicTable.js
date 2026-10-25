@@ -1067,6 +1067,7 @@ window.qBittorrent.DynamicTable ??= (() => {
 
             for (let k = 0; k < this.columns.length; ++k) {
                 const td = document.createElement("td");
+                td.dataset.column = this.columns[k].name;
                 if ((this.columns[k].visible === "0") || this.columns[k].force_hide)
                     td.classList.add("invisible");
                 tr.append(td);
@@ -1191,7 +1192,11 @@ window.qBittorrent.DynamicTable ??= (() => {
     class TorrentsTable extends DynamicTable {
         setupVirtualList() {
             super.setupVirtualList();
-            this.rowHeight = (clientData.get("display_density") === "compact") ? 18 : 22;
+            // Must match the card height in theme.css. Read once at load, so crossing the breakpoint needs a reload.
+            if (window.matchMedia("(max-width: 640px)").matches)
+                this.rowHeight = 92;
+            else
+                this.rowHeight = (clientData.get("display_density") === "compact") ? 18 : 22;
         }
 
         initColumns() {

@@ -1,0 +1,606 @@
+/* Modern dark theme. Loaded after the stock stylesheets and only overrides them. */
+
+:root,
+:root.dark {
+    --bg: hsl(225deg 14% 7%);
+    --surface: hsl(225deg 13% 11%);
+    --surface-2: hsl(225deg 12% 15%);
+    --surface-3: hsl(225deg 11% 20%);
+    --border: hsl(225deg 10% 22%);
+    --text: hsl(225deg 20% 92%);
+    --text-muted: hsl(225deg 10% 62%);
+    --accent: hsl(217deg 92% 62%);
+    --accent-soft: hsl(217deg 92% 62% / 18%);
+    --green: hsl(145deg 60% 52%);
+    --orange: hsl(32deg 95% 60%);
+    --red: hsl(0deg 85% 65%);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+    --color-accent-blue: var(--accent);
+    --color-text-blue: var(--accent);
+    --color-text-orange: var(--orange);
+    --color-text-red: var(--red);
+    --color-text-green: var(--green);
+    --color-text-white: hsl(0deg 0% 100%);
+    --color-text-disabled: var(--text-muted);
+    --color-text-default: var(--text);
+    --color-background-primary: var(--bg);
+    --color-background-blue: var(--accent);
+    --color-background-popup: var(--surface-2);
+    --color-background-default: var(--surface-2);
+    --color-background-hover: var(--accent);
+    --color-border-blue: var(--accent);
+    --color-border-default: var(--border);
+
+    color-scheme: dark;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+}
+
+input:not([type="checkbox"], [type="radio"], [type="range"]),
+select,
+textarea {
+    background-color: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 4px 8px;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    border-color: var(--accent);
+    outline: 2px solid var(--accent-soft);
+}
+
+button {
+    background-color: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 4px 12px;
+}
+
+button:hover:not(:disabled) {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+fieldset {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+/* Header: menu bar, toolbar, tabs, search */
+
+#desktopHeader {
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+#desktopNavbar {
+    background-color: var(--surface);
+}
+
+#desktopNavbar ul li a {
+    border-radius: var(--radius-sm);
+}
+
+#desktopNavbar li ul {
+    background-color: var(--surface-2);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px hsl(0deg 0% 0% / 45%);
+    padding: 4px;
+}
+
+#mochaToolbar {
+    align-items: center;
+    background-color: var(--surface);
+    border: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    height: auto;
+    padding: 6px 10px;
+}
+
+#mochaToolbar > a,
+#mochaToolbar #uploadButton,
+#queueingButtons > a {
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    padding: 5px;
+}
+
+#mochaToolbar > a:hover,
+#mochaToolbar #uploadButton:hover,
+#queueingButtons > a:hover {
+    background-color: var(--surface-3);
+}
+
+#mochaToolbar .divider {
+    background-image: none;
+    margin-left: 12px;
+    padding: 5px;
+}
+
+#uploadButton label {
+    display: flex;
+}
+
+#queueingButtons {
+    display: inline-flex;
+    gap: 2px;
+}
+
+.mochaToolButton {
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    width: 20px;
+}
+
+#mainWindowTabs {
+    margin-left: auto;
+}
+
+.tab-menu {
+    background-color: var(--surface-2);
+    border-radius: var(--radius);
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+}
+
+.tab-menu li a,
+.tab-menu li:first-child a {
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    margin: 0;
+    padding: 4px 12px;
+}
+
+.tab-menu li:hover a {
+    background-color: var(--surface-3);
+    color: var(--text);
+}
+
+.tab-menu li.selected a {
+    background-color: var(--accent);
+    color: var(--color-text-white);
+}
+
+.tab-menu li.selected img {
+    filter: var(--color-icon-hover);
+}
+
+#torrentsFilterToolbar {
+    align-items: center;
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+
+#torrentsFilterInput {
+    background-position: 12px center;
+    background-size: 15px;
+    border-radius: 999px;
+    padding: 5px 12px 5px 36px;
+    width: 280px;
+}
+
+#torrentsFilterRegexBox + label,
+#torrentsFilterRegexBox:checked + label {
+    border-radius: var(--radius-sm);
+    margin: 0;
+}
+
+#torrentsFilterRegexBox:checked + label {
+    background-color: var(--accent-soft);
+}
+
+/* Layout chrome */
+
+#pageWrapper {
+    border: 0;
+}
+
+.columnHandle {
+    background-color: var(--bg);
+    border: 0;
+    width: 6px;
+}
+
+.horizontalHandle {
+    background-color: var(--bg);
+}
+
+/* Keep the 1px border: Mocha splits spare height in proportion to current panel heights, so a 0px panel never grows. */
+.panel {
+    border-bottom-color: transparent;
+}
+
+.panel-header {
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+/* Filters sidebar */
+
+#filtersColumn,
+#Filters {
+    background-color: var(--surface);
+}
+
+.filterTitle {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 14px 12px 6px;
+    text-transform: uppercase;
+}
+
+ul.filterList {
+    padding: 0 6px;
+}
+
+ul.filterList span.link {
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 5px 8px;
+}
+
+ul.filterList span.link:hover {
+    background-color: var(--surface-3);
+    color: var(--text);
+}
+
+.selectedFilter > span.link,
+.selectedFilter > span.link:hover {
+    background-color: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+ul.filterList .selectedFilter > .link :is(img, button) {
+    filter: none;
+}
+
+/* Tables */
+
+.dynamicTable th {
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.dynamicTable th.sorted {
+    color: var(--text);
+}
+
+.dynamicTable td,
+.dynamicTable th {
+    border-right: 0;
+}
+
+.altRowColors tbody tr:nth-child(odd of :not(.invisible)) {
+    background-color: hsl(225deg 13% 9%);
+}
+
+.dynamicTableDiv table.dynamicTable tbody tr:hover {
+    background-color: var(--surface-2);
+    color: var(--text);
+}
+
+.dynamicTableDiv table.dynamicTable tbody tr.selected {
+    background-color: var(--accent-soft);
+    color: var(--text);
+}
+
+.dynamicTable tr:is(:hover, .selected) img:not(.flags) {
+    filter: none;
+}
+
+progress-bar {
+    border: 0 !important;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+    overflow: hidden;
+}
+
+/* Properties panel */
+
+#propertiesPanel_header {
+    height: auto;
+    padding: 4px 6px;
+}
+
+#propertiesPanel {
+    background-color: var(--bg);
+}
+
+#propGeneral fieldset {
+    background-color: var(--surface);
+    margin: 10px;
+    padding: 10px 14px;
+}
+
+#propGeneral legend {
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 6px;
+}
+
+td.generalLabel {
+    color: var(--text-muted);
+}
+
+/* Footer */
+
+#desktopFooterWrapper,
+#desktopFooter {
+    background-color: var(--surface);
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: var(--font);
+}
+
+td.statusBarSeparator {
+    background: linear-gradient(var(--border), var(--border)) center / 1px 16px no-repeat;
+}
+
+/* Menus and dialogs */
+
+.contextMenu {
+    background-color: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px hsl(0deg 0% 0% / 45%);
+    padding: 4px;
+}
+
+.contextMenu li a {
+    border-radius: var(--radius-sm);
+    color: var(--text);
+}
+
+.contextMenu li ul {
+    background-color: var(--surface-2);
+    border-radius: var(--radius);
+}
+
+.mocha {
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+/* Mobile: one column, status chips on top, torrents as cards. */
+
+@media (max-width: 640px) {
+    #desktop {
+        min-width: 0;
+    }
+
+    #desktopNavbar,
+    #queueingButtons,
+    #torrentCreatorButton,
+    #mainWindowTabs,
+    #torrentsFilterToolbar > :not(#torrentsFilterInput),
+    #filtersColumn_handle,
+    #transferList_handle,
+    #propertiesPanel_wrapper,
+    #torrentsTableFixedHeaderDiv,
+    #Filters .filterWrapper:not(:first-child),
+    #Filters .filterTitle,
+    #desktopFooter td:not(.speedLabel) {
+        display: none !important;
+    }
+
+    #mochaToolbar {
+        gap: 4px;
+        padding: 8px 12px;
+    }
+
+    #mochaToolbar .divider {
+        margin-left: 0;
+    }
+
+    #preferencesButton {
+        margin-left: auto;
+    }
+
+    .mochaToolButton {
+        height: 24px;
+        width: 24px;
+    }
+
+    #torrentsFilterInput {
+        font-size: 16px; /* below 16px iOS Safari zooms the page on focus */
+        width: 100%;
+    }
+
+    #pageWrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #filtersColumn,
+    #filtersColumn #Filters_wrapper,
+    #filtersColumn #Filters {
+        border: 0;
+        flex: none;
+        height: auto !important;
+        width: 100% !important;
+    }
+
+    #Filters {
+        overflow: hidden !important;
+    }
+
+    #statusFilterList {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding: 8px 12px;
+        scrollbar-width: none;
+    }
+
+    #statusFilterList li {
+        flex: none;
+    }
+
+    #statusFilterList span.link {
+        background-color: var(--surface-2);
+        border-radius: 999px;
+        padding: 6px 12px;
+        white-space: nowrap;
+    }
+
+    #mainColumn {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        height: auto !important;
+        min-height: 0;
+        width: 100% !important;
+    }
+
+    #transferList_wrapper,
+    #transferList {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        height: auto !important;
+        min-height: 0;
+    }
+
+    #transferList_pad,
+    #torrentsTableDiv {
+        flex: 1;
+        min-height: 0;
+    }
+
+    #torrentsTableDiv table.dynamicTable {
+        margin: 8px 0;
+        width: 100% !important;
+    }
+
+    #torrentsTableDiv colgroup {
+        display: none;
+    }
+
+    /* 92px row slot = 84px card + 8px gap; the slot height is set in dynamicTable.js. */
+    #torrentsTableDiv tbody tr {
+        background-color: var(--surface) !important;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        column-gap: 12px;
+        display: grid;
+        grid-template-areas:
+            "name name name name"
+            "progress progress progress progress"
+            "status dl up eta";
+        grid-template-columns: 1fr auto auto auto;
+        height: 84px !important;
+        left: 10px;
+        padding: 9px 12px;
+        right: 10px;
+        row-gap: 6px;
+    }
+
+    #torrentsTableDiv tbody tr.selected {
+        background-color: var(--surface-2) !important;
+        border-color: var(--accent);
+    }
+
+    #transferList #torrentsTableDiv tbody td {
+        display: none !important;
+        line-height: 18px;
+        max-width: none !important;
+        overflow: hidden;
+        padding: 0;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: auto !important;
+    }
+
+    #transferList #torrentsTableDiv tbody td:is(
+        [data-column="name"],
+        [data-column="progress"],
+        [data-column="status"],
+        [data-column="dlspeed"],
+        [data-column="upspeed"],
+        [data-column="eta"]
+    ) {
+        display: block !important;
+    }
+
+    #torrentsTableDiv td[data-column="name"] {
+        font-size: 14px;
+        font-weight: 600;
+        grid-area: name;
+        line-height: 20px !important;
+    }
+
+    #torrentsTableDiv td[data-column="name"] .stateIcon {
+        background-size: 16px;
+        padding-left: 24px;
+    }
+
+    #torrentsTableDiv td[data-column="progress"] {
+        grid-area: progress;
+    }
+
+    #torrentsTableDiv td[data-column="status"] {
+        color: var(--text-muted);
+        grid-area: status;
+    }
+
+    #torrentsTableDiv td[data-column="dlspeed"] {
+        color: var(--text-muted);
+        grid-area: dl;
+    }
+
+    #torrentsTableDiv td[data-column="dlspeed"]::before {
+        color: var(--green);
+        content: "↓ ";
+    }
+
+    #torrentsTableDiv td[data-column="upspeed"] {
+        color: var(--text-muted);
+        grid-area: up;
+    }
+
+    #torrentsTableDiv td[data-column="upspeed"]::before {
+        color: var(--accent);
+        content: "↑ ";
+    }
+
+    #torrentsTableDiv td[data-column="eta"] {
+        color: var(--text-muted);
+        grid-area: eta;
+        text-align: right;
+    }
+
+    #desktopFooter table {
+        margin: 0 auto !important;
+    }
+
+    td.speedLabel {
+        min-width: 0;
+        padding: 0 8px;
+    }
+}
