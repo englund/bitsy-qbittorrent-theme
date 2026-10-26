@@ -136,3 +136,14 @@ label {
 #noscript h1 {
     color: var(--red);
 }
+
+@media (max-width: 640px) {
+    label,
+    #loginButton {
+        font-size: 16px;
+    }
+
+    #error_msg {
+        font-size: 14px;
+    }
+}

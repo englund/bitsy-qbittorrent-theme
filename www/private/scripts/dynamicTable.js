@@ -1208,7 +1208,7 @@ window.qBittorrent.DynamicTable ??= (() => {
         setupVirtualList() {
             super.setupVirtualList();
             this.rowHeight = (clientData.get("display_density") === "compact") ? 18 : 22;
-            this.useMobileRowHeight(92);
+            this.useMobileRowHeight(100);
         }
 
         initColumns() {
@@ -2025,7 +2025,7 @@ window.qBittorrent.DynamicTable ??= (() => {
     class SearchResultsTable extends DynamicTable {
         setupVirtualList() {
             super.setupVirtualList();
-            this.useMobileRowHeight(72);
+            this.useMobileRowHeight(82);
         }
 
         initColumns() {

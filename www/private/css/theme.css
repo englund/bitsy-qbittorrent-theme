@@ -263,7 +263,7 @@ fieldset {
         border: 0;
         border-radius: var(--radius-sm);
         display: flex;
-        font-size: 15px;
+        font-size: 16px;
         gap: 10px;
         padding: 10px 12px;
         text-align: left;
@@ -893,7 +893,7 @@ body:has(> div > h2.vcenter) > div {
         border-radius: 999px;
         display: flex;
         flex: 1 1 0; /* a zero basis keeps the toolbar from wrapping it; it grows to its text and then ellipsizes */
-        font-size: 15px;
+        font-size: 16px;
         gap: 4px;
         height: var(--touch);
         max-width: max-content;
@@ -919,7 +919,7 @@ body:has(> div > h2.vcenter) > div {
         border-radius: 999px;
         display: flex;
         flex: none;
-        font-size: 15px;
+        font-size: 16px;
         height: var(--touch);
         margin-left: auto;
         max-width: 40%;
@@ -973,7 +973,7 @@ body:has(> div > h2.vcenter) > div {
     #Filters_pad span.link {
         align-items: center;
         box-sizing: border-box;
-        font-size: 15px;
+        font-size: 16px;
         gap: 12px;
         min-height: var(--row);
         padding: 0 12px;
@@ -1049,19 +1049,19 @@ body:has(> div > h2.vcenter) > div {
         column-gap: 12px;
         display: grid;
         left: var(--gutter);
-        padding: 9px 12px;
+        padding: 12px;
         right: var(--gutter);
-        row-gap: 6px;
+        row-gap: 4px;
     }
 
-    /* 92px row slot = 84px card + 8px gap; the slot height is set in dynamicTable.js. */
+    /* 100px row slot = 92px card + 8px gap; the slot height is set in dynamicTable.js. */
     #torrentsTableDiv tbody tr {
         grid-template-areas:
             "name name name name"
             "progress progress progress progress"
             "status dl up eta";
         grid-template-columns: 1fr auto auto auto;
-        height: 84px !important;
+        height: 92px !important;
     }
 
     /* Lucide ellipsis-vertical (ISC). theme.js opens the context menu when it's tapped. */
@@ -1072,7 +1072,7 @@ body:has(> div > h2.vcenter) > div {
         mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3Ccircle cx='12' cy='5' r='1'/%3E%3Ccircle cx='12' cy='19' r='1'/%3E%3C/svg%3E") center / contain no-repeat;
         position: absolute;
         right: 8px;
-        top: 9px;
+        top: 14px;
         width: 20px;
     }
 
@@ -1083,7 +1083,7 @@ body:has(> div > h2.vcenter) > div {
 
     #transferList #torrentsTableDiv tbody td {
         display: none !important;
-        line-height: 18px;
+        line-height: 20px;
         max-width: none !important;
         overflow: hidden;
         padding: 0;
@@ -1104,10 +1104,10 @@ body:has(> div > h2.vcenter) > div {
     }
 
     #torrentsTableDiv td[data-column="name"] {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 600;
         grid-area: name;
-        line-height: 20px !important;
+        line-height: 24px !important;
         padding-right: 24px !important; /* room for the ⋮ */
     }
 
@@ -1308,18 +1308,19 @@ body:has(> div > h2.vcenter) > div {
         height: auto !important;
     }
 
-    /* 72px row slot = 64px card + 8px gap; the slot height is set in dynamicTable.js. */
+    /* 82px row slot = 74px card + 8px gap; the slot height is set in dynamicTable.js. */
     #searchResultsTableDiv tbody tr {
         grid-template-areas:
             "name name name name"
             "size seeds leechers engine";
         grid-template-columns: auto auto auto 1fr;
-        height: 64px !important;
+        height: 74px !important;
 
         & td {
             color: var(--text-muted);
             display: none !important;
-            line-height: 18px;
+            font-size: 14px;
+            line-height: 20px;
             max-width: none !important;
             overflow: hidden;
             padding: 0 !important;
@@ -1334,9 +1335,10 @@ body:has(> div > h2.vcenter) > div {
 
         & td[data-column="fileName"] {
             color: var(--text);
+            font-size: 16px;
             font-weight: 600;
             grid-area: name;
-            line-height: 20px;
+            line-height: 24px;
             padding-right: 24px !important; /* room for the ⋮ */
         }
 
@@ -1725,7 +1727,7 @@ body:has(> div > h2.vcenter) > div {
 
         & h3 {
             flex: 1;
-            font-size: 16px;
+            font-size: 20px;
             margin: 0;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1782,7 +1784,7 @@ body:has(> div > h2.vcenter) > div {
         background: none !important;
         border-bottom: 1px solid var(--border);
         display: flex;
-        font-size: 15px;
+        font-size: 16px;
         padding: 0 var(--gutter);
 
         & td {
@@ -1972,7 +1974,7 @@ body:has(> div > h2.vcenter) > div {
         background: none !important;
         border-bottom: 1px solid var(--border);
         display: flex;
-        font-size: 15px;
+        font-size: 16px;
 
         & td {
             align-items: center;
@@ -1995,7 +1997,7 @@ body:has(> div > h2.vcenter) > div {
 
     :root .articleTableFeed td {
         color: var(--text-muted);
-        font-size: 13px;
+        font-size: 14px;
     }
 
     /* Rules drill into the rule editor. Lucide chevron-right (ISC). */
@@ -2017,7 +2019,7 @@ body:has(> div > h2.vcenter) > div {
         border: 1px solid var(--border);
         border-radius: var(--radius);
         display: flex;
-        font-size: 15px;
+        font-size: 16px;
         margin: 12px 0;
         min-height: var(--row);
         padding: 0 16px;
@@ -2114,7 +2116,7 @@ body:has(> div > h2.vcenter) > div {
 
         & h3 {
             flex: 1;
-            font-size: 16px;
+            font-size: 20px;
             margin: 0;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -2164,7 +2166,7 @@ body:has(> div > h2.vcenter) > div {
             border: 0;
             border-radius: 0;
             display: flex;
-            font-size: 15px;
+            font-size: 16px;
             gap: 12px;
             min-height: 48px;
             padding: 0 16px;
@@ -2307,7 +2309,7 @@ body:has(> div > h2.vcenter) > div {
     .mochaTitlebar h3 {
         background-position: 16px center !important;
         background-size: 20px !important;
-        font-size: 16px;
+        font-size: 20px;
         line-height: 52px;
         padding: 0 56px 0 44px !important;
     }
@@ -2563,6 +2565,12 @@ body:has(> div > h2.vcenter) > div {
             display: flex;
             flex: 1;
             min-height: var(--touch);
+
+            /* As flex items, the text and a link inside it would sit side by side once the text wraps. */
+            &:has(> a) {
+                align-content: center;
+                display: block;
+            }
         }
     }
 
@@ -3204,5 +3212,89 @@ body:has(> div > h2.vcenter) > div {
         min-height: 0;
         padding: 0 4px;
         width: 100%;
+    }
+}
+
+/* Type on phones: body 16px, secondary 14px, section headings 12px, nothing under 11px.
+   Data tables stay at 14px (an approved exception): at 16px their narrow columns cut off almost everything.
+   Dialog frames get the same rules through .mobile-sheet. */
+
+@media (max-width: 640px) {
+    :root {
+        & body,
+        & .mochaContentWrapper,
+        & .tab-menu,
+        & :is(#qbittorrentVersion, #statisticsContent h3) {
+            font-size: 16px;
+        }
+
+        & fieldset.settings legend,
+        & .filterTitle {
+            font-size: 12px;
+        }
+
+        & fieldset.settings legend label {
+            font-size: 16px;
+        }
+
+        & progress-bar {
+            font-size: 11px;
+        }
+
+        & .dynamicTable,
+        & #diskInfo,
+        & #desktopFooter,
+        & #preferencesPage :is(i, li) {
+            font-size: 14px;
+        }
+
+        /* Context menus keep their stock size with the rest of that exception: at 16px the torrent menu runs off the screen. */
+        & .contextMenu {
+            font-size: 13px;
+        }
+
+        & body:has(> div > h2.vcenter) > div {
+            & h2 {
+                font-size: 16px;
+            }
+
+            & p {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+:root.mobile-sheet {
+    & body,
+    & .slider {
+        font-size: 16px;
+    }
+
+    & fieldset.settings legend {
+        font-size: 12px;
+    }
+
+    & fieldset.settings legend label {
+        font-size: 16px;
+    }
+
+    & .dynamicTable,
+    & #diskInfo {
+        font-size: 14px;
+    }
+
+    & .contextMenu {
+        font-size: 13px;
+    }
+
+    & body:has(> div > h2.vcenter) > div {
+        & h2 {
+            font-size: 16px;
+        }
+
+        & p {
+            font-size: 14px;
+        }
     }
 }
