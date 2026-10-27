@@ -66,7 +66,7 @@
     --accent-text: hsl(var(--accent-hs) 26%);
     --accent-soft-text: var(--accent-text);
     --green: hsl(145deg 65% 30%);
-    --orange: hsl(28deg 90% 40%);
+    --orange: hsl(28deg 90% 36%);
     --red: hsl(0deg 72% 46%);
     --yellow: hsl(42deg 95% 34%);
     --purple: hsl(262deg 60% 55%);
