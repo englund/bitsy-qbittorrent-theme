@@ -151,6 +151,8 @@ Sources: Apple HIG (layout, lists and tables, sheets, buttons, menus, text field
 - Long-press context menu on cards: built into the stock UI, only tested in emulation. Real-phone testing was dropped: the ⋮ button opens the same menu, so long press is a shortcut.
 - Mobile context menu: stock styling, opened at the tap point; it's 25 rows of 30px and only just fits at 812px, so it can't reach 44px rows as is. A bottom sheet was built (full width, 44px rows, the row's name as title, submenus drilling in place) and compared with stock on every menu; the user preferred stock for now, so it was reverted. Its diff is saved outside the repo in the side-session notes as `context-menu-bottom-sheet.patch`. Found while comparing, now fixed: on phones the filter-list menus opened behind the filter popover (it is in the top layer), so `theme.js` lifts a context menu into the top layer as a manual popover while any popover is open (`.contextMenu:popover-open` resets the popover defaults); and in Add torrent a long press on a file row while scrolled down put the menu, and its Priority submenu, above the visible area (the `contextmenu.js` fix above).
 - Optional: a more compact variant of the tabs for the details-panel header on desktop (currently 53px tall).
+- Investigate: would it be useful to split the mobile and desktop code into separate files (CSS and JS)? Today everything lives in `theme.css` and `theme.js`.
+- Idea: a color theme option, i.e. let the user pick between several color themes for the app.
 
 ## History
 ```
