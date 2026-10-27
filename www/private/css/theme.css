@@ -16,6 +16,7 @@
     --accent: hsl(var(--accent-hs) var(--accent-l));
     --accent-hover: hsl(var(--accent-hs) calc(var(--accent-l) - 6%));
     --accent-soft: hsl(var(--accent-hs) var(--accent-l) / 18%);
+    --button-hover: var(--accent);
     --row-alt: hsl(225deg 13% 9%);
     --green: hsl(145deg 60% 52%);
     --orange: hsl(32deg 95% 60%);
@@ -57,6 +58,8 @@
     --text: hsl(225deg 25% 12%);
     --text-muted: hsl(225deg 10% 40%);
     --accent-l: 48%;
+    /* --text on a solid accent is about 3:1. White hover text instead goes white-on-white on buttons whose own background wins. */
+    --button-hover: var(--accent-soft);
     --green: hsl(145deg 65% 30%);
     --orange: hsl(28deg 90% 40%);
     --red: hsl(0deg 72% 46%);
@@ -139,7 +142,7 @@ button {
 }
 
 button:hover:not(:disabled) {
-    background-color: var(--accent);
+    background-color: var(--button-hover);
     border-color: var(--accent);
 }
 
