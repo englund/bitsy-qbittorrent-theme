@@ -550,7 +550,7 @@ td.statusBarSeparator {
 }
 
 .mochaContentWrapper {
-    background-color: var(--surface);
+    background-color: var(--bg);
 }
 
 .mochaCloseButton {
@@ -650,12 +650,8 @@ input#save:hover {
     border-color: var(--red);
 }
 
-body:has(#uploadForm, > div > h2.vcenter) {
-    background-color: var(--surface);
-}
-
 fieldset.settings {
-    background-color: var(--bg);
+    background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     margin: 0 0 12px;
@@ -663,7 +659,7 @@ fieldset.settings {
     padding: 8px 14px 12px;
 
     & fieldset.settings {
-        background-color: var(--surface);
+        background-color: transparent;
         margin: 8px 0 0;
     }
 
@@ -1630,7 +1626,7 @@ body:has(> div > h2.vcenter) > div {
         }
 
         & tbody tr.cookieCard {
-            background-color: var(--bg);
+            background-color: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             display: grid;
