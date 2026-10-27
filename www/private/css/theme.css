@@ -2531,6 +2531,36 @@ body:has(> div > h2.vcenter) > div {
             "size size priority";
         grid-template-columns: 20px minmax(0, 1fr) auto;
         height: 92px !important;
+        left: calc(var(--gutter) + var(--depth-indent, 0px));
+
+        /* Nested rows indent the whole card, 16px per level up to 4. Stock's inline margins are the only record
+           of the depth: a shown folder arrow gets depth × 20px, a file name (depth + 1) × 20px. Rows are reused
+           across nodes, so a hidden arrow can keep a stale margin. */
+        &:has(.filesTableCollapseIcon[style*="display: inline"]:not([style*="margin-left: 0px"]), span[id^="filesTablefileName"]:not([style*="margin-left: 0"], [style*="margin-left: 20px"])) {
+            --depth-indent: 64px;
+        }
+
+        &:has(.filesTableCollapseIcon[style*="display: inline"][style*="margin-left: 20px"], span[id^="filesTablefileName"][style*="margin-left: 40px"]) {
+            --depth-indent: 16px;
+        }
+
+        &:has(.filesTableCollapseIcon[style*="display: inline"][style*="margin-left: 40px"], span[id^="filesTablefileName"][style*="margin-left: 60px"]) {
+            --depth-indent: 32px;
+        }
+
+        &:has(.filesTableCollapseIcon[style*="display: inline"][style*="margin-left: 60px"], span[id^="filesTablefileName"][style*="margin-left: 80px"]) {
+            --depth-indent: 48px;
+        }
+
+        & .filesTableCollapseIcon,
+        & span[id^="filesTablefileName"] {
+            margin-left: 0 !important;
+        }
+
+        /* Files keep the arrow's slot when the torrent has folders, so their names line up with their siblings'. */
+        &:is(tbody:has(.filesTableCollapseIcon[style*="display: inline"]) > tr) span[id^="filesTablefileName"]:not([style*="margin-left: 0"]) {
+            margin-left: 20px !important;
+        }
 
         & td:is([data-column="checked"], [data-column="name"], [data-column="progress"], [data-column="size"], [data-column="priority"]) {
             display: block !important;
