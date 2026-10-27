@@ -2046,9 +2046,22 @@ body:has(> div > h2.vcenter) > div {
    shrink to nothing. Let it fill the rest of the column instead, and scroll the column when that's too little. */
 
 @media (min-width: 641px) {
+    /* Stock floats the columns at 25/50/25% with no gutter between them. */
+    :root #RssDownloader {
+        display: flex;
+        gap: 12px;
+    }
+
+    :root :is(#leftRssDownloaderColumn, #rightRssDownloaderColumn) {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
     :root #centerRssDownloaderColumn {
         display: flex;
+        flex: 2 1 0;
         flex-direction: column;
+        min-width: 0;
         overflow: auto;
     }
 
