@@ -1041,10 +1041,8 @@ body:has(> div > h2.vcenter) > div {
         padding: 0 12px;
     }
 
-    /* :root outranks the touch-target minimum at the end of this file. */
-    :root .popoverMenu > button {
+    .popoverMenu > button {
         gap: 12px;
-        min-height: var(--row);
         padding: 0 12px;
     }
 
@@ -3467,6 +3465,10 @@ body:has(> div > h2.vcenter) > div {
         & :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]), select, button, textarea) {
             box-sizing: border-box;
             min-height: var(--touch);
+        }
+
+        & .popoverMenu > button {
+            min-height: var(--row);
         }
 
         /* Header cells sort when tapped, and file lists hold the select-all checkbox there. */
