@@ -15,6 +15,8 @@ const placeBelow = (popover, button) => {
 {
     const stockHeaderHeight = MUI.Window.prototype.options.headerHeight;
     MUI.Window.prototype.options.headerHeight = 56;
+    // Options' and About's tab rows, the only window toolbars; stock's 29px would clip the window's bottom.
+    MUI.Window.prototype.options.toolbarHeight = 63;
     const extra = 56 - stockHeaderHeight;
     // Dialog is frozen, so it's replaced; loadWindowHeight looks it up on every call.
     const dialog = window.qBittorrent.Dialog;
