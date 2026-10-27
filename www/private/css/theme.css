@@ -2338,6 +2338,39 @@ img[src*="/wallet-open.svg"] { --icon: url("../images/wallet-open.svg"); --icon-
     .mochaErrorIcon {
         mask-size: contain;
     }
+
+    /* Grey icons drawn as element backgrounds go on a masked ::before, since a mask on the element would hide its
+       text, border and background too. --icon-at mirrors the stock background-position / size. */
+    :is(.panel-collapse, .panel-expand) { --icon: url("../images/collapse.svg"); --icon-at: center / 16px; }
+    .categoryToggle { --icon: url("../images/go-down.svg"); --icon-at: center / 10px; }
+    #torrentsFilterRegexBox + label { --icon: url("../images/regex.svg"); --icon-at: center / 1.5em; }
+    #rememberBtn { --icon: url("../images/object-locked.svg"); --icon-at: center / 24px; }
+    .dynamicTable th.sorted { --icon: url("../images/go-up.svg"); --icon-at: right 3px center / 12px; }
+    .dynamicTable th.sorted.reverse { --icon: url("../images/go-down.svg"); }
+    :is(#mobileSortButton, #detailsSortButton) { --icon: url("../images/sort-ascending.svg"); --icon-at: 10px center / 16px; }
+    :is(#mobileSortButton, #detailsSortButton).reversed { --icon: url("../images/sort-descending.svg"); }
+    :is(#mobileSortMenu, #detailsSortMenu) button[aria-checked="true"] { --icon: url("../images/sort-ascending.svg"); --icon-at: right 12px center / 16px; }
+    :is(#mobileSortMenu, #detailsSortMenu).reversed button[aria-checked="true"] { --icon: url("../images/sort-descending.svg"); }
+
+    :is(.panel-collapse, .panel-expand, .categoryToggle, #torrentsFilterRegexBox + label, #rememberBtn, .dynamicTable th.sorted, #mobileSortButton, #detailsSortButton, :is(#mobileSortMenu, #detailsSortMenu) button[aria-checked="true"]) {
+        background-image: none !important;
+        position: relative;
+
+        &::before {
+            background-color: var(--text-muted);
+            content: "";
+            inset: 0;
+            mask: var(--icon) var(--icon-at) no-repeat;
+            pointer-events: none;
+            position: absolute;
+        }
+    }
+
+    /* An <input> takes neither a mask nor a pseudo-element, so the search fields get Lucide search (ISC) inlined in
+       Light's --text-muted. */
+    :is(#torrentsFilterInput, #torrentFilesFilterInput, #filterTextInput, #searchPattern, #rssFilterInput) {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c6170' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21 21-4.34-4.34'/%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3C/svg%3E");
+    }
 }
 
 @media (max-width: 640px) {
