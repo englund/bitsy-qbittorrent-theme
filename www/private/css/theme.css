@@ -2042,6 +2042,7 @@ body:has(> div > h2.vcenter) > div {
             background-color: var(--surface-2);
             background-repeat: no-repeat;
             background-size: 18px;
+            --icon-at: center / 18px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             float: none;
@@ -2352,24 +2353,29 @@ img[src*="/wallet-open.svg"] { --icon: url("../images/wallet-open.svg"); --icon-
     :is(#mobileSortMenu, #detailsSortMenu) button[aria-checked="true"] { --icon: url("../images/sort-ascending.svg"); --icon-at: right 12px center / 16px; }
     :is(#mobileSortMenu, #detailsSortMenu).reversed button[aria-checked="true"] { --icon: url("../images/sort-descending.svg"); }
 
-    :is(.panel-collapse, .panel-expand, .categoryToggle, #torrentsFilterRegexBox + label, #rememberBtn, .dynamicTable th.sorted, #mobileSortButton, #detailsSortButton, :is(#mobileSortMenu, #detailsSortMenu) button[aria-checked="true"]) {
-        background-image: none !important;
-        position: relative;
-
-        &::before {
-            background-color: var(--text-muted);
-            content: "";
-            inset: 0;
-            mask: var(--icon) var(--icon-at) no-repeat;
-            pointer-events: none;
-            position: absolute;
-        }
-    }
-
     /* An <input> takes neither a mask nor a pseudo-element, so the search fields get Lucide search (ISC) inlined in
        Light's --text-muted. */
     :is(#torrentsFilterInput, #torrentFilesFilterInput, #filterTextInput, #searchPattern, #rssFilterInput) {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c6170' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21 21-4.34-4.34'/%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3C/svg%3E");
+    }
+}
+
+#newRuleButton { --icon: url("../images/list-add.svg"); --icon-fill: var(--accent); --icon-at: center / 24px; }
+#deleteRuleButton { --icon: url("../images/edit-clear.svg"); --icon-at: center / 24px; }
+
+/* The RSS Downloader's add-rule button is baked in the accent, so it takes the mask in every theme. */
+:root:not(.dark) :is(.panel-collapse, .panel-expand, .categoryToggle, #torrentsFilterRegexBox + label, #rememberBtn, .dynamicTable th.sorted, #mobileSortButton, #detailsSortButton, :is(#mobileSortMenu, #detailsSortMenu) button[aria-checked="true"], #deleteRuleButton),
+#newRuleButton {
+    background-image: none !important;
+    position: relative;
+
+    &::before {
+        background-color: var(--icon-fill, var(--text-muted));
+        content: "";
+        inset: 0;
+        mask: var(--icon) var(--icon-at) no-repeat;
+        pointer-events: none;
+        position: absolute;
     }
 }
 
