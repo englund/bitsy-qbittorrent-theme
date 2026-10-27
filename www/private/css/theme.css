@@ -328,6 +328,7 @@ fieldset {
 .columnHandle {
     background-color: var(--surface);
     border: 0;
+    border-right: 1px solid var(--border);
     width: 6px;
 }
 
