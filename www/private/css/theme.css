@@ -499,6 +499,17 @@ progress-bar {
     padding: 4px 6px;
 }
 
+@media (min-width: 641px) {
+    :root #propertiesTabs {
+        gap: 2px;
+        padding: 2px;
+
+        & li a {
+            padding: 4px 12px;
+        }
+    }
+}
+
 #propertiesPanel {
     background-color: var(--bg);
 }
