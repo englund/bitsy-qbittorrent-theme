@@ -246,7 +246,8 @@ fieldset {
 
 #mobileFilterButton,
 #mobileMenuButton,
-#mobileSortButton {
+#mobileSortButton,
+#detailsSortButton {
     display: none;
 }
 
@@ -305,7 +306,7 @@ fieldset {
     font-weight: 600;
 }
 
-#mobileSortMenu {
+:is(#mobileSortMenu, #detailsSortMenu) {
     & button[aria-checked="true"] {
         background: var(--accent-soft) url("../images/sort-ascending.svg") right 12px center / 16px no-repeat;
         color: var(--accent);
@@ -973,7 +974,8 @@ body:has(> div > h2.vcenter) > div {
         }
     }
 
-    #mobileSortButton {
+    #mobileSortButton,
+    :root.details-open #detailsSortButton:not([hidden]) {
         align-items: center;
         background: var(--surface-2) url("../images/sort-ascending.svg") 10px center / 16px no-repeat;
         border-radius: 999px;
@@ -1093,16 +1095,16 @@ body:has(> div > h2.vcenter) > div {
         min-height: 0;
     }
 
-    :is(#torrentsTableDiv, #searchResultsTableDiv) table.dynamicTable {
+    :is(#torrentsTableDiv, #searchResultsTableDiv, #torrentTrackersTableDiv, #torrentPeersTableDiv, #torrentFilesTableDiv) table.dynamicTable {
         margin: 8px 0;
         width: 100% !important;
     }
 
-    :is(#torrentsTableDiv, #searchResultsTableDiv) colgroup {
+    :is(#torrentsTableDiv, #searchResultsTableDiv, #torrentTrackersTableDiv, #torrentPeersTableDiv, #torrentFilesTableDiv) colgroup {
         display: none;
     }
 
-    :is(#torrentsTableDiv, #searchResultsTableDiv) tbody tr {
+    :is(#torrentsTableDiv, #searchResultsTableDiv, #torrentTrackersTableDiv, #torrentPeersTableDiv, #torrentFilesTableDiv) tbody tr {
         background-color: var(--surface) !important;
         border: 1px solid var(--border);
         border-radius: var(--radius);
@@ -1125,7 +1127,7 @@ body:has(> div > h2.vcenter) > div {
     }
 
     /* Lucide ellipsis-vertical (ISC). theme.js opens the context menu when it's tapped. */
-    :is(#torrentsTableDiv, #searchResultsTableDiv) tbody tr::after {
+    :is(#torrentsTableDiv, #searchResultsTableDiv, #torrentTrackersTableDiv, #torrentPeersTableDiv, #torrentFilesTableDiv) tbody tr::after {
         background-color: var(--text-muted);
         content: "";
         height: 20px;
@@ -1136,7 +1138,7 @@ body:has(> div > h2.vcenter) > div {
         width: 20px;
     }
 
-    :is(#torrentsTableDiv, #searchResultsTableDiv) tbody tr.selected {
+    :is(#torrentsTableDiv, #searchResultsTableDiv, #torrentTrackersTableDiv, #torrentPeersTableDiv, #torrentFilesTableDiv) tbody tr.selected {
         background-color: var(--surface-2) !important;
         border-color: var(--accent);
     }
@@ -2259,9 +2261,20 @@ body:has(> div > h2.vcenter) > div {
         padding: 8px var(--gutter);
     }
 
-    /* With the tabs hidden it only holds the Content filter. Mocha shows it inline, hence the !important. */
-    :root.details-open #propertiesPanel_header:has(#torrentFilesFilterToolbar.invisible) {
-        display: none !important;
+    /* With the tabs hidden it only holds the Content filter and the sort pill. Mocha shows it inline, hence the !important. */
+    :root.details-open #propertiesPanel_header {
+        align-items: center;
+        display: flex !important;
+        gap: 8px;
+
+        & .toolbarTabs {
+            flex: 1;
+            min-width: 0;
+        }
+
+        &:has(#torrentFilesFilterToolbar.invisible):has(#detailsSortButton[hidden]) {
+            display: none !important;
+        }
     }
 
     :root.details-open #torrentFilesFilterToolbar {
@@ -2299,7 +2312,7 @@ body:has(> div > h2.vcenter) > div {
     /* Cells can't take the inset: virtual-list rows size them inline, the header by its colgroup.
        So the scroller is padded and the header and row backgrounds are stretched back over the padding.
        Left only: on the right the header's th borders can't be stretched, and the last column has room anyway. */
-    :root.details-open .propertiesTabContent .dynamicTableDiv {
+    :root.details-open #torrentWebseedsTableDiv {
         padding-left: var(--gutter);
 
         /* The gradient continues the th bottom border under the inset. */
@@ -2311,6 +2324,266 @@ body:has(> div > h2.vcenter) > div {
 
         & tbody tr {
             box-shadow: calc(-1 * var(--gutter)) 0 var(--row-bg, transparent);
+        }
+    }
+
+    /* Trackers, Peers and Content are cards like the torrent list (base styles above). The slot heights,
+       card + 8px gap, are set in dynamicTable.js. Labels are the translated column captions (--label-*, theme.js). */
+    :is(#torrentTrackersTableDiv, #torrentPeersTableDiv, #torrentFilesTableDiv) {
+        & .dynamicTableFixedHeaderDiv {
+            display: none;
+        }
+
+        & tbody td {
+            color: var(--text-muted);
+            display: none !important;
+            font-size: 14px;
+            line-height: 20px;
+            max-width: none !important;
+            overflow: hidden;
+            padding: 0 !important;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: auto !important;
+        }
+
+        /* A 44px target from the 15px icon rightwards (the checkbox's is on its left), without growing the line. */
+        & .filesTableCollapseIcon {
+            box-sizing: content-box;
+            margin-block: -14px -15px;
+            margin-right: -24px; /* keeps stock's 5px gap */
+            padding: 14px 29px 15px 0;
+            transform-origin: 7.5px 21.5px; /* the icon's centre, for stock's collapsed rotation */
+        }    }
+
+    /* 106px slot. Flex lines: the URL fills the first; ::before breaks after the status and message (::after is the ⋮). */
+    #torrentTrackersTableDiv tbody tr {
+        align-content: flex-start;
+        column-gap: 0;
+        display: flex;
+        flex-wrap: wrap;
+        height: 98px !important;
+        row-gap: 4px;
+
+        &::before {
+            content: "";
+            flex-basis: 100%;
+            order: 4;
+        }
+
+        & td:is([data-column="url"], [data-column="status"], [data-column="message"], [data-column="tier"]:not(:empty), [data-column="peers"], [data-column="seeds"], [data-column="leeches"]) {
+            display: block !important;
+        }
+
+        & td[data-column="url"] {
+            color: var(--text);
+            flex-basis: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 24px;
+            order: 1;
+            padding-right: 24px !important; /* room for the ⋮ */
+        }
+
+        & td[data-column="status"] {
+            order: 2;
+        }
+
+        & td[data-column="message"] {
+            flex: 1;
+            min-width: 0;
+            order: 3;
+
+            &:not(:empty)::before {
+                content: "\00a0· ";
+            }
+        }
+
+        & td:is([data-column="tier"], [data-column="peers"], [data-column="seeds"], [data-column="leeches"]) {
+            margin-right: 12px;
+            margin-top: -4px; /* the line break is a flex line of its own, with a row gap */
+            order: 5;
+        }
+
+        & td[data-column="tier"]::before {
+            content: var(--label-tier) " ";
+        }
+
+        & td[data-column="peers"]::before {
+            content: var(--label-peers) " ";
+        }
+
+        & td[data-column="seeds"]::before {
+            content: var(--label-seeds) " ";
+        }
+
+        & td[data-column="leeches"]::before {
+            content: var(--label-leeches) " ";
+        }
+    }
+
+    /* 82px slot. Two flex lines: flag, address, port and connection, then the client and the speeds.
+       ::before is the line break (::after is the ⋮). */
+    #torrentPeersTableDiv tbody tr {
+        align-content: flex-start;
+        column-gap: 0;
+        display: flex;
+        flex-wrap: wrap;
+        height: 74px !important;
+        row-gap: 0;
+
+        &::before {
+            content: "";
+            flex-basis: 100%;
+            order: 5;
+        }
+
+        & td:is([data-column="country"], [data-column="ip"], [data-column="port"], [data-column="connection"], [data-column="client"], [data-column="dl_speed"]:not(:empty), [data-column="up_speed"]:not(:empty)) {
+            display: block !important;
+        }
+
+        & td:is([data-column="country"], [data-column="ip"], [data-column="port"]) {
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        & td:is([data-column="country"], [data-column="ip"], [data-column="port"], [data-column="connection"]) {
+            line-height: 24px;
+        }
+
+        & td[data-column="country"] {
+            font-size: 0;
+            margin-right: 8px;
+            order: 1;
+
+            & span.flags {
+                display: inline-block;
+                height: 24px;
+                margin: 0;
+                padding: 0;
+                width: 20px;
+            }
+        }
+
+        & td[data-column="ip"] {
+            min-width: 0;
+            order: 2;
+        }
+
+        & td[data-column="port"] {
+            flex: none;
+            order: 3;
+
+            &::before {
+                content: ":";
+            }
+        }
+
+        & td[data-column="connection"] {
+            flex: none;
+            order: 4;
+            padding-right: 24px !important; /* room for the ⋮ */
+
+            &::before {
+                content: "\00a0· ";
+            }
+        }
+
+        & td:is([data-column="client"], [data-column="dl_speed"], [data-column="up_speed"]) {
+            margin-top: 4px;
+        }
+
+        & td[data-column="client"] {
+            flex: 1 1 1px; /* not 0, which would fit it onto the line break's line */
+            min-width: 0;
+            order: 6;
+        }
+
+        & td[data-column="dl_speed"] {
+            flex: none;
+            margin-left: 12px;
+            order: 7;
+
+            &::before {
+                color: var(--green);
+                content: "↓ ";
+            }
+        }
+
+        & td[data-column="up_speed"] {
+            flex: none;
+            margin-left: 12px;
+            order: 8;
+
+            &::before {
+                color: var(--accent);
+                content: "↑ ";
+            }
+        }
+    }
+
+    /* 100px slot, the torrent card's layout. The checkbox column is fixed so the size below can span it. */
+    #torrentFilesTableDiv tbody tr {
+        grid-template-areas:
+            "checked name name"
+            "progress progress progress"
+            "size size priority";
+        grid-template-columns: 20px minmax(0, 1fr) auto;
+        height: 92px !important;
+
+        & td:is([data-column="checked"], [data-column="name"], [data-column="progress"], [data-column="size"], [data-column="priority"]) {
+            display: block !important;
+        }
+
+        & td[data-column="checked"] {
+            align-self: center;
+            grid-area: checked;
+            line-height: 0;
+
+            /* The tree-line image of Add torrent's layout. */
+            & img {
+                display: none;
+            }
+        }
+
+        & td[data-column="name"] {
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 600;
+            grid-area: name;
+            line-height: 24px;
+            padding: 0 24px 0 8px !important; /* room for the ⋮, and 8px between the checkbox's and expand icon's targets */
+
+            & img {
+                vertical-align: middle !important;
+            }
+        }
+
+        & td[data-column="progress"] {
+            align-self: center;
+            grid-area: progress;
+        }
+
+        & td[data-column="size"] {
+            grid-area: size;
+        }
+
+        /* A 44px target on the 20px line, reaching into the padding below and the bar above. */
+        & td[data-column="priority"] {
+            grid-area: priority;
+            overflow: visible;
+
+            & select {
+                background-color: transparent;
+                border: 0;
+                color: var(--text);
+                height: var(--touch);
+                margin: -12px -12px -12px 0;
+                padding: 0 12px;
+                position: relative; /* above the bar it reaches into */
+                text-align: right;
+            }
         }
     }
 

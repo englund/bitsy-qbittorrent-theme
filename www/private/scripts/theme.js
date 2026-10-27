@@ -209,6 +209,24 @@ window.addEventListener("DOMContentLoaded", () => {
         tr.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: rect.right - 22, clientY: rect.top + 32 }));
     }, true);
 
+    // The details sheet's tracker, peer and file cards have no other tap action either; their own controls
+    // (a file's checkbox, priority and expand icon) keep theirs.
+    document.addEventListener("click", (event) => {
+        const tr = event.target.closest?.(":is(#torrentTrackersTableDiv, #torrentPeersTableDiv, #torrentFilesTableDiv) tbody tr");
+        if (!mobileQuery.matches || !tr || event.target.closest("input, select, .filesTableCollapseIcon"))
+            return;
+        event.stopPropagation();
+        // The checkbox stays 20px; with the card's edge on its left, a tap up to 11px right of it or 12px above or
+        // below it counts, which makes it a 44px target (the expand icon's starts 8px further right).
+        const checkbox = tr.querySelector("input[type=checkbox]")?.getBoundingClientRect();
+        if (checkbox && (event.clientX <= checkbox.right + 11) && (Math.abs(event.clientY - (checkbox.y + 10)) <= 22)) {
+            tr.querySelector("input[type=checkbox]").click();
+            return;
+        }
+        const rect = tr.getBoundingClientRect();
+        tr.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: rect.right - 18, clientY: rect.top + 19 }));
+    }, true);
+
     // Tapping a search result opens the download window, which is what a double-click does on desktop.
     document.addEventListener("click", (event) => {
         const tr = event.target.closest("#searchResultsTableDiv tr");
@@ -306,6 +324,71 @@ window.addEventListener("DOMContentLoaded", () => {
         bar.classList.toggle("subpage", isSubpage);
         title.textContent = isSubpage ? document.getElementById(page).textContent.trim() : torrentName;
         selectTab(page);
+        sortTable = document.getElementById(cardTables[page])?.dynamicTable;
+        sortButton.hidden = !sortTable;
+        if (sortTable)
+            renderSortButton();
+    };
+
+    // The tables of these pages are cards on phones, so their headers are hidden.
+    const cardTables = {
+        propTrackersLink: "torrentTrackersTableDiv",
+        propPeersLink: "torrentPeersTableDiv",
+        propFilesLink: "torrentFilesTableDiv"
+    };
+    let sortTable;
+    let sortButton;
+    let sortMenu;
+
+    const renderSortButton = () => {
+        sortButton.firstElementChild.textContent = sortTable.columns[sortTable.sortedColumn]?.caption ?? "";
+        sortButton.classList.toggle("reversed", sortTable.reverseSort === "1");
+    };
+
+    // Stands in for clicking a column header, like the torrent list's sort menu.
+    const buildSortMenu = () => {
+        sortButton = document.createElement("button");
+        sortButton.type = "button";
+        sortButton.id = "detailsSortButton";
+        sortMenu = document.createElement("div");
+        sortButton.popoverTargetElement = sortMenu;
+        sortButton.append(document.createElement("span"));
+        sortMenu.id = "detailsSortMenu";
+        sortMenu.className = "popoverMenu";
+        sortMenu.popover = "auto";
+        sortMenu.role = "menu";
+        sortMenu.addEventListener("toggle", (event) => {
+            if (event.newState !== "open")
+                return;
+            sortMenu.replaceChildren(...sortTable.columns.filter(column => column.caption && (column.visible !== "0")).map((column) => {
+                const item = document.createElement("button");
+                item.type = "button";
+                item.role = "menuitemradio";
+                item.dataset.column = column.name;
+                item.textContent = column.caption;
+                item.ariaChecked = String(column === sortTable.columns[sortTable.sortedColumn]);
+                return item;
+            }));
+            sortMenu.classList.toggle("reversed", sortTable.reverseSort === "1");
+            placeBelow(sortMenu, sortButton);
+        });
+        // Picking the current column again flips the direction, same as clicking its header.
+        sortMenu.addEventListener("click", (event) => {
+            const item = event.target.closest("[data-column]");
+            if (!item)
+                return;
+            sortTable.setSortedColumn(item.dataset.column);
+            renderSortButton();
+            sortMenu.hidePopover();
+        });
+        document.getElementById("propertiesPanel_header").append(sortButton, sortMenu);
+
+        // The cards label some values with their column's caption, which is translated.
+        for (const id of Object.values(cardTables)) {
+            const div = document.getElementById(id);
+            for (const column of div.dynamicTable.columns)
+                div.style.setProperty(`--label-${column.name}`, JSON.stringify(column.caption));
+        }
     };
 
     const go = (page) => {
@@ -340,6 +423,7 @@ window.addEventListener("DOMContentLoaded", () => {
             sections.append(row);
         }
         document.getElementById("propBarsWrapper").after(sections);
+        buildSortMenu();
     };
 
     document.addEventListener("click", (event) => {

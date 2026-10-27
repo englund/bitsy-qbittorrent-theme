@@ -79,6 +79,7 @@ window.qBittorrent.DynamicTable ??= (() => {
             this.dynamicTableDivId = dynamicTableDivId;
             this.dynamicTableFixedHeaderDivId = dynamicTableFixedHeaderDivId;
             this.dynamicTableDiv = document.getElementById(dynamicTableDivId);
+            this.dynamicTableDiv.dynamicTable = this; // theme.js sorts the mobile card lists through it
             this.useVirtualList = clientData.get("use_virtual_list") ?? true;
             this.fixedTableHeader = document.querySelector(`#${dynamicTableFixedHeaderDivId} thead tr`);
             // the body table is the direct child; the fixed header table is nested in a child div
@@ -1911,6 +1912,11 @@ window.qBittorrent.DynamicTable ??= (() => {
     }
 
     class TorrentPeersTable extends DynamicTable {
+        setupVirtualList() {
+            super.setupVirtualList();
+            this.useMobileRowHeight(82);
+        }
+
         initColumns() {
             this.newColumn("country", "", "QBT_TR(Country/Region)QBT_TR[CONTEXT=PeerListWidget]", 22, true);
             this.newColumn("ip", "", "QBT_TR(IP/Address)QBT_TR[CONTEXT=PeerListWidget]", 80, true);
@@ -2220,6 +2226,11 @@ window.qBittorrent.DynamicTable ??= (() => {
             this.collapseState.clear();
         }
 
+        setupVirtualList() {
+            super.setupVirtualList();
+            this.useMobileRowHeight(106);
+        }
+
         initColumns() {
             this.newColumn("url", "", "QBT_TR(URL/Announce Endpoint)QBT_TR[CONTEXT=TrackerListWidget]", 250, true);
             this.newColumn("tier", "", "QBT_TR(Tier)QBT_TR[CONTEXT=TrackerListWidget]", 35, true);
@@ -2435,7 +2446,8 @@ window.qBittorrent.DynamicTable ??= (() => {
 
         setupVirtualList() {
             super.setupVirtualList();
-            this.useMobileRowHeight(48);
+            // The details sheet's Content is cards; Add torrent and Rename Files keep list rows.
+            this.useMobileRowHeight((this.dynamicTableDivId === "torrentFilesTableDiv") ? 100 : 48);
         }
 
         updateHeaderCheckbox() {
