@@ -7,13 +7,55 @@
     --border: hsl(225deg 10% 22%);
     --text: hsl(225deg 20% 92%);
     --text-muted: hsl(225deg 10% 62%);
-    --accent: hsl(217deg 92% 62%);
-    --accent-soft: hsl(217deg 92% 62% / 18%);
+    --accent-hs: 217deg 92%;
+    --accent-l: 62%;
+    --accent: hsl(var(--accent-hs) var(--accent-l));
+    --accent-hover: hsl(var(--accent-hs) calc(var(--accent-l) - 6%));
+    --accent-soft: hsl(var(--accent-hs) var(--accent-l) / 18%);
     --red: hsl(0deg 85% 65%);
+    --shadow: hsl(0deg 0% 0% / 40%);
     --radius: 10px;
     --radius-sm: 6px;
 
     color-scheme: dark;
+}
+
+/* Same themes as theme.css; login-theme.js sets the classes. */
+:root:not(.dark) {
+    --bg: hsl(225deg 20% 96%);
+    --surface: hsl(0deg 0% 100%);
+    --surface-2: hsl(225deg 20% 98%);
+    --border: hsl(225deg 14% 86%);
+    --text: hsl(225deg 25% 12%);
+    --text-muted: hsl(225deg 10% 40%);
+    --accent-l: 48%;
+    --red: hsl(0deg 72% 46%);
+    --shadow: hsl(225deg 30% 20% / 12%);
+
+    color-scheme: light;
+}
+
+:root.oled {
+    --bg: hsl(0deg 0% 0%);
+    --surface: hsl(225deg 10% 6%);
+    --surface-2: hsl(225deg 10% 9%);
+    --border: hsl(225deg 8% 16%);
+}
+
+:root[data-accent="green"] {
+    --accent-hs: 152deg 60%;
+}
+
+:root[data-accent="purple"] {
+    --accent-hs: 262deg 80%;
+}
+
+:root[data-accent="orange"] {
+    --accent-hs: 28deg 92%;
+}
+
+:root[data-accent="pink"] {
+    --accent-hs: 330deg 80%;
 }
 
 body {
@@ -33,7 +75,7 @@ body {
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: 0 16px 48px hsl(0deg 0% 0% / 40%);
+    box-shadow: 0 16px 48px var(--shadow);
     box-sizing: border-box;
     gap: 4px;
     max-width: 360px;
@@ -113,7 +155,7 @@ label {
 }
 
 #loginButton:hover {
-    background-color: hsl(217deg 92% 56%);
+    background-color: var(--accent-hover);
 }
 
 #loginButton:focus-visible {

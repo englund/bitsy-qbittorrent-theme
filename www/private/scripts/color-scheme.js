@@ -47,6 +47,11 @@ window.qBittorrent.ColorScheme ??= (() => {
         root.classList.toggle("dark", ((!validScheme && isDark) || (colorScheme === "dark") || (colorScheme === "oled")));
         root.classList.toggle("oled", (colorScheme === "oled"));
         root.dataset.accent = clientData.get("accent_color") ?? "blue";
+        // The login page can't read client data before sign-in, so it reuses the last theme from here.
+        try {
+            localStorage.setItem("qbt_theme", JSON.stringify({ colorScheme, accent: root.dataset.accent }));
+        }
+        catch {}
     };
 
     colorSchemeQuery.addEventListener("change", (_event) => update());
