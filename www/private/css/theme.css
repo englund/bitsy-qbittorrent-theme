@@ -6,6 +6,8 @@
     --surface: hsl(225deg 13% 11%);
     --surface-2: hsl(225deg 12% 15%);
     --surface-3: hsl(225deg 11% 20%);
+    --menu-border: hsl(225deg 10% 28%);
+    --menu-hover: hsl(225deg 10% 27%);
     --border: hsl(225deg 10% 22%);
     --text: hsl(225deg 20% 92%);
     --text-muted: hsl(225deg 10% 62%);
@@ -110,10 +112,14 @@ fieldset {
 }
 
 #desktopNavbar li ul {
-    background-color: var(--surface-2);
+    background-color: var(--surface-3);
+    border-color: var(--menu-border);
     border-radius: var(--radius);
-    box-shadow: 0 12px 32px hsl(0deg 0% 0% / 45%);
     padding: 4px;
+}
+
+#desktopNavbar li ul li.divider {
+    border-color: var(--menu-border);
 }
 
 #mochaToolbar {
@@ -246,10 +252,9 @@ fieldset {
 
 /* Popover menus, positioned under their button by theme.js */
 .popoverMenu {
-    background-color: var(--surface-2);
-    border: 1px solid var(--border);
+    background-color: var(--surface-3);
+    border: 1px solid var(--menu-border);
     border-radius: var(--radius);
-    box-shadow: 0 12px 32px hsl(0deg 0% 0% / 45%);
     color: var(--text);
     inset: auto;
     margin: 0;
@@ -270,14 +275,15 @@ fieldset {
         width: 100%;
     }
 
-    & > button:hover {
-        background-color: var(--surface-3);
+    & > button:hover,
+    & ul.filterList li:not(.selectedFilter) > span.link:hover {
+        background-color: var(--menu-hover);
         border: 0;
     }
 
     & > hr {
         border: 0;
-        border-top: 1px solid var(--border);
+        border-top: 1px solid var(--menu-border);
         margin: 4px 0;
     }
 }
@@ -475,11 +481,14 @@ td.statusBarSeparator {
 /* Menus and dialogs */
 
 .contextMenu {
-    background-color: var(--surface-2);
-    border: 1px solid var(--border);
+    background-color: var(--surface-3);
+    border: 1px solid var(--menu-border);
     border-radius: var(--radius);
-    box-shadow: 0 12px 32px hsl(0deg 0% 0% / 45%);
     padding: 4px;
+}
+
+.contextMenu :is(.separator, .separatorBottom) {
+    border-color: var(--menu-border);
 }
 
 .contextMenu li a {
@@ -488,7 +497,8 @@ td.statusBarSeparator {
 }
 
 .contextMenu li ul {
-    background-color: var(--surface-2);
+    background-color: var(--surface-3);
+    border-color: var(--menu-border);
     border-radius: var(--radius);
 }
 
@@ -505,7 +515,7 @@ td.statusBarSeparator {
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    box-shadow: 0 24px 64px hsl(0deg 0% 0% / 55%);
+    box-shadow: none;
     overflow: hidden;
 }
 
@@ -762,8 +772,9 @@ fieldset.settings {
 }
 
 #uploadForm .vsb-menu {
+    background-color: var(--surface-3);
+    border-color: var(--menu-border);
     border-radius: var(--radius);
-    box-shadow: 0 12px 32px hsl(0deg 0% 0% / 45%);
 }
 
 /* Speed › schedule: stock sets the time inputs inline with bare ":" text between them and no spacing. */
