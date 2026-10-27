@@ -2432,8 +2432,8 @@ img[src*="/view-statistics.svg"] { --icon: url("../images/view-statistics.svg");
 img[src*="/wallet-open.svg"] { --icon: url("../images/wallet-open.svg"); --icon-fill: var(--red); }
 
 :root:not(.dark) {
-    /* L.svg and spinner.svg aren't baked by icons.mjs and have no --icon. */
-    img[src*="images/"][src$=".svg"]:not([src*="/L.svg"], [src*="/spinner.svg"]) {
+    /* L.svg, spinner.svg and the qBittorrent logo aren't baked by icons.mjs and have no --icon. */
+    img[src*="images/"][src$=".svg"]:not([src*="/L.svg"], [src*="/spinner.svg"], [src*="/qbittorrent-tray.svg"]) {
         background-color: var(--icon-fill, var(--accent));
         mask: var(--icon) center / contain no-repeat;
         object-position: -9999px;
