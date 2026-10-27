@@ -25,15 +25,54 @@ const placeBelow = (popover, button) => {
 }
 
 // Dialogs load in iframes, where media queries see the frame's width, not the screen's.
-// Tag each dialog document so theme.css can style it as a full-screen phone sheet.
+// Tag each dialog document so theme.css can style it as a full-screen phone sheet, and point theme.css's
+// breakpoint queries at the screen: a 500px desktop dialog would otherwise get the phone rules.
 {
     const mobileQuery = window.matchMedia("(max-width: 640px)");
-    const tagFrame = (iframe) => iframe.contentDocument?.documentElement.classList.toggle("mobile-sheet", mobileQuery.matches);
+    const originalMedia = new WeakMap();
+    const tagFrame = (iframe) => {
+        const doc = iframe.contentDocument;
+        if (!doc)
+            return;
+        doc.documentElement.classList.toggle("mobile-sheet", mobileQuery.matches);
+        for (const sheet of doc.styleSheets) {
+            if (!sheet.href?.includes("theme.css"))
+                continue;
+            for (const rule of sheet.cssRules) {
+                // Not instanceof CSSMediaRule: the frame has its own copy of that class.
+                if (!rule.media)
+                    continue;
+                if (!originalMedia.has(rule))
+                    originalMedia.set(rule, rule.media.mediaText);
+                const media = originalMedia.get(rule);
+                const isPhone = media.includes("max-width: 640px");
+                if (isPhone || media.includes("min-width: 641px"))
+                    rule.media.mediaText = (isPhone === mobileQuery.matches) ? "all" : "not all";
+            }
+        }
+    };
+
+    // Stock gives the small dialogs fixed heights that fit its own spacing, so ours clips their buttons.
+    // The 400px cut keeps the big scrolling ones (Options, Add torrent) at their stock or saved size.
+    const fitSmallDialog = (win, contentHeight, shownHeight) => {
+        if (mobileQuery.matches || !win || !contentHeight || (contentHeight <= shownHeight)
+            || (win.retrieve("instance").options.height > 400))
+            return;
+        MochaUI.resizeWindow(win, { height: window.qBittorrent.Dialog.limitHeightToViewport(contentHeight), centered: true });
+    };
+    // Windows that load into the page (Global speed limits) and set no onContentLoaded of their own.
+    MUI.Window.prototype.options.onContentLoaded = (win) => {
+        const wrapper = win.querySelector(".mochaContentWrapper");
+        fitSmallDialog(win, wrapper?.firstElementChild?.scrollHeight, wrapper?.clientHeight);
+    };
 
     // load doesn't bubble, but a capturing listener still sees it for every iframe
     document.addEventListener("load", (event) => {
-        if (event.target.matches?.(".mochaIframe"))
+        if (event.target.matches?.(".mochaIframe")) {
             tagFrame(event.target);
+            fitSmallDialog(event.target.closest(".mocha"), event.target.contentDocument?.documentElement.scrollHeight,
+                event.target.clientHeight);
+        }
         // An RSS article's description is a srcdoc frame that links only the stock style.css.
         if (event.target.id === "rssDescription") {
             const link = event.target.contentDocument.createElement("link");

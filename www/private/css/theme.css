@@ -3351,3 +3351,95 @@ body:has(> div > h2.vcenter) > div {
         }
     }
 }
+
+/* Desktop dialogs: 8px between a box and its label, labels and fields in aligned columns, 8px between rows.
+   Stock spaces these with inline margins of 3-6px. theme.js applies this block in dialog frames, which are
+   narrower than the breakpoint. */
+
+@media (min-width: 641px) {
+    /* 4px plus the space between the inline box and its label makes 8px. */
+    input:is([type="checkbox"], [type="radio"]):has(+ label),
+    #deleteFromDiskCB {
+        margin: 0 4px 0 0;
+    }
+
+    /* Share limits: radio | checkbox | label | field, so the custom limits sit under the radio's label
+       and their fields line up. */
+    body > div:has(> input[name="shareLimit"]) {
+        align-items: center;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: auto auto auto 1fr;
+
+        & input:is([type="checkbox"], [type="radio"]) {
+            margin: 0;
+        }
+
+        & > br {
+            display: none;
+        }
+
+        & > input + label {
+            grid-column: 2 / -1;
+        }
+
+        & > div {
+            display: contents;
+        }
+
+        & > div > input[type="checkbox"] {
+            grid-column: 2;
+        }
+
+        & > div > label {
+            grid-column: 3;
+        }
+
+        & > div > :is(input[type="number"], select) {
+            grid-column: 4;
+        }
+
+        & > div:last-child {
+            display: block;
+            grid-column: 1 / -1;
+        }
+    }
+
+    /* New/edit category: every label in one column with its field beside it. */
+    body > div:has(#shareLimitsGrid),
+    fieldset:has(#useDownloadPath) {
+        align-items: center;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: auto 1fr;
+
+        & > div[style*="display: flex"] {
+            display: contents !important;
+        }
+
+        & > div > :is(input, select) {
+            margin-left: 0 !important;
+        }
+
+        & > :is(fieldset, legend, div:last-child) {
+            grid-column: 1 / -1;
+        }
+    }
+
+    #useDownloadPath {
+        justify-self: start;
+    }
+
+    :root #shareLimitsGrid {
+        gap: 8px;
+        grid-template-columns: max-content max-content minmax(0, 1fr) max-content;
+
+        & > .shareLimitsActionRow {
+            display: contents;
+        }
+
+        & > .shareLimitsActionRow > select {
+            grid-column: 2 / -1;
+        }
+    }
+}
