@@ -563,6 +563,59 @@ td.statusBarSeparator {
     background-color: var(--surface-3);
 }
 
+/* Desktop title bar: 56px (theme.js sets Mocha's headerHeight to match, so windows grow instead of clipping),
+   a 16px title and a 36px close button. Mocha sets the icon, padding and controls width inline. */
+@media (min-width: 641px) {
+    .mochaTitlebar h3 {
+        background-position: 16px center !important;
+        background-size: 20px !important;
+        font-size: 16px;
+        line-height: 56px;
+        padding: 0 64px 0 48px !important;
+    }
+
+    .mochaControls {
+        height: 36px;
+        right: 8px;
+        top: 10px;
+        width: auto !important;
+    }
+
+    :is(.mochaCloseButton, .mochaMaximizeButton) {
+        border-radius: 8px;
+        height: 36px;
+        margin-left: 4px;
+        transition: background-color 0.12s;
+        width: 36px;
+
+        &::before,
+        &::after {
+            background-color: var(--text-muted);
+        }
+
+        &:hover {
+            background-color: var(--surface-3);
+
+            &::before,
+            &::after {
+                background-color: var(--text);
+            }
+        }
+
+        &:active {
+            background-color: var(--border);
+            transform: scale(0.94);
+        }
+    }
+
+    .mochaCloseButton {
+        &::before,
+        &::after {
+            width: 14px;
+        }
+    }
+}
+
 button[type="submit"],
 #addButton,
 :is(#rssdownloaderpage, #cookiesPage) #saveButton,

@@ -9,6 +9,21 @@ const placeBelow = (popover, button) => {
     popover.style.right = fromLeft ? "auto" : `${window.innerWidth - rect.right}px`;
 };
 
+// Mocha sizes each window as content + headerHeight, so the taller title bar in theme.css must be set here too.
+// Phones override it with their own 52px bar. Stock caps content height to fit the viewport with its 25px bar,
+// so the cap shrinks by the difference.
+{
+    const stockHeaderHeight = MUI.Window.prototype.options.headerHeight;
+    MUI.Window.prototype.options.headerHeight = 56;
+    const extra = 56 - stockHeaderHeight;
+    // Dialog is frozen, so it's replaced; loadWindowHeight looks it up on every call.
+    const dialog = window.qBittorrent.Dialog;
+    window.qBittorrent.Dialog = Object.freeze({
+        ...dialog,
+        limitHeightToViewport: (height) => dialog.limitHeightToViewport(height + extra) - extra
+    });
+}
+
 // Dialogs load in iframes, where media queries see the frame's width, not the screen's.
 // Tag each dialog document so theme.css can style it as a full-screen phone sheet.
 {
