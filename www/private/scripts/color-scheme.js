@@ -42,9 +42,11 @@ window.qBittorrent.ColorScheme ??= (() => {
     const update = () => {
         const root = document.documentElement;
         const colorScheme = clientData.get("color_scheme");
-        const validScheme = (colorScheme === "light") || (colorScheme === "dark");
+        const validScheme = (colorScheme === "light") || (colorScheme === "dark") || (colorScheme === "oled");
         const isDark = colorSchemeQuery.matches;
-        root.classList.toggle("dark", ((!validScheme && isDark) || (colorScheme === "dark")));
+        root.classList.toggle("dark", ((!validScheme && isDark) || (colorScheme === "dark") || (colorScheme === "oled")));
+        root.classList.toggle("oled", (colorScheme === "oled"));
+        root.dataset.accent = clientData.get("accent_color") ?? "blue";
     };
 
     colorSchemeQuery.addEventListener("change", (_event) => update());

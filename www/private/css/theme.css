@@ -11,8 +11,12 @@
     --border: hsl(225deg 10% 22%);
     --text: hsl(225deg 20% 92%);
     --text-muted: hsl(225deg 10% 62%);
-    --accent: hsl(217deg 92% 62%);
-    --accent-soft: hsl(217deg 92% 62% / 18%);
+    --accent-hs: 217deg 92%;
+    --accent-l: 62%;
+    --accent: hsl(var(--accent-hs) var(--accent-l));
+    --accent-hover: hsl(var(--accent-hs) calc(var(--accent-l) - 6%));
+    --accent-soft: hsl(var(--accent-hs) var(--accent-l) / 18%);
+    --row-alt: hsl(225deg 13% 9%);
     --green: hsl(145deg 60% 52%);
     --orange: hsl(32deg 95% 60%);
     --red: hsl(0deg 85% 65%);
@@ -40,6 +44,52 @@
     --color-border-default: var(--border);
 
     color-scheme: dark;
+}
+
+:root:not(.dark) {
+    --bg: hsl(225deg 20% 96%);
+    --surface: hsl(0deg 0% 100%);
+    --surface-2: hsl(225deg 20% 98%);
+    --surface-3: hsl(225deg 16% 91%);
+    --menu-border: hsl(225deg 14% 80%);
+    --menu-hover: hsl(225deg 16% 90%);
+    --border: hsl(225deg 14% 86%);
+    --text: hsl(225deg 25% 12%);
+    --text-muted: hsl(225deg 10% 40%);
+    --accent-l: 48%;
+    --green: hsl(145deg 65% 30%);
+    --orange: hsl(28deg 90% 40%);
+    --red: hsl(0deg 72% 46%);
+    --row-alt: hsl(225deg 20% 97.5%);
+
+    color-scheme: light;
+}
+
+:root.oled {
+    --bg: hsl(0deg 0% 0%);
+    --surface: hsl(225deg 10% 6%);
+    --surface-2: hsl(225deg 10% 9%);
+    --surface-3: hsl(225deg 9% 14%);
+    --menu-border: hsl(225deg 8% 22%);
+    --menu-hover: hsl(225deg 8% 20%);
+    --border: hsl(225deg 8% 16%);
+    --row-alt: hsl(0deg 0% 3%);
+}
+
+:root[data-accent="green"] {
+    --accent-hs: 152deg 60%;
+}
+
+:root[data-accent="purple"] {
+    --accent-hs: 262deg 80%;
+}
+
+:root[data-accent="orange"] {
+    --accent-hs: 28deg 92%;
+}
+
+:root[data-accent="pink"] {
+    --accent-hs: 330deg 80%;
 }
 
 body {
@@ -412,7 +462,7 @@ ul.filterList .selectedFilter > .link :is(img, button) {
 }
 
 .altRowColors tbody tr:nth-child(odd of :not(.invisible)) {
-    --row-bg: hsl(225deg 13% 9%);
+    --row-bg: var(--row-alt);
     background-color: var(--row-bg);
 }
 
@@ -648,7 +698,7 @@ button[type="submit"]:hover:not(:disabled),
 :is(#rssdownloaderpage, #cookiesPage) #saveButton:hover:not(:disabled),
 input[onclick*="applyPreferences"]:hover,
 input#save:hover {
-    background-color: hsl(217deg 92% 56%);
+    background-color: var(--accent-hover);
 }
 
 /* Destructive: red text rather than a red fill, which white text can't reach 4.5:1 on. */
@@ -659,7 +709,7 @@ input#save:hover {
 }
 
 :is(#confirmDeletionButton, #confirmBtn):hover {
-    background-color: hsl(0deg 50% 22%);
+    background-color: color-mix(in srgb, var(--red) 20%, transparent);
     border-color: var(--red);
 }
 

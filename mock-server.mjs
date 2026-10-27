@@ -143,6 +143,7 @@ const maindata = () => {
     };
 };
 
+const clientData = {};
 let cookies = [
     { domain: "tracker.example.org", path: "/", name: "session", value: "f3a9c1e07b", expirationDate: 1830000000 },
     { domain: ".isos.example.net", path: "/rss", name: "uid", value: "42", expirationDate: 0 }
@@ -171,7 +172,16 @@ const api = {
         return "";
     },
     "app/getFreeSpaceAtPath": () => 734 * GiB,
-    "clientdata/load": () => ({}),
+    "clientdata/load": () => clientData,
+    "clientdata/store": (_, fields) => {
+        for (const [key, value] of Object.entries(JSON.parse(fields.get("data") ?? "{}"))) {
+            if (value === null)
+                delete clientData[key];
+            else
+                clientData[key] = value;
+        }
+        return "";
+    },
     "sync/maindata": maindata,
     "sync/torrentPeers": () => ({
         rid: ++rid, full_update: true, show_flags: true,

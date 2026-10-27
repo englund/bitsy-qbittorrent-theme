@@ -31,6 +31,17 @@
                 <option value="0">QBT_TR(Auto)QBT_TR[CONTEXT=OptionsDialog]</option>
                 <option value="1">QBT_TR(Light)QBT_TR[CONTEXT=OptionsDialog]</option>
                 <option value="2">QBT_TR(Dark)QBT_TR[CONTEXT=OptionsDialog]</option>
+                <option value="3">QBT_TR(OLED black)QBT_TR[CONTEXT=OptionsDialog]</option>
+            </select>
+        </div>
+        <div class="formRow" style="margin-bottom: 3px;">
+            <label for="accentColorSelect">QBT_TR(Accent color:)QBT_TR[CONTEXT=OptionsDialog]</label>
+            <select id="accentColorSelect">
+                <option value="blue">QBT_TR(Blue)QBT_TR[CONTEXT=OptionsDialog]</option>
+                <option value="green">QBT_TR(Green)QBT_TR[CONTEXT=OptionsDialog]</option>
+                <option value="purple">QBT_TR(Purple)QBT_TR[CONTEXT=OptionsDialog]</option>
+                <option value="orange">QBT_TR(Orange)QBT_TR[CONTEXT=OptionsDialog]</option>
+                <option value="pink">QBT_TR(Pink)QBT_TR[CONTEXT=OptionsDialog]</option>
             </select>
         </div>
         <div class="formRow">
@@ -2484,6 +2495,8 @@ Use ';' to split multiple entries. Can use wildcard '*'.)QBT_TR[CONTEXT=OptionsD
                 combobox.options[1].selected = true;
             else if (colorScheme === "dark")
                 combobox.options[2].selected = true;
+            else if (colorScheme === "oled")
+                combobox.options[3].selected = true;
             else
                 combobox.options[0].selected = true;
         };
@@ -2519,6 +2532,7 @@ Use ';' to split multiple entries. Can use wildcard '*'.)QBT_TR[CONTEXT=OptionsD
 
                     // Interface
                     updateColoSchemeSelect(colorScheme);
+                    document.getElementById("accentColorSelect").value = clientData.get("accent_color") ?? "blue";
                     document.getElementById("displayDensitySelect").value = displayDensity;
                     document.getElementById("addTorrentWindowEnabled").checked = addTorrentWindowEnabled === true;
                     document.getElementById("statusBarExternalIP").checked = pref.status_bar_external_ip;
@@ -2979,8 +2993,12 @@ Use ';' to split multiple entries. Can use wildcard '*'.)QBT_TR[CONTEXT=OptionsD
                 clientData.color_scheme = null;
             else if (colorScheme === 1)
                 clientData.color_scheme = "light";
-            else
+            else if (colorScheme === 2)
                 clientData.color_scheme = "dark";
+            else
+                clientData.color_scheme = "oled";
+            const accentColor = document.getElementById("accentColorSelect").value;
+            clientData.accent_color = (accentColor === "blue") ? null : accentColor;
             const displayDensity = document.getElementById("displayDensitySelect").value;
             clientData.display_density = (displayDensity === "default") ? null : displayDensity;
             settings["status_bar_external_ip"] = document.getElementById("statusBarExternalIP").checked;

@@ -65,6 +65,7 @@ window.qBittorrent.Client ??= (() => {
             "add_new_torrent_dialog_enabled",
             "add_torrent_default_category",
             "add_torrent_separate_dialog_per_torrent",
+            "accent_color",
             "color_scheme",
             "date_format",
             "dblclick_complete",
