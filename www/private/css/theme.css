@@ -17,6 +17,8 @@
     --accent-hover: hsl(var(--accent-hs) calc(var(--accent-l) - 6%));
     --accent-soft: hsl(var(--accent-hs) var(--accent-l) / 18%);
     --button-hover: var(--accent);
+    /* Text on --accent-soft. 77% and 26% are the lightest and darkest that reach 4.5:1 for every accent. */
+    --accent-text: hsl(var(--accent-hs) 77%);
     --row-alt: hsl(225deg 13% 9%);
     --green: hsl(145deg 60% 52%);
     --orange: hsl(32deg 95% 60%);
@@ -60,6 +62,7 @@
     --accent-l: 48%;
     /* --text on a solid accent is about 3:1. White hover text instead goes white-on-white on buttons whose own background wins. */
     --button-hover: var(--accent-soft);
+    --accent-text: hsl(var(--accent-hs) 26%);
     --green: hsl(145deg 65% 30%);
     --orange: hsl(28deg 90% 40%);
     --red: hsl(0deg 72% 46%);
@@ -366,14 +369,14 @@ a:is([href^="http"], [href^="mailto:"]) {
 :root:has(#logTabLink.selected) #mobileMenu [data-click="logTabLink"],
 :root:has(#alternativeSpeedLimits[src$="/slow.svg"]) #mobileMenu [data-click="alternativeSpeedLimits"] {
     background-color: var(--accent-soft);
-    color: var(--accent);
+    color: var(--accent-text);
     font-weight: 600;
 }
 
 :is(#mobileSortMenu, #detailsSortMenu) {
     & button[aria-checked="true"] {
         background: var(--accent-soft) url("../images/sort-ascending.svg") right 12px center / 16px no-repeat;
-        color: var(--accent);
+        color: var(--accent-text);
         font-weight: 600;
     }
 
