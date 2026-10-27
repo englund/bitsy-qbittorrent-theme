@@ -130,7 +130,8 @@ fieldset {
     flex-wrap: wrap;
     gap: 2px;
     height: auto;
-    padding: 6px 10px;
+    margin-top: 0;
+    padding: 2px 10px 6px;
 }
 
 #mochaToolbar > a,
