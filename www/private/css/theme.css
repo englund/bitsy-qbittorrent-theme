@@ -2178,6 +2178,15 @@ body:has(> div > h2.vcenter) > div {
     display: none !important;
 }
 
+:root #torrentTrackersTableDiv tr,
+:root.dark #torrentTrackersTableDiv tr {
+    --color-tracker-disabled: var(--text-muted);
+    --color-tracker-not-contacted: var(--orange);
+    --color-tracker-working: var(--green);
+    --color-tracker-updating: var(--accent);
+    --color-tracker-not-working: var(--red);
+}
+
 @media (max-width: 640px) {
     /* Back button of the drill-down sheets. Lucide chevron-left (ISC), as a mask so it takes the text color. */
     .sheetBack {
