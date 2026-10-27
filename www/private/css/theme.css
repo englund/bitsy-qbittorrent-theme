@@ -2615,6 +2615,22 @@ img[src*="/wallet-open.svg"] { --icon: url("../images/wallet-open.svg"); --icon-
         }
     }
 
+    /* Item counts (theme.js) sit before the chevron. */
+    :root #propertiesPanel #detailsSheetSections button[data-count] {
+        &::before {
+            color: var(--text-muted);
+            content: attr(data-count);
+            font-size: 14px;
+            margin-left: auto;
+            order: 1;
+        }
+
+        &::after {
+            margin-left: 0;
+            order: 2;
+        }
+    }
+
     :root.details-open #propertiesPanel_header {
         flex: none;
         padding: 8px var(--gutter);

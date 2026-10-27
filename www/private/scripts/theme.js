@@ -396,6 +396,30 @@ window.addEventListener("DOMContentLoaded", () => {
         render();
     };
 
+    // The torrent list has no file or web seed counts, so each section's list is fetched once when the sheet opens.
+    const countSources = {
+        propTrackersLink: ["torrents/trackers", (list) => list.length],
+        propPeersLink: ["sync/torrentPeers", (data) => Object.keys(data.peers ?? {}).length],
+        propWebSeedsLink: ["torrents/webseeds", (list) => list.length],
+        propFilesLink: ["torrents/files", (list) => list.length]
+    };
+    let countedHash;
+
+    const loadCounts = (hash) => {
+        countedHash = hash;
+        for (const row of document.querySelectorAll("#detailsSheetSections button")) {
+            delete row.dataset.count;
+            const [endpoint, count] = countSources[row.dataset.tab];
+            fetch(`api/v2/${endpoint}?${new URLSearchParams({ hash })}`)
+                .then((response) => (response.ok ? response.json() : Promise.reject()))
+                .then((data) => {
+                    if (countedHash === hash)
+                        row.dataset.count = count(data);
+                })
+                .catch(() => {});
+        }
+    };
+
     const build = () => {
         bar = document.createElement("div");
         bar.id = "detailsSheetBar";
@@ -418,6 +442,7 @@ window.addEventListener("DOMContentLoaded", () => {
         for (const tab of document.querySelectorAll("#propertiesTabs li:not(#propGeneralLink)")) {
             const row = document.createElement("button");
             row.type = "button";
+            row.dataset.tab = tab.id;
             row.append(...tab.firstElementChild.cloneNode(true).childNodes);
             row.addEventListener("click", () => go(tab.id));
             sections.append(row);
@@ -435,6 +460,7 @@ window.addEventListener("DOMContentLoaded", () => {
         torrentName = torrentsTable.getRow(tr.rowId).full_data.name;
         if (!bar)
             build();
+        loadCounts(tr.rowId);
         go("propGeneralLink");
     });
     window.addEventListener("popstate", render);
