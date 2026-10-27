@@ -1,5 +1,7 @@
 "use strict";
 
+const mobileQuery = window.matchMedia("(max-width: 640px)");
+
 const placeBelow = (popover, button) => {
     const rect = button.getBoundingClientRect();
     popover.style.top = `${rect.bottom + 6}px`;
@@ -30,7 +32,6 @@ const placeBelow = (popover, button) => {
 // Tag each dialog document so theme.css can style it as a full-screen phone sheet, and point theme.css's
 // breakpoint queries at the screen: a 500px desktop dialog would otherwise get the phone rules.
 {
-    const mobileQuery = window.matchMedia("(max-width: 640px)");
     const originalMedia = new WeakMap();
     const tagFrame = (iframe) => {
         const doc = iframe.contentDocument;
@@ -185,7 +186,6 @@ window.addEventListener("DOMContentLoaded", () => {
 // The ⋮ on each mobile card is a pseudo-element (the rows are virtualized and rebuilt by stock), so a tap in its
 // corner opens the stock context menu, the same one a long press opens.
 {
-    const mobileQuery = window.matchMedia("(max-width: 640px)");
     document.addEventListener("click", (event) => {
         const tr = event.target.closest?.(":is(#torrentsTableDiv, #searchResultsTableDiv) tr");
         if (!mobileQuery.matches || !tr)
@@ -238,7 +238,6 @@ window.addEventListener("DOMContentLoaded", () => {
 // On mobile the stock filters panel itself becomes the popover menu, so its click handlers and live counts keep working.
 // It can't be hidden with its column: a popover under a display: none ancestor doesn't render.
 {
-    const mobileQuery = window.matchMedia("(max-width: 640px)");
     let menu;
     let button;
     // The menu has the counts; the button only has room for the names.
@@ -285,7 +284,7 @@ window.addEventListener("DOMContentLoaded", () => {
 // Mobile hides the properties panel, so Mocha lays it out at 0px, and Mocha splits space in proportion to current heights.
 // Back on desktop (e.g. a phone rotated to landscape), restore the saved split before Mocha lays the column out again.
 {
-    window.matchMedia("(max-width: 640px)").addEventListener("change", (event) => {
+    mobileQuery.addEventListener("change", (event) => {
         if (event.matches)
             return;
         const panel = document.getElementById("propertiesPanel");
@@ -303,7 +302,6 @@ window.addEventListener("DOMContentLoaded", () => {
 // The sheet opens on General, which links to the other tabs as drill-down pages. Each level is a history
 // entry, so the phone's back gesture steps out of it.
 {
-    const mobileQuery = window.matchMedia("(max-width: 640px)");
     let bar;
     let title;
     let torrentName = "";
@@ -448,7 +446,6 @@ window.addEventListener("DOMContentLoaded", () => {
 // Like the details sheet, each level is a history entry, so the back gesture steps back and then closes the window.
 // About's first tab is the list page itself (its content above the list), so it gets no row.
 const drillDownTabs = ({ winId, tabsId, readyId, key, listId, listClass, subpageClass, homeTabId }) => {
-    const mobileQuery = window.matchMedia("(max-width: 640px)");
     let ownsHistory = false;
     let windowTitle;
 
@@ -548,7 +545,6 @@ drillDownTabs({
 // Mobile RSS: the three panes (feeds, articles, article) become drill-down pages. Like the details sheet,
 // each level is a history entry, so the back gesture steps out of it.
 {
-    const mobileQuery = window.matchMedia("(max-width: 640px)");
     const depth = { articles: 1, article: 2 };
     let view;
     let title;
@@ -618,7 +614,6 @@ drillDownTabs({
 // Mobile RSS Downloader: rules → rule editor → matching articles, instead of three squeezed columns.
 // Like Options, each level is a history entry, so the back gesture steps back and then closes the window.
 {
-    const mobileQuery = window.matchMedia("(max-width: 640px)");
     const depth = { rules: 1, rule: 2, articles: 3 };
     let ownsHistory = false;
     let windowTitle;
