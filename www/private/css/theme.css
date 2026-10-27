@@ -60,6 +60,8 @@
     --green: hsl(145deg 65% 30%);
     --orange: hsl(28deg 90% 40%);
     --red: hsl(0deg 72% 46%);
+    --yellow: hsl(42deg 95% 34%);
+    --purple: hsl(262deg 60% 55%);
     --row-alt: hsl(225deg 20% 97.5%);
 
     color-scheme: light;
@@ -2222,16 +2224,119 @@ img:is([src*="/directory.svg"], [src*="/edit-find.svg"], [src*="/filter-all.svg"
 }
 
 /* The state icon is the background of the span holding the torrent name, so a mask there would hide the name too. */
-.stateIcon:is(.stateChecking, .stateUploading) {
+.stateIcon:is(.stateChecking, .stateUploading),
+:root:not(.dark) .stateIcon:is(.stateDownloading, .stateStalledUP, .stateStalledDL, .stateStoppedDL, .stateStoppedUP, .stateQueued, .stateMoving, .stateError, .stateRunning) {
     background-image: none !important;
     position: relative;
 
     &::before {
-        background-color: var(--accent);
+        background-color: var(--icon-fill, var(--accent));
         content: "";
         inset: 0;
         mask: var(--icon) left center / contain no-repeat;
         position: absolute;
+    }
+}
+
+/* The other baked colors are the dark theme's shades, too faint on white, so on Light every baked icon gets the mask, filled from its token. */
+img[src*="/application-exit.svg"] { --icon: url("../images/application-exit.svg"); --icon-fill: var(--red); }
+img[src*="/application-rss.svg"] { --icon: url("../images/application-rss.svg"); --icon-fill: var(--orange); }
+img[src*="/application-url.svg"] { --icon: url("../images/application-url.svg"); --icon-fill: var(--text-muted); }
+img[src*="/browser-cookies.svg"] { --icon: url("../images/browser-cookies.svg"); --icon-fill: var(--text-muted); }
+img[src*="/checked-completed.svg"],
+.stateIcon.stateStoppedUP { --icon: url("../images/checked-completed.svg"); --icon-fill: var(--purple); }
+img[src*="/collapse.svg"] { --icon: url("../images/collapse.svg"); --icon-fill: var(--text-muted); }
+img[src*="/configure.svg"] { --icon: url("../images/configure.svg"); --icon-fill: var(--text-muted); }
+img[src*="/connected.svg"] { --icon: url("../images/connected.svg"); --icon-fill: var(--green); }
+img[src*="/dialog-warning.svg"],
+.confirmDialogWarning { --icon: url("../images/dialog-warning.svg"); --icon-fill: var(--yellow); }
+img[src*="/disconnected.svg"] { --icon: url("../images/disconnected.svg"); --icon-fill: var(--red); }
+img[src*="/download.svg"] { --icon: url("../images/download.svg"); --icon-fill: var(--green); }
+img[src*="/downloading.svg"],
+.stateIcon.stateDownloading { --icon: url("../images/downloading.svg"); --icon-fill: var(--green); }
+img[src*="/edit-clear.svg"] { --icon: url("../images/edit-clear.svg"); --icon-fill: var(--text-muted); }
+img[src*="/edit-copy.svg"] { --icon: url("../images/edit-copy.svg"); --icon-fill: var(--text-muted); }
+img[src*="/edit-find.svg"] { --icon: url("../images/edit-find.svg"); --icon-fill: var(--text-muted); }
+img[src*="/edit-rename.svg"] { --icon: url("../images/edit-rename.svg"); --icon-fill: var(--text-muted); }
+img[src*="/error.svg"],
+.stateIcon.stateError,
+.mochaErrorIcon { --icon: url("../images/error.svg"); --icon-fill: var(--red); }
+img[src*="/filter-active.svg"] { --icon: url("../images/filter-active.svg"); --icon-fill: var(--green); }
+img[src*="/filter-inactive.svg"] { --icon: url("../images/filter-inactive.svg"); --icon-fill: var(--text-muted); }
+img[src*="/filter-stalled.svg"] { --icon: url("../images/filter-stalled.svg"); --icon-fill: var(--orange); }
+img[src*="/firewalled.svg"] { --icon: url("../images/firewalled.svg"); --icon-fill: var(--orange); }
+img[src*="/go-bottom.svg"] { --icon: url("../images/go-bottom.svg"); --icon-fill: var(--text-muted); }
+img[src*="/go-down.svg"] { --icon: url("../images/go-down.svg"); --icon-fill: var(--text-muted); }
+img[src*="/go-top.svg"] { --icon: url("../images/go-top.svg"); --icon-fill: var(--text-muted); }
+img[src*="/go-up.svg"] { --icon: url("../images/go-up.svg"); --icon-fill: var(--text-muted); }
+img[src*="/hash.svg"] { --icon: url("../images/hash.svg"); --icon-fill: var(--text-muted); }
+img[src*="/help-contents.svg"] { --icon: url("../images/help-contents.svg"); --icon-fill: var(--text-muted); }
+img[src*="/ip-blocked.svg"] { --icon: url("../images/ip-blocked.svg"); --icon-fill: var(--red); }
+img[src*="/list-remove.svg"] { --icon: url("../images/list-remove.svg"); --icon-fill: var(--red); }
+img[src*="/mail-inbox.svg"] { --icon: url("../images/mail-inbox.svg"); --icon-fill: var(--text-muted); }
+img[src*="/menu.svg"] { --icon: url("../images/menu.svg"); --icon-fill: var(--text-muted); }
+img[src*="/name.svg"] { --icon: url("../images/name.svg"); --icon-fill: var(--text-muted); }
+img[src*="/network-connect.svg"] { --icon: url("../images/network-connect.svg"); --icon-fill: var(--text-muted); }
+img[src*="/network-server.svg"] { --icon: url("../images/network-server.svg"); --icon-fill: var(--text-muted); }
+img[src*="/object-locked.svg"] { --icon: url("../images/object-locked.svg"); --icon-fill: var(--text-muted); }
+img[src*="/pause-session.svg"] { --icon: url("../images/pause-session.svg"); --icon-fill: var(--orange); }
+img[src*="/paused.svg"] { --icon: url("../images/paused.svg"); --icon-fill: var(--text-muted); }
+img[src*="/peers-add.svg"] { --icon: url("../images/peers-add.svg"); --icon-fill: var(--green); }
+img[src*="/peers-remove.svg"] { --icon: url("../images/peers-remove.svg"); --icon-fill: var(--red); }
+img[src*="/peers.svg"] { --icon: url("../images/peers.svg"); --icon-fill: var(--text-muted); }
+img[src*="/plugins.svg"] { --icon: url("../images/plugins.svg"); --icon-fill: var(--text-muted); }
+img[src*="/preferences-advanced.svg"] { --icon: url("../images/preferences-advanced.svg"); --icon-fill: var(--text-muted); }
+img[src*="/preferences-bittorrent.svg"] { --icon: url("../images/preferences-bittorrent.svg"); --icon-fill: var(--text-muted); }
+img[src*="/preferences-desktop.svg"] { --icon: url("../images/preferences-desktop.svg"); --icon-fill: var(--text-muted); }
+img[src*="/preferences-webui.svg"] { --icon: url("../images/preferences-webui.svg"); --icon-fill: var(--text-muted); }
+img[src*="/queued.svg"],
+.stateIcon.stateQueued { --icon: url("../images/queued.svg"); --icon-fill: var(--orange); }
+img[src*="/ratio.svg"] { --icon: url("../images/ratio.svg"); --icon-fill: var(--text-muted); }
+img[src*="/reannounce.svg"] { --icon: url("../images/reannounce.svg"); --icon-fill: var(--text-muted); }
+img[src*="/regex.svg"] { --icon: url("../images/regex.svg"); --icon-fill: var(--text-muted); }
+img[src*="/set-location.svg"],
+.stateIcon.stateMoving { --icon: url("../images/set-location.svg"); --icon-fill: var(--text-muted); }
+img[src*="/slow.svg"] { --icon: url("../images/slow.svg"); --icon-fill: var(--orange); }
+img[src*="/sort-ascending.svg"] { --icon: url("../images/sort-ascending.svg"); --icon-fill: var(--text-muted); }
+img[src*="/sort-descending.svg"] { --icon: url("../images/sort-descending.svg"); --icon-fill: var(--text-muted); }
+img[src*="/slow_off.svg"] { --icon: url("../images/slow_off.svg"); --icon-fill: var(--text-muted); }
+img[src*="/stalledDL.svg"],
+.stateIcon.stateStalledDL { --icon: url("../images/stalledDL.svg"); --icon-fill: var(--text-muted); }
+img[src*="/stalledUP.svg"],
+.stateIcon.stateStalledUP { --icon: url("../images/stalledUP.svg"); --icon-fill: var(--text-muted); }
+img[src*="/stopped.svg"],
+.stateIcon.stateStoppedDL { --icon: url("../images/stopped.svg"); --icon-fill: var(--text-muted); }
+img[src*="/system-log-out.svg"] { --icon: url("../images/system-log-out.svg"); --icon-fill: var(--text-muted); }
+img[src*="/task-complete.svg"] { --icon: url("../images/task-complete.svg"); --icon-fill: var(--green); }
+img[src*="/task-reject.svg"] { --icon: url("../images/task-reject.svg"); --icon-fill: var(--red); }
+img[src*="/torrent-creator.svg"] { --icon: url("../images/torrent-creator.svg"); --icon-fill: var(--text-muted); }
+img[src*="/torrent-start-forced.svg"] { --icon: url("../images/torrent-start-forced.svg"); --icon-fill: var(--green); }
+img[src*="/torrent-start.svg"],
+.stateIcon.stateRunning { --icon: url("../images/torrent-start.svg"); --icon-fill: var(--green); }
+img[src*="/torrent-stop.svg"] { --icon: url("../images/torrent-stop.svg"); --icon-fill: var(--orange); }
+img[src*="/tracker-error.svg"] { --icon: url("../images/tracker-error.svg"); --icon-fill: var(--red); }
+img[src*="/tracker-warning.svg"] { --icon: url("../images/tracker-warning.svg"); --icon-fill: var(--yellow); }
+img[src*="/trackerless.svg"] { --icon: url("../images/trackerless.svg"); --icon-fill: var(--text-muted); }
+img[src*="/trackers.svg"] { --icon: url("../images/trackers.svg"); --icon-fill: var(--text-muted); }
+img[src*="/view-refresh.svg"] { --icon: url("../images/view-refresh.svg"); --icon-fill: var(--text-muted); }
+img[src*="/view-statistics.svg"] { --icon: url("../images/view-statistics.svg"); --icon-fill: var(--text-muted); }
+img[src*="/wallet-open.svg"] { --icon: url("../images/wallet-open.svg"); --icon-fill: var(--red); }
+
+:root:not(.dark) {
+    /* L.svg and spinner.svg aren't baked by icons.mjs and have no --icon. */
+    img[src*="images/"][src$=".svg"]:not([src*="/L.svg"], [src*="/spinner.svg"]) {
+        background-color: var(--icon-fill, var(--accent));
+        mask: var(--icon) center / contain no-repeat;
+        object-position: -9999px;
+    }
+
+    :is(.confirmDialogWarning, .mochaErrorIcon) {
+        background: var(--icon-fill);
+        mask: var(--icon) center no-repeat;
+    }
+
+    .mochaErrorIcon {
+        mask-size: contain;
     }
 }
 
