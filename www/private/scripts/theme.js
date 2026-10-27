@@ -52,26 +52,68 @@ const placeBelow = (popover, button) => {
         }
     };
 
-    // Stock gives the small dialogs fixed heights that fit its own spacing, so ours clips their buttons.
-    // The 400px cut keeps the big scrolling ones (Options, Add torrent) at their stock or saved size.
-    const fitSmallDialog = (win, contentHeight, shownHeight) => {
-        if (mobileQuery.matches || !win || !contentHeight || (contentHeight <= shownHeight)
-            || (win.retrieve("instance").options.height > 400))
-            return;
-        MochaUI.resizeWindow(win, { height: window.qBittorrent.Dialog.limitHeightToViewport(contentHeight), centered: true });
+    // How much more room the window's scrolling parts (its own, and its iframe's) need to show everything.
+    const overflowOf = (win) => {
+        const iframeRoot = win.querySelector(".mochaIframe")?.contentDocument?.documentElement;
+        let width = 0;
+        let height = 0;
+        for (const root of [win, iframeRoot]) {
+            if (!root)
+                continue;
+            for (const el of [root, ...root.querySelectorAll("*")]) {
+                if (!el.clientHeight)
+                    continue;
+                const style = getComputedStyle(el);
+                // A document scrolls without overflow set on its root.
+                if ((el === iframeRoot) || /auto|scroll/.test(style.overflowX))
+                    width = Math.max(width, el.scrollWidth - el.clientWidth);
+                if ((el === iframeRoot) || /auto|scroll/.test(style.overflowY))
+                    height = Math.max(height, el.scrollHeight - el.clientHeight);
+            }
+        }
+        return { width, height };
     };
-    // Windows that load into the page (Global speed limits) and set no onContentLoaded of their own.
-    MUI.Window.prototype.options.onContentLoaded = (win) => {
-        const wrapper = win.querySelector(".mochaContentWrapper");
-        fitSmallDialog(win, wrapper?.firstElementChild?.scrollHeight, wrapper?.clientHeight);
+
+    // Desktop dialogs grow to show their content, up to 1000px wide and the viewport's height. A size the user
+    // saved by resizing is kept, only shrunk to fit the screen (RSS Downloader skips stock's viewport cap).
+    const fitDialog = (win) => {
+        const instance = win?.retrieve("instance");
+        if (mobileQuery.matches || !instance || instance.isMaximized)
+            return;
+        const { Dialog } = window.qBittorrent;
+        // Add torrent windows are "uploadPage-<source>" but save their size as "uploadPage".
+        const saved = localStorage.getItem(`window_${win.id.split("-")[0]}_height`) !== null;
+        const resize = (width, height) => MochaUI.resizeWindow(win, { width, height, centered: true });
+
+        const size = instance.contentWrapperEl.getSize();
+        const grownWidth = saved ? size.x : Math.max(size.x, Math.min(size.x + overflowOf(win).width, 1000));
+        const width = Dialog.limitWidthToViewport(grownWidth);
+        if (width !== size.x)
+            resize(width, size.y);
+        // Measured after widening, which can reflow content shorter. Stock's height cap counts only the title bar,
+        // not toolbars like Options' tabs, so the cap comes from the window's real chrome.
+        const chrome = win.getBoundingClientRect().height - size.y;
+        const maxHeight = window.innerHeight - 40 - chrome;
+        const height = Math.min(saved ? size.y : size.y + overflowOf(win).height, maxHeight);
+        if (height !== size.y)
+            resize(width, height);
+        if ((width !== size.x) || (height !== size.y))
+            MochaUI.centerWindow(win);
+    };
+    // Runs after the window's own contentLoaded handlers, which fill in some dialogs (Statistics).
+    const fireEvent = MUI.Window.prototype.fireEvent;
+    MUI.Window.prototype.fireEvent = function(type, ...args) {
+        const result = fireEvent.call(this, type, ...args);
+        if ((type === "contentLoaded") && (this.options.loadMethod !== "iframe"))
+            fitDialog(this.windowEl);
+        return result;
     };
 
     // load doesn't bubble, but a capturing listener still sees it for every iframe
     document.addEventListener("load", (event) => {
         if (event.target.matches?.(".mochaIframe")) {
             tagFrame(event.target);
-            fitSmallDialog(event.target.closest(".mocha"), event.target.contentDocument?.documentElement.scrollHeight,
-                event.target.clientHeight);
+            fitDialog(event.target.closest(".mocha"));
         }
         // An RSS article's description is a srcdoc frame that links only the stock style.css.
         if (event.target.id === "rssDescription") {
