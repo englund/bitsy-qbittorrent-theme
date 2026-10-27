@@ -1997,6 +1997,39 @@ body:has(> div > h2.vcenter) > div {
     }
 }
 
+/* RSS Downloader rule buttons: add before remove, styled as the theme's buttons. */
+:root #topMenuBar {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+    height: auto;
+    margin-bottom: 4px;
+
+    & #rulesTableDesc {
+        flex: 1;
+        order: -1;
+    }
+
+    & .imageButton {
+        background-color: var(--surface-2);
+        background-repeat: no-repeat;
+        background-size: 16px;
+        --icon-at: center / 16px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        float: none;
+        height: 28px;
+        margin: 0;
+        padding: 0;
+        width: 28px;
+
+        &:hover:not(:disabled) {
+            background-color: var(--surface-3);
+            border-color: var(--border);
+        }
+    }
+}
+
 /* Mobile RSS Downloader: theme.js shows one column per page (data-rssdl-page: rules, rule or articles).
    The view's own <style> comes after theme.css and setup() sizes the columns inline, hence :root and !important. */
 
@@ -2027,27 +2060,14 @@ body:has(> div > h2.vcenter) > div {
     }
 
     :root #topMenuBar {
-        align-items: center;
-        display: flex;
         gap: 8px;
-        height: auto;
         margin-bottom: 8px;
 
-        & #rulesTableDesc {
-            flex: 1;
-            order: -1;
-        }
-
         & .imageButton {
-            background-color: var(--surface-2);
-            background-repeat: no-repeat;
             background-size: 18px;
             --icon-at: center / 18px;
-            border: 1px solid var(--border);
             border-radius: var(--radius);
-            float: none;
             height: var(--touch);
-            margin: 0;
             width: var(--touch);
         }
     }
@@ -2360,8 +2380,8 @@ img[src*="/wallet-open.svg"] { --icon: url("../images/wallet-open.svg"); --icon-
     }
 }
 
-#newRuleButton { --icon: url("../images/list-add.svg"); --icon-fill: var(--accent); --icon-at: center / 24px; }
-#deleteRuleButton { --icon: url("../images/edit-clear.svg"); --icon-at: center / 24px; }
+#newRuleButton { --icon: url("../images/list-add.svg"); --icon-fill: var(--accent); }
+#deleteRuleButton { --icon: url("../images/edit-clear.svg"); }
 
 /* The RSS Downloader's add-rule button is baked in the accent, so it takes the mask in every theme. */
 :root:not(.dark) :is(.panel-collapse, .panel-expand, .categoryToggle, #torrentsFilterRegexBox + label, #rememberBtn, .dynamicTable th.sorted, #mobileSortButton, #detailsSortButton, :is(#mobileSortMenu, #detailsSortMenu) button[aria-checked="true"], #deleteRuleButton),
