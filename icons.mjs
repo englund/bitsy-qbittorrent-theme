@@ -37,7 +37,7 @@ const icons = {
     "downloading": ["arrow-down", green],
     "edit-clear": ["x", muted],
     "edit-copy": ["copy", muted],
-    "edit-find": ["search", accent],
+    "edit-find": ["search", muted],
     "edit-rename": ["pencil", muted],
     "error": ["circle-alert", red],
     "filter-active": ["activity", green],
