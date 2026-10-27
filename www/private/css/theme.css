@@ -1226,6 +1226,10 @@ body:has(> div > h2.vcenter) > div {
     #torrentsTableDiv td[data-column="name"] .stateIcon {
         background-size: 16px;
         padding-left: 24px;
+
+        &::before {
+            mask-size: 16px;
+        }
     }
 
     #torrentsTableDiv td[data-column="progress"] {
@@ -2185,6 +2189,50 @@ body:has(> div > h2.vcenter) > div {
     --color-tracker-working: var(--green);
     --color-tracker-updating: var(--accent);
     --color-tracker-not-working: var(--red);
+}
+
+/* icons.mjs bakes the accent icons in blue, and an SVG in <img> or background-image can't read --accent.
+   So they're drawn as a mask over an --accent fill instead; object-position moves the baked image out of the box. */
+img[src*="/directory.svg"] { --icon: url("../images/directory.svg"); }
+img[src*="/edit-find.svg"] { --icon: url("../images/edit-find.svg"); }
+img[src*="/filter-all.svg"] { --icon: url("../images/filter-all.svg"); }
+img[src*="/folder-documents.svg"] { --icon: url("../images/folder-documents.svg"); }
+img[src*="/folder-new.svg"] { --icon: url("../images/folder-new.svg"); }
+img[src*="/force-recheck.svg"],
+.stateIcon.stateChecking { --icon: url("../images/force-recheck.svg"); }
+img[src*="/help-about.svg"],
+.confirmWarning { --icon: url("../images/help-about.svg"); }
+img[src*="/insert-link.svg"] { --icon: url("../images/insert-link.svg"); }
+img[src*="/list-add.svg"] { --icon: url("../images/list-add.svg"); }
+img[src*="/tags.svg"] { --icon: url("../images/tags.svg"); }
+img[src*="/torrent-magnet.svg"] { --icon: url("../images/torrent-magnet.svg"); }
+img[src*="/upload.svg"],
+.stateIcon.stateUploading { --icon: url("../images/upload.svg"); }
+img[src*="/view-categories.svg"] { --icon: url("../images/view-categories.svg"); }
+
+img:is([src*="/directory.svg"], [src*="/edit-find.svg"], [src*="/filter-all.svg"], [src*="/folder-documents.svg"], [src*="/folder-new.svg"], [src*="/force-recheck.svg"], [src*="/help-about.svg"], [src*="/insert-link.svg"], [src*="/list-add.svg"], [src*="/tags.svg"], [src*="/torrent-magnet.svg"], [src*="/upload.svg"], [src*="/view-categories.svg"]) {
+    background-color: var(--accent);
+    mask: var(--icon) center / contain no-repeat;
+    object-position: -9999px;
+}
+
+.confirmWarning {
+    background: var(--accent);
+    mask: var(--icon) center no-repeat;
+}
+
+/* The state icon is the background of the span holding the torrent name, so a mask there would hide the name too. */
+.stateIcon:is(.stateChecking, .stateUploading) {
+    background-image: none !important;
+    position: relative;
+
+    &::before {
+        background-color: var(--accent);
+        content: "";
+        inset: 0;
+        mask: var(--icon) left center / contain no-repeat;
+        position: absolute;
+    }
 }
 
 @media (max-width: 640px) {
