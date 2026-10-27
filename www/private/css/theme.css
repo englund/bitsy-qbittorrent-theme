@@ -792,6 +792,28 @@ fieldset.settings {
     translate: 0 -50%;
 }
 
+/* Stock draws black cell borders and an inline table border; the column headings become plain labels. */
+@media (min-width: 641px) {
+    #preferencesPage_content #watched_folders_tab {
+        border: 0 !important;
+        border-collapse: separate;
+        border-spacing: 8px 4px;
+        margin: 0 -8px;
+
+        & :is(td, th) {
+            border: 0;
+            padding: 0;
+        }
+
+        & th {
+            background: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-align: left;
+        }
+    }
+}
+
 /* Type-or-pick combo (category): the wrapper is the visible field, the select's arrow peeks out from under the input. */
 .select-watched-folder-editable {
     background-color: var(--surface-2);
@@ -1515,6 +1537,32 @@ body:has(> div > h2.vcenter) > div {
     }
 }
 
+/* Search plugins: only the Enabled cell is green or red, not the whole row (stock). */
+#searchPluginsTableDiv tbody tr {
+    color: var(--text);
+
+    &.green td[data-column="enabled"] {
+        color: var(--green);
+    }
+
+    &.red td[data-column="enabled"] {
+        color: var(--red);
+    }
+}
+
+@media (min-width: 641px) {
+    :root #searchPluginsContainer > div:last-child {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+
+        & button {
+            padding: 3px 14px;
+            width: auto !important;
+        }
+    }
+}
+
 /* Mobile Search plugins: one list row per plugin (name and version, URL below, Enabled on the right) whose ⋮ opens
    the stock menu (theme.js), with Install and Check for updates pinned at the bottom. Close duplicates ×. */
 
@@ -1638,14 +1686,6 @@ body:has(> div > h2.vcenter) > div {
             align-self: center;
             font-size: 14px;
             grid-area: enabled;
-        }
-
-        & tr.green td[data-column="enabled"] {
-            color: var(--green);
-        }
-
-        & tr.red td[data-column="enabled"] {
-            color: var(--red);
         }
 
         /* Lucide ellipsis-vertical (ISC), as on the cards. */
