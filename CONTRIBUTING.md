@@ -63,11 +63,17 @@ Sources: Apple HIG, Google's touch-target guidance and the Material 3 component 
 
 ## Workflow
 
-Work is tracked in GitHub issues, labelled `bug`, `enhancement`, `accessibility`, `tech-debt` or `needs-device-test`. Start by picking an issue, or open one.
+Work is tracked in GitHub issues, labelled `bug`, `enhancement`, `accessibility`, `tech-debt` or `needs-device-test`. Every change starts from an issue: pick one, or open one. Anything bigger than a small fix, and anything visual on phones, is agreed in the issue first, with mockups or screenshots, because the Design principles are hard rules and a change that breaks one won't be merged.
 
-Design choices (the mockups offered, which one the user picked, the options rejected) are recorded as comments on the issue, with screenshots, not in the repo. The why of a single piece of code goes in a comment at that code; the why of a decision goes in the issue.
+Design choices (the mockups offered, which one was picked, the options rejected) are recorded as comments on the issue, with screenshots, not in the repo. The why of a single piece of code goes in a comment at that code; the why of a decision goes in the issue.
 
-Commits go straight to `main`, no pull requests, in conventional-commit format with `Closes #N` (or `Refs #N`) in the body. Parked or rejected work: close the issue as "not planned" with the patch attached to it.
+### Outside contributors
+
+Fork, work on a branch, and open a pull request that says `Closes #N`. Keep it to one issue. For visual changes, attach screenshots at 375×812 and at a desktop width, before and after. Write commit messages in conventional-commit format (`fix(webui): ...`). Keep edits to stock files small and commented (see Stock files). Pull requests are squash-merged, so don't worry about tidying the history.
+
+### Maintainer
+
+The maintainer, and agents working for them, push straight to `main` with no pull requests, in conventional-commit format with `Closes #N` (or `Refs #N`) in the body. Parked or rejected work: close the issue as "not planned" with the patch attached to it.
 
 ## Mock server
 

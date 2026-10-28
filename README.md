@@ -9,7 +9,7 @@ It's an *alternative WebUI*: a full copy of the stock WebUI with the theme appli
 1. Get the files onto the machine that runs qBittorrent:
 
    ```bash
-   git clone git@github.com:englund/bitsy-qbittorrent-theme.git
+   git clone https://github.com/englund/bitsy-qbittorrent-theme.git
    ```
 
 2. In qBittorrent, open **Tools → Options → Web UI** and turn on **Use alternative WebUI**.
