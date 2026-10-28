@@ -2035,8 +2035,8 @@ body:has(> div > h2.vcenter) > div {
     :root #rssTorrentDetailsName {
         background: none;
         color: var(--text);
-        font-size: 17px;
-        line-height: 1.35;
+        font-size: 16px;
+        line-height: 24px;
         margin: 0 0 4px;
         overflow-wrap: anywhere;
     }
