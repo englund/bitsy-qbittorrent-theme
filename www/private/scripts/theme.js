@@ -1,6 +1,7 @@
 "use strict";
 
-const mobileQuery = window.matchMedia("(max-width: 640px)");
+const phoneMaxWidth = 640;
+const mobileQuery = window.matchMedia(`(max-width: ${phoneMaxWidth}px)`);
 
 const placeBelow = (popover, button) => {
     const rect = button.getBoundingClientRect();
@@ -50,8 +51,8 @@ const placeBelow = (popover, button) => {
                 if (!originalMedia.has(rule))
                     originalMedia.set(rule, rule.media.mediaText);
                 const media = originalMedia.get(rule);
-                const isPhone = media.includes("max-width: 640px");
-                if (isPhone || media.includes("min-width: 641px"))
+                const isPhone = media.includes(`max-width: ${phoneMaxWidth}px`);
+                if (isPhone || media.includes(`min-width: ${phoneMaxWidth + 1}px`))
                     rule.media.mediaText = (isPhone === mobileQuery.matches) ? "all" : "not all";
             }
         }
