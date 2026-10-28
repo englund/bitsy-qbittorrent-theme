@@ -1,6 +1,6 @@
 # bitsy-qbittorrent-theme
 
-A dark, mobile-friendly theme for the **qBittorrent 5.3.0** WebUI. On a phone, torrents show as cards, and filters, sorting and menus open as popovers. Dialogs become full-screen sheets, and Options, About and the torrent details drill down page by page. On desktop it's the familiar layout, restyled.
+A mobile-friendly theme for the **qBittorrent 5.3.0** WebUI, with dark, light and OLED black color schemes and five accent colors. On a phone, torrents show as cards, and filters, sorting and menus open as popovers. Dialogs become full-screen sheets, and Options, About and the torrent details drill down page by page. On desktop it's the familiar layout, restyled.
 
 It's an *alternative WebUI*: a full copy of the stock WebUI with the theme applied, so nothing in qBittorrent itself is modified.
 
@@ -26,6 +26,15 @@ volumes:
 ```
 
 Then set **Files location** to `/themes/bitsy`.
+
+## Color schemes
+
+Set them in the WebUI under **Options › Behavior › Interface**:
+
+- **Color scheme**: Dark, Light, OLED black, or Auto (follows your OS). Changing it reloads the page when you click Save.
+- **Accent color**: blue (default), green, purple, orange or pink.
+
+qBittorrent stores both with your WebUI settings, so your choice follows you to every device and browser. The login page can't read them before you sign in, so it uses the last scheme and accent this browser saw, or Auto and blue if it never signed in.
 
 ## Update
 
