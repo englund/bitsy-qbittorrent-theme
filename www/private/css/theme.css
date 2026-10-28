@@ -18,6 +18,7 @@
     --accent-soft: hsl(var(--accent-hs) var(--accent-l) / 18%);
     --button-hover: var(--accent);
     --accent-text: var(--accent);
+    --accent-icon: var(--accent);
     /* 77% and 26% are the lightest and darkest that reach 4.5:1 on --accent-soft for every accent. */
     --accent-soft-text: hsl(var(--accent-hs) 77%);
     --row-alt: hsl(225deg 13% 9%);
@@ -68,6 +69,8 @@
     --accent-text: hsl(var(--accent-hs) var(--accent-text-l));
     /* --accent-text falls short on --accent-soft. */
     --accent-soft-text: hsl(var(--accent-hs) 26%);
+    /* --accent is under 3:1 on the light surfaces for green and orange. */
+    --accent-icon: var(--accent-text);
     --green: hsl(145deg 65% 30%);
     /* The lightest orange text that reaches 4.5:1 on --bg. It falls short on --surface-3, so no orange text in menus. */
     --orange: hsl(28deg 90% 36%);
@@ -2319,7 +2322,7 @@ body:has(> div > h2.vcenter) > div {
     --color-tracker-disabled: var(--text-muted);
     --color-tracker-not-contacted: var(--orange);
     --color-tracker-working: var(--green);
-    --color-tracker-updating: var(--accent);
+    --color-tracker-updating: var(--accent-text);
     --color-tracker-not-working: var(--red);
 }
 
@@ -2343,13 +2346,13 @@ img[src*="/upload.svg"],
 img[src*="/view-categories.svg"] { --icon: url("../images/view-categories.svg"); }
 
 img:is([src*="/directory.svg"], [src*="/edit-find.svg"], [src*="/filter-all.svg"], [src*="/folder-documents.svg"], [src*="/folder-new.svg"], [src*="/force-recheck.svg"], [src*="/help-about.svg"], [src*="/insert-link.svg"], [src*="/list-add.svg"], [src*="/tags.svg"], [src*="/torrent-magnet.svg"], [src*="/upload.svg"], [src*="/view-categories.svg"]) {
-    background-color: var(--accent);
+    background-color: var(--accent-icon);
     mask: var(--icon) center / contain no-repeat;
     object-position: -9999px;
 }
 
 .confirmWarning {
-    background: var(--accent);
+    background: var(--accent-icon);
     mask: var(--icon) center no-repeat;
 }
 
@@ -2360,7 +2363,7 @@ img:is([src*="/directory.svg"], [src*="/edit-find.svg"], [src*="/filter-all.svg"
     position: relative;
 
     &::before {
-        background-color: var(--icon-fill, var(--accent));
+        background-color: var(--icon-fill, var(--accent-icon));
         content: "";
         inset: 0;
         mask: var(--icon) left center / contain no-repeat;
@@ -2455,7 +2458,7 @@ img[src*="/wallet-open.svg"] { --icon: url("../images/wallet-open.svg"); --icon-
 :root:not(.dark) {
     /* L.svg, spinner.svg and the qBittorrent logo aren't baked by icons.mjs and have no --icon. */
     img[src*="images/"][src$=".svg"]:not([src*="/L.svg"], [src*="/spinner.svg"], [src*="/qbittorrent-tray.svg"]) {
-        background-color: var(--icon-fill, var(--accent));
+        background-color: var(--icon-fill, var(--accent-icon));
         mask: var(--icon) center / contain no-repeat;
         object-position: -9999px;
     }
@@ -2489,7 +2492,7 @@ img[src*="/wallet-open.svg"] { --icon: url("../images/wallet-open.svg"); --icon-
     }
 }
 
-#newRuleButton { --icon: url("../images/list-add.svg"); --icon-fill: var(--accent); }
+#newRuleButton { --icon: url("../images/list-add.svg"); --icon-fill: var(--accent-icon); }
 #deleteRuleButton { --icon: url("../images/edit-clear.svg"); }
 
 /* The RSS Downloader's add-rule button is baked in the accent, so it takes the mask in every theme. */
