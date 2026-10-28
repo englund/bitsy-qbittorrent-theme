@@ -1,6 +1,6 @@
 // Replaces the stock WebUI icons with Lucide icons (ISC licensed), keeping the stock filenames.
 // Usage: node icons.mjs <path to lucide-static/icons>
-// Get the icons with: curl -sL $(npm view lucide-static dist.tarball) | tar xz   (→ package/icons)
+// Get the icons with: curl -sL $(npm view lucide-static@1.61.0 dist.tarball) | tar xz   (→ package/icons)
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 

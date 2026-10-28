@@ -143,6 +143,7 @@ const maindata = () => {
     };
 };
 
+// To set a client data setting directly, POST data={"qbt_<key>": value} to /api/v2/clientdata/store and reload.
 const clientData = {};
 let cookies = [
     { domain: "tracker.example.org", path: "/", name: "session", value: "f3a9c1e07b", expirationDate: 1830000000 },

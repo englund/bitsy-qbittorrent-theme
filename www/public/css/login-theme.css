@@ -1,4 +1,5 @@
-/* Login page theme. The private theme.css isn't served before login, so the tokens it needs are repeated here. */
+/* Login page theme. The private theme.css isn't served before login, so the tokens it needs are repeated here.
+   Not named theme.css: the mock server resolves private/ first, so that one would shadow it. */
 
 :root {
     --bg: hsl(225deg 14% 7%);
