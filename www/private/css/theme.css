@@ -63,8 +63,11 @@
     --accent-l: 48%;
     /* --text on a solid accent is about 3:1. White hover text instead goes white-on-white on buttons whose own background wins. */
     --button-hover: var(--accent-soft);
-    --accent-text: hsl(var(--accent-hs) 26%);
-    --accent-soft-text: var(--accent-text);
+    /* Set per accent: the lightest that reaches 4.5:1 on both --bg and --surface-3. */
+    --accent-text-l: 46%;
+    --accent-text: hsl(var(--accent-hs) var(--accent-text-l));
+    /* --accent-text falls short on --accent-soft. */
+    --accent-soft-text: hsl(var(--accent-hs) 26%);
     --green: hsl(145deg 65% 30%);
     /* The lightest orange text that reaches 4.5:1 on --bg. It falls short on --surface-3, so no orange text in menus. */
     --orange: hsl(28deg 90% 36%);
@@ -89,10 +92,12 @@
 
 :root[data-accent="green"] {
     --accent-hs: 152deg 60%;
+    --accent-text-l: 28%;
 }
 
 :root[data-accent="purple"] {
     --accent-hs: 262deg 80%;
+    --accent-text-l: 57%;
 }
 
 /* At the shared 62% purple text is under 4.5:1 on the dark surfaces. */
@@ -102,10 +107,12 @@
 
 :root[data-accent="orange"] {
     --accent-hs: 28deg 92%;
+    --accent-text-l: 33%;
 }
 
 :root[data-accent="pink"] {
     --accent-hs: 330deg 80%;
+    --accent-text-l: 43%;
 }
 
 body {
