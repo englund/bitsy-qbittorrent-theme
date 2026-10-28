@@ -59,13 +59,14 @@
     --menu-hover: hsl(225deg 16% 90%);
     --border: hsl(225deg 14% 86%);
     --text: hsl(225deg 25% 12%);
-    --text-muted: hsl(225deg 10% 40%);
+    --text-muted: hsl(225deg 10% 40%); /* also inlined as #5c6170 in the Light search-field icon */
     --accent-l: 48%;
     /* --text on a solid accent is about 3:1. White hover text instead goes white-on-white on buttons whose own background wins. */
     --button-hover: var(--accent-soft);
     --accent-text: hsl(var(--accent-hs) 26%);
     --accent-soft-text: var(--accent-text);
     --green: hsl(145deg 65% 30%);
+    /* The lightest orange text that reaches 4.5:1 on --bg. It falls short on --surface-3, so no orange text in menus. */
     --orange: hsl(28deg 90% 36%);
     --red: hsl(0deg 72% 46%);
     --yellow: hsl(42deg 95% 34%);

@@ -420,6 +420,7 @@ window.addEventListener("DOMContentLoaded", async (event) => {
 
     window.addEventListener("resize", window.qBittorrent.Misc.createDebounceHandler(500, (e) => {
         // only save sizes if the columns are visible
+        // On phones the panel is hidden or full-screen, so the saved split would be 0 or ~94%.
         if (!document.getElementById("mainColumn").classList.contains("invisible") && !window.matchMedia("(max-width: 640px)").matches)
             saveColumnSizes();
     }));

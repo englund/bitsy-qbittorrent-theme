@@ -61,7 +61,7 @@ No qBittorrent is needed: `mock-server.mjs` serves `www/` the way qBittorrent do
 node --watch mock-server.mjs        # http://localhost:8090 (needs Node 20.11+)
 ```
 
-There's no CSS hot reload, so reload the page after edits. The theme lives in `www/private/css/theme.css` (styles) and `www/private/scripts/theme.js` (mobile behaviour); edits to stock files are kept small. `HANDOFF.md` documents the design rules, every decision and the stock files that were changed.
+There's no CSS hot reload, so reload the page after edits. The theme lives in `www/private/css/theme.css` (styles) and `www/private/scripts/theme.js` (mobile behaviour); edits to stock files are kept small. `CONTRIBUTING.md` covers the design rules, the stock files that were changed and how work is tracked.
 
 ## License
 

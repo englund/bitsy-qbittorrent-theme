@@ -21,6 +21,8 @@ const red = "#f87171";
 const yellow = "#facc15";
 const purple = "#a78bfa";
 
+// Each icon also needs an --icon line in theme.css, which masks every baked icon on Light;
+// accent ones go in its accent mask list too.
 const icons = {
     "application-exit": ["power", red],
     "application-rss": ["rss", orange],
