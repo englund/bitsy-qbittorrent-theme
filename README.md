@@ -4,6 +4,14 @@ A mobile-friendly theme for the **qBittorrent 5.3.0** WebUI, with dark, light an
 
 It's an *alternative WebUI*: a full copy of the stock WebUI with the theme applied, so nothing in qBittorrent itself is modified.
 
+![Desktop layout in the dark scheme with the blue accent](docs/screenshots/desktop-dark-blue.png)
+
+<p>
+  <img src="docs/screenshots/phone-dark-blue.png" width="32%" alt="Phone layout with torrents as cards, dark scheme, blue accent">
+  <img src="docs/screenshots/phone-light-purple.png" width="32%" alt="Phone layout, light scheme, purple accent">
+  <img src="docs/screenshots/phone-oled-pink.png" width="32%" alt="Phone layout, OLED black scheme, pink accent">
+</p>
+
 ## Install
 
 1. Get the files onto the machine that runs qBittorrent:
@@ -35,6 +43,8 @@ Set them in the WebUI under **Options › Behavior › Interface**:
 - **Accent color**: blue (default), green, purple, orange or pink.
 
 qBittorrent stores both with your WebUI settings, so your choice follows you to every device and browser. The login page can't read them before you sign in, so it uses the last scheme and accent this browser saw, or Auto and blue if it never signed in.
+
+![Desktop layout in the light scheme with the purple accent](docs/screenshots/desktop-light-purple.png)
 
 ## Update
 
